@@ -1,0 +1,21 @@
+<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad-analytics" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#5269c3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#90a0da;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Axis lines -->
+  <path d="M14 44V20" stroke="url(#grad-analytics)" stroke-width="2" stroke-linecap="round"/>
+  <path d="M46 44V18" stroke="url(#grad-analytics)" stroke-width="2" stroke-linecap="round"/>
+  <!-- Base line -->
+  <path d="M14 44H50" stroke="url(#grad-analytics)" stroke-width="2" stroke-linecap="round"/>
+  <!-- Bar 1 -->
+  <rect x="18" y="32" width="6" height="12" rx="1" stroke="url(#grad-analytics)" stroke-width="1.5" fill="url(#grad-analytics)" opacity="0.5"/>
+  <!-- Bar 2 -->
+  <rect x="26" y="24" width="6" height="20" rx="1" stroke="url(#grad-analytics)" stroke-width="1.5" fill="url(#grad-analytics)" opacity="0.7"/>
+  <!-- Bar 3 -->
+  <rect x="34" y="28" width="6" height="16" rx="1" stroke="url(#grad-analytics)" stroke-width="1.5" fill="url(#grad-analytics)"/>
+  <!-- Trend line -->
+  <polyline points="21,32 29,24 37,28 45,18" stroke="url(#grad-analytics)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+</svg>

@@ -38,7 +38,7 @@ const NAV_LINKS = [
     { to: '/services',  label: 'Services'    },
     { to: '/about',     label: 'About'       },
     { to: '/portfolio', label: 'Portfolio'   },
-    { to: '/ai-tools',  label: '✦ AI Tools'  },
+    { to: '/ai-tools',  label: 'AI Tools'    },
     { to: '/blog',      label: 'Blog'        },
     { to: '/contact',   label: 'Contact'     },
 ];
@@ -166,8 +166,8 @@ const Navbar = () => {
                         Contact Us
                     </Link>
                     <div className="mobile-nav-contact">
-                        <a href="tel:+256764524816">📞 +256 764 524 816</a>
-                        <a href="mailto:juniorreactive@gmail.com">✉️ juniorreactive@gmail.com</a>
+                        <a href="tel:+256764524816">+256 764 524 816</a>
+                        <a href="mailto:juniorreactive@gmail.com">juniorreactive@gmail.com</a>
                     </div>
                 </div>
             </nav>

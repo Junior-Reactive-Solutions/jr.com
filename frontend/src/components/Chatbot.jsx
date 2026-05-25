@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Icon from '../assets/icons/components/Icon';
 import './Chatbot.css';
 
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5005';
@@ -51,7 +52,7 @@ function resolveRoute(suggestion) {
 const INITIAL_MESSAGE = {
   id: 1,
   from: 'bot',
-  text: "Hi there! 👋 I'm **JR Assistant**, powered by AI.\n\nI can answer questions about our services, help you find the right solution, or navigate you anywhere on the site. What would you like to know?",
+  text: "Hi there! I'm **JR Assistant**, powered by AI.\n\nI can answer questions about our services, help you find the right solution, or navigate you anywhere on the site. What would you like to know?",
   suggestions: ['What services do you offer?', 'How much does it cost?', 'Book a free discovery call'],
 };
 
@@ -135,7 +136,7 @@ export default function Chatbot() {
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
         from: 'bot',
-        text: "I'm having connection issues right now. 😅\n\nPlease reach us directly:\n📧 juniorreactive@gmail.com\n📱 +256 764 524 816",
+        text: "I'm having connection issues right now.\n\nPlease reach us directly:\njuniorreactive@gmail.com\n+256 764 524 816",
         suggestions: ['Contact Us', 'WhatsApp Us'],
       }]);
     } finally {

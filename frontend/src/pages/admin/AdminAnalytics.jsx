@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
+import Icon from '../../assets/icons/components/Icon';
 import { getAnalytics } from '../../services/adminService';
 
 function StatPill({ label, value, color }) {
@@ -12,7 +13,12 @@ function StatPill({ label, value, color }) {
 }
 
 function BarChart({ data }) {
-    if (!data?.length) return <p className="admin-empty">No data yet</p>;
+    if (!data?.length) return (
+        <div style={{ textAlign: 'center', padding: '32px 16px' }}>
+            <Icon name="state-empty" size="lg" ariaLabel="No data" style={{ marginBottom: 16, opacity: 0.5 }} />
+            <p className="admin-empty">No data yet</p>
+        </div>
+    );
     const max = Math.max(...data.map(d => d.total), 1);
     return (
         <div className="admin-bar-chart">
@@ -87,7 +93,12 @@ export default function AdminAnalytics() {
                                 </div>
                             ))}
                         </div>
-                    ) : <p className="admin-empty">No data yet</p>}
+                    ) : (
+                        <div style={{ textAlign: 'center', padding: '32px 16px' }}>
+                            <Icon name="state-empty" size="lg" ariaLabel="No data" style={{ marginBottom: 16, opacity: 0.5 }} />
+                            <p className="admin-empty">No data yet</p>
+                        </div>
+                    )}
                 </div>
 
                 {/* Device breakdown */}
@@ -115,7 +126,12 @@ export default function AdminAnalytics() {
                                 );
                             })}
                         </div>
-                    ) : <p className="admin-empty">No device data yet</p>}
+                    ) : (
+                        <div style={{ textAlign: 'center', padding: '32px 16px' }}>
+                            <Icon name="state-empty" size="lg" ariaLabel="No data" style={{ marginBottom: 16, opacity: 0.5 }} />
+                            <p className="admin-empty">No device data yet</p>
+                        </div>
+                    )}
                 </div>
             </div>
 

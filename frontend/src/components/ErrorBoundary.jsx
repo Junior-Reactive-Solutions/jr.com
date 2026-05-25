@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from '../assets/icons/components/Icon';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -18,6 +19,9 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div style={{ padding: '40px', textAlign: 'center', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'center' }}>
+            <Icon name="ui-lock" size="xl" color="error" ariaLabel="Error" />
+          </div>
           <h1 style={{ color: '#1c265e', marginBottom: '16px' }}>Something went wrong</h1>
           <p style={{ color: '#6b7280', marginBottom: '24px' }}>An unexpected error occurred. Please try refreshing the page.</p>
           <button

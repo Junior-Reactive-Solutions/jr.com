@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
+import Icon from '../../assets/icons/components/Icon';
 import { getDashboard } from '../../services/adminService';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -29,7 +30,12 @@ function StatCard({ icon, label, total, today, sub, color, link }) {
 
 // ── Bar Chart ─────────────────────────────────────────────────────────────────
 function BarChart({ data }) {
-    if (!data?.length) return <p className="admin-empty">No data yet</p>;
+    if (!data?.length) return (
+        <div style={{ textAlign: 'center', padding: '32px 16px' }}>
+            <Icon name="state-empty" size="lg" ariaLabel="No data" style={{ marginBottom: 16, opacity: 0.5 }} />
+            <p className="admin-empty">No data yet</p>
+        </div>
+    );
     const max = Math.max(...data.map(d => d.total), 1);
     return (
         <div className="admin-bar-chart">
@@ -137,7 +143,12 @@ export default function AdminDashboard() {
                                 </div>
                             ))}
                         </div>
-                    ) : <p className="admin-empty">No page views yet</p>}
+                    ) : (
+                        <div style={{ textAlign: 'center', padding: '32px 16px' }}>
+                            <Icon name="state-empty" size="lg" ariaLabel="No data" style={{ marginBottom: 16, opacity: 0.5 }} />
+                            <p className="admin-empty">No page views yet</p>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -165,7 +176,12 @@ export default function AdminDashboard() {
                                 </div>
                             ))}
                         </div>
-                    ) : <p className="admin-empty">No messages yet</p>}
+                    ) : (
+                        <div style={{ textAlign: 'center', padding: '32px 16px' }}>
+                            <Icon name="state-empty" size="lg" ariaLabel="No data" style={{ marginBottom: 16, opacity: 0.5 }} />
+                            <p className="admin-empty">No messages yet</p>
+                        </div>
+                    )}
                 </div>
 
                 {/* Recent Applications */}
@@ -189,7 +205,12 @@ export default function AdminDashboard() {
                                 </div>
                             ))}
                         </div>
-                    ) : <p className="admin-empty">No applications yet</p>}
+                    ) : (
+                        <div style={{ textAlign: 'center', padding: '32px 16px' }}>
+                            <Icon name="state-empty" size="lg" ariaLabel="No data" style={{ marginBottom: 16, opacity: 0.5 }} />
+                            <p className="admin-empty">No applications yet</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </AdminLayout>

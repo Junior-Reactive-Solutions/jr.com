@@ -5,6 +5,7 @@ import { contentService } from '../services/contentService';
 import HeroSection from '../components/layout/HeroSection';
 import { SkeletonText } from '../components/common/SkeletonLoader';
 import ErrorState from '../components/common/ErrorState';
+import Icon from '../assets/icons/components/Icon';
 
 const ServiceDetailPage = () => {
     const { id } = useParams();
@@ -78,7 +79,7 @@ const ServiceDetailPage = () => {
                             {[
                                 { icon: '✅', text: 'Expert consultation & planning' },
                                 { icon: '⚡', text: 'Scalable, future-proof solutions' },
-                                { icon: '🔒', text: 'Secure & compliant delivery' },
+                                { icon: 'ui-lock', text: 'Secure & compliant delivery', isIconComponent: true },
                                 { icon: '📞', text: 'Ongoing support & maintenance' },
                             ].map((b) => (
                                 <div key={b.text} style={{
@@ -86,7 +87,9 @@ const ServiceDetailPage = () => {
                                     background: 'var(--color-surface)', borderRadius: 'var(--radius-md)',
                                     padding: '12px 14px', border: '1px solid var(--color-border)',
                                 }}>
-                                    <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>{b.icon}</span>
+                                    <span style={{ fontSize: '1.1rem', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                                        {b.isIconComponent ? <Icon name={b.icon} size="sm" ariaLabel="Secure" /> : b.icon}
+                                    </span>
                                     <span style={{ fontSize: '0.875rem', color: 'var(--color-text-mid)', fontWeight: 500 }}>{b.text}</span>
                                 </div>
                             ))}

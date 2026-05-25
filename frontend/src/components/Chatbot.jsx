@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Icon from '../assets/icons/components/Icon';
 import './Chatbot.css';
 
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5005';

@@ -1,0 +1,12 @@
+<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad-search" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#5269c3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#90a0da;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Circle (search field) -->
+  <circle cx="26" cy="26" r="14" stroke="url(#grad-search)" stroke-width="2" fill="none"/>
+  <!-- Handle (magnifier extension) -->
+  <path d="M38 38L50 50" stroke="url(#grad-search)" stroke-width="2" stroke-linecap="round"/>
+</svg>

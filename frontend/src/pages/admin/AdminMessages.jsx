@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { getMessages, replyToMessage, deleteMessage, markMessageRead } from '../../services/adminService';
+import Icon from '../../assets/icons/components/Icon';
 
 const fmt = (ts) => ts ? new Date(ts).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
 
@@ -27,7 +28,7 @@ function ReplyModal({ message, onClose, onSent }) {
             <div className="admin-modal" onClick={e => e.stopPropagation()}>
                 <div className="admin-modal-header">
                     <h3>Reply to {message.name}</h3>
-                    <button className="admin-modal-close" onClick={onClose}>✕</button>
+                    <button className="admin-modal-close" onClick={onClose}><Icon name="close" size="sm" /></button>
                 </div>
                 <div className="admin-modal-body">
                     <div className="admin-reply-meta">
@@ -54,7 +55,7 @@ function ReplyModal({ message, onClose, onSent }) {
                 <div className="admin-modal-footer">
                     <button className="admin-btn admin-btn-ghost" onClick={onClose}>Cancel</button>
                     <button className="admin-btn admin-btn-primary" onClick={handleSend} disabled={loading || !body.trim()}>
-                        {loading ? <><span className="admin-spinner-sm" /> Sending…</> : '✉️ Send Reply'}
+                        {loading ? <><span className="admin-spinner-sm" /> Sending…</> : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="email" size="xs" color="white" /> Send Reply</span>}
                     </button>
                 </div>
             </div>
@@ -69,7 +70,7 @@ function ViewModal({ message, onClose, onReply }) {
             <div className="admin-modal admin-modal-lg" onClick={e => e.stopPropagation()}>
                 <div className="admin-modal-header">
                     <h3>{message.subject}</h3>
-                    <button className="admin-modal-close" onClick={onClose}>✕</button>
+                    <button className="admin-modal-close" onClick={onClose}><Icon name="close" size="sm" /></button>
                 </div>
                 <div className="admin-modal-body">
                     <div className="admin-msg-details">
@@ -84,7 +85,7 @@ function ViewModal({ message, onClose, onReply }) {
                         {message.replied_at && (
                             <div className="admin-msg-detail-row">
                                 <span className="admin-msg-detail-key">Replied</span>
-                                <span className="admin-text-green">✓ {fmt(message.replied_at)}</span>
+                                <span className="admin-text-green" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="check" size="xs" color="success" /> {fmt(message.replied_at)}</span>
                             </div>
                         )}
                     </div>
@@ -94,8 +95,8 @@ function ViewModal({ message, onClose, onReply }) {
                 </div>
                 <div className="admin-modal-footer">
                     <button className="admin-btn admin-btn-ghost" onClick={onClose}>Close</button>
-                    <button className="admin-btn admin-btn-primary" onClick={onReply}>
-                        ↩ Reply to this message
+                    <button className="admin-btn admin-btn-primary" onClick={onReply} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                        <Icon name="messages" size="xs" color="white" /> Reply to this message
                     </button>
                 </div>
             </div>
@@ -147,7 +148,7 @@ export default function AdminMessages() {
         <AdminLayout unreadCount={unread}>
             {toast && <div className="admin-toast">{toast}</div>}
             {viewing  && <ViewModal  message={viewing}  onClose={() => setViewing(null)}  onReply={() => { setReplying(viewing); setViewing(null); }} />}
-            {replying && <ReplyModal message={replying} onClose={() => setReplying(null)} onSent={() => { showToast(`Reply sent to ${replying.email} ✓`); load(); }} />}
+            {replying && <ReplyModal message={replying} onClose={() => setReplying(null)} onSent={() => { showToast(`Reply sent to ${replying.email}`); load(); }} />}
 
             <div className="admin-page-header">
                 <div>
@@ -172,7 +173,7 @@ export default function AdminMessages() {
                     <div className="admin-loading"><div className="admin-spinner" /></div>
                 ) : filtered.length === 0 ? (
                     <div className="admin-empty-state">
-                        <div className="admin-empty-icon">✉️</div>
+                        <div className="admin-empty-icon"><Icon name="email" size="xl" color="muted" /></div>
                         <p>No messages here</p>
                     </div>
                 ) : (

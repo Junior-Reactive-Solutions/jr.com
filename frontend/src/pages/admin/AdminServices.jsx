@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { createService, updateService, deleteService } from '../../services/adminService';
+import Icon from '../../assets/icons/components/Icon';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:5005';
 
@@ -10,13 +11,13 @@ async function fetchServices() {
     return data.success ? data.data : [];
 }
 
-const EMPTY_FORM = { key: '', title: '', icon: '🔧', shortDescription: '', fullDescription: '' };
+const EMPTY_FORM = { key: '', title: '', icon: 'settings', shortDescription: '', fullDescription: '' };
 
 // ── Service Modal ─────────────────────────────────────────────────────────────
 function ServiceModal({ service, onClose, onSaved }) {
     const isEdit = !!service?.id;
     const [form,    setForm]    = useState(service ? {
-        key: service.key || '', title: service.title || '', icon: service.icon || '🔧',
+        key: service.key || '', title: service.title || '', icon: service.icon || 'settings',
         shortDescription: service.shortDescription || '', fullDescription: service.fullDescription || '',
     } : { ...EMPTY_FORM });
     const [loading, setLoading] = useState(false);
@@ -45,7 +46,7 @@ function ServiceModal({ service, onClose, onSaved }) {
             <div className="admin-modal admin-modal-lg" onClick={e => e.stopPropagation()}>
                 <div className="admin-modal-header">
                     <h3>{isEdit ? 'Edit Service' : 'Add New Service'}</h3>
-                    <button className="admin-modal-close" onClick={onClose}>✕</button>
+                    <button className="admin-modal-close" onClick={onClose}><Icon name="close" size="sm" /></button>
                 </div>
                 <div className="admin-modal-body">
                     <div className="admin-form-row-2">
@@ -56,8 +57,11 @@ function ServiceModal({ service, onClose, onSaved }) {
                             </div>
                         )}
                         <div className="admin-form-group">
-                            <label>Icon (emoji)</label>
-                            <input className="admin-input" placeholder="🧠" value={form.icon} onChange={set('icon')} style={{ fontSize: 20, width: 80 }} />
+                            <label>Icon <span className="admin-label-hint">(name, e.g. ai, cloud, rocket)</span></label>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                <input className="admin-input" placeholder="e.g. ai" value={form.icon} onChange={set('icon')} style={{ width: 160 }} />
+                                <span style={{ display: 'inline-flex', padding: 6, border: '1px solid var(--color-border, #e4eaf9)', borderRadius: 8 }}><Icon name={form.icon || 'settings'} size="md" color="primary" /></span>
+                            </div>
                         </div>
                     </div>
                     <div className="admin-form-group">
@@ -79,7 +83,7 @@ function ServiceModal({ service, onClose, onSaved }) {
                 <div className="admin-modal-footer">
                     <button className="admin-btn admin-btn-ghost" onClick={onClose}>Cancel</button>
                     <button className="admin-btn admin-btn-primary" onClick={handleSave} disabled={loading}>
-                        {loading ? <><span className="admin-spinner-sm" /> Saving…</> : isEdit ? '✓ Save Changes' : '+ Add Service'}
+                        {loading ? <><span className="admin-spinner-sm" /> Saving…</> : isEdit ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="check" size="xs" color="white" /> Save Changes</span> : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="plus" size="xs" color="white" /> Add Service</span>}
                     </button>
                 </div>
             </div>
@@ -112,7 +116,7 @@ export default function AdminServices() {
 
     const handleSaved = () => {
         setModal(null);
-        showToast('Service saved successfully ✓');
+        showToast('Service saved successfully');
         load();
     };
 
@@ -143,7 +147,7 @@ export default function AdminServices() {
                 <div className="admin-services-grid">
                     {services.map(s => (
                         <div className="admin-service-card" key={s.id}>
-                            <div className="admin-service-icon">{s.icon || '🔧'}</div>
+                            <div className="admin-service-icon"><Icon name={s.icon || 'settings'} size="lg" color="primary" ariaLabel={`${s.title} icon`} /></div>
                             <div className="admin-service-body">
                                 <h4 className="admin-service-title">{s.title}</h4>
                                 <p className="admin-service-desc">{s.shortDescription}</p>

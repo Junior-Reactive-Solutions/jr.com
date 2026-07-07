@@ -100,7 +100,7 @@ const TeamPage = () => {
                             onRetry={refetch}
                         />
                     ) : members.length === 0 ? (
-                        <ErrorState icon="👤" title="No team members yet" message="Team profiles will appear here once added to the database." />
+                        <ErrorState icon="team" title="No team members yet" message="Team profiles will appear here once added to the database." />
                     ) : (
                         <div className="services-grid">
                             {members.map((member, i) => (

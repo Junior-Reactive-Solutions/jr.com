@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { contentService } from '../services/contentService';
 import HeroSection from '../components/layout/HeroSection';
 import { SkeletonGrid } from '../components/common/SkeletonLoader';
+import Icon from '../assets/icons/components/Icon';
 
 const STATS = [
     { number: '50+',  label: 'Projects Delivered' },
@@ -13,24 +14,24 @@ const STATS = [
 ];
 
 const FALLBACK_SERVICES = [
-    { id: 1, key: 'n8n-automation', icon: '⚡', title: 'N8N Workflow Automation',  shortDescription: 'Connect your tools and automate repetitive processes with powerful visual N8N workflows.' },
-    { id: 2, key: 'ai-consulting',  icon: '🧠', title: 'AI Consulting',              shortDescription: 'Strategic AI roadmaps that turn business challenges into intelligent, automated solutions.' },
-    { id: 3, key: 'ai-courses',     icon: '📚', title: 'AI Courses & Training',      shortDescription: 'Structured, practical AI education programmes for individuals and corporate teams.' },
+    { id: 1, key: 'n8n-automation', icon: 'automation', title: 'N8N Workflow Automation',  shortDescription: 'Connect your tools and automate repetitive processes with powerful visual N8N workflows.' },
+    { id: 2, key: 'ai-consulting',  icon: 'ai',         title: 'AI Consulting',              shortDescription: 'Strategic AI roadmaps that turn business challenges into intelligent, automated solutions.' },
+    { id: 3, key: 'ai-courses',     icon: 'courses',    title: 'AI Courses & Training',      shortDescription: 'Structured, practical AI education programmes for individuals and corporate teams.' },
 ];
 
 const WHY_US = [
-    { icon: '🧠', title: 'AI-First Approach',    desc: "Every solution we build leverages the latest AI capabilities — not as a buzzword, but as genuine business value." },
-    { icon: '🔧', title: 'End-to-End Ownership', desc: "We stay with you from strategy through deployment and beyond. Your success is our metric." },
-    { icon: '🌍', title: 'Built for Africa',     desc: "Deep understanding of East African business environments means solutions that actually work in the real world." },
+    { icon: 'ai',           title: 'AI-First Approach',    desc: "Every solution we build uses the latest AI capabilities — not as a buzzword, but as genuine business value." },
+    { icon: 'workflow',     title: 'End-to-End Ownership', desc: "We stay with you from strategy through deployment and beyond. Your success is our metric." },
+    { icon: 'globe',        title: 'Built for Africa',     desc: "Deep understanding of East African business environments means solutions that actually work in the real world." },
 ];
 
 const ServiceCard = ({ service }) => (
     <div className="card">
-        <div className="card-icon">{service.icon}</div>
+        <div className="card-icon"><Icon name={service.icon} size="lg" color="primary" ariaLabel={`${service.title} icon`} /></div>
         <h3 style={{ marginBottom: 10, fontSize: '1.1rem' }}>{service.title}</h3>
         <p style={{ fontSize: '.875rem', flex: 1 }}>{service.shortDescription}</p>
         <Link to={`/services/${service.key}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--color-secondary)', fontWeight: 700, fontSize: '.875rem', marginTop: 12 }}>
-            Learn More →
+            Learn More <Icon name="arrow-right" size="xs" />
         </Link>
     </div>
 );
@@ -111,7 +112,7 @@ const HomePage = () => {
                         <>
                             {isError && (
                                 <div style={{ background: 'rgba(239,68,68,.06)', border: '1px solid rgba(239,68,68,.2)', borderRadius: 'var(--radius-md)', padding: '10px 16px', marginBottom: 24, fontSize: '.85rem', color: '#7f1d1d', display: 'flex', gap: 8, alignItems: 'center' }}>
-                                    <span>⚠️</span>
+                                    <Icon name="warning" size="sm" color="error" ariaLabel="Warning" />
                                     <span>Could not connect to the backend. Showing default services. <button onClick={refetch} style={{ background: 'none', border: 'none', color: 'var(--color-secondary)', fontWeight: 700, cursor: 'pointer', padding: 0 }}>Retry</button></span>
                                 </div>
                             )}
@@ -119,7 +120,7 @@ const HomePage = () => {
                                 {displayServices.map(s => <ServiceCard key={s.id} service={s} />)}
                             </div>
                             <div style={{ textAlign: 'center', marginTop: 40 }}>
-                                <Link to="/services" className="btn btn-outline">View All 9 Services →</Link>
+                                <Link to="/services" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>View All 9 Services <Icon name="arrow-right" size="xs" /></Link>
                             </div>
                         </>
                     )}
@@ -155,7 +156,7 @@ const HomePage = () => {
                     <div className="services-grid">
                         {WHY_US.map(item => (
                             <div className="card" key={item.title}>
-                                <div className="card-icon">{item.icon}</div>
+                                <div className="card-icon"><Icon name={item.icon} size="lg" color="primary" ariaLabel={`${item.title} icon`} /></div>
                                 <h3>{item.title}</h3>
                                 <p style={{ fontSize: '.9rem' }}>{item.desc}</p>
                             </div>

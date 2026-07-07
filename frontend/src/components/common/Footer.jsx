@@ -1,5 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Icon from '../../assets/icons/components/Icon';
+
+const contactLinkStyle = { color: 'rgba(255,255,255,.55)', display: 'inline-flex', alignItems: 'center', gap: 8 };
 
 // ScrollLink: navigates to a route AND scrolls to top
 const ScrollLink = ({ to, children, ...props }) => {
@@ -70,13 +73,13 @@ const Footer = () => {
                         <h3>Contact</h3>
                         <ul>
                             <li style={{ color: 'rgba(255,255,255,.55)', fontSize: '.9rem', marginBottom: 8 }}>
-                                <a href="tel:+256764524816" style={{ color: 'rgba(255,255,255,.55)' }}>📞 +256 764 524 816</a>
+                                <a href="tel:+256764524816" style={contactLinkStyle}><Icon name="phone" size="xs" /> +256 764 524 816</a>
                             </li>
                             <li style={{ color: 'rgba(255,255,255,.55)', fontSize: '.9rem', marginBottom: 8 }}>
-                                <a href="mailto:juniorreactive@gmail.com" style={{ color: 'rgba(255,255,255,.55)' }}>✉️ juniorreactive@gmail.com</a>
+                                <a href="mailto:juniorreactive@gmail.com" style={contactLinkStyle}><Icon name="email" size="xs" /> juniorreactive@gmail.com</a>
                             </li>
-                            <li style={{ color: 'rgba(255,255,255,.55)', fontSize: '.9rem', marginBottom: 16 }}>
-                                📍 Kampala, Uganda
+                            <li style={{ color: 'rgba(255,255,255,.55)', fontSize: '.9rem', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <Icon name="location" size="xs" /> Kampala, Uganda
                             </li>
                         </ul>
                         <ul>

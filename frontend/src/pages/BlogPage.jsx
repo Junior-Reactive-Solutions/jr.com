@@ -5,6 +5,7 @@ import { contentService } from '../services/contentService';
 import HeroSection from '../components/layout/HeroSection';
 import { SkeletonBlogCard, SkeletonGrid } from '../components/common/SkeletonLoader';
 import ErrorState from '../components/common/ErrorState';
+import Icon from '../assets/icons/components/Icon';
 
 const BlogPage = () => {
     const { data, isLoading, isError, refetch } = useQuery({
@@ -34,7 +35,7 @@ const BlogPage = () => {
                         />
                     ) : posts.length === 0 ? (
                         <ErrorState
-                            icon="📝"
+                            icon="document"
                             title="No posts yet"
                             message="Blog posts will appear here once published."
                         />
@@ -49,9 +50,8 @@ const BlogPage = () => {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        fontSize: '3rem',
                                     }}>
-                                        📰
+                                        <Icon name="blog" size="xl" color="white" ariaLabel="" />
                                     </div>
                                     <div className="blog-card-body">
                                         <div className="blog-meta">
@@ -63,8 +63,8 @@ const BlogPage = () => {
                                             <Link to={`/blog/${post.slug}`}>{post.title}</Link>
                                         </h3>
                                         <p>{post.excerpt}</p>
-                                        <Link to={`/blog/${post.slug}`} className="read-more">
-                                            Read More →
+                                        <Link to={`/blog/${post.slug}`} className="read-more" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                                            Read More <Icon name="arrow-right" size="xs" />
                                         </Link>
                                     </div>
                                 </article>

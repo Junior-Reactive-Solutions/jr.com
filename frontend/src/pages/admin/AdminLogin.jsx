@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { adminLogin } from '../../services/adminService';
+import Icon from '../../assets/icons/components/Icon';
 
 export default function AdminLogin() {
     const [password, setPassword] = useState('');
@@ -82,7 +83,7 @@ export default function AdminLogin() {
                 </form>
 
                 <p className="admin-login-footer">
-                    <a href="/" className="admin-link">← Back to website</a>
+                    <a href="/" className="admin-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="arrow-left" size="xs" /> Back to website</a>
                 </p>
             </div>
         </div>

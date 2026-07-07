@@ -1,5 +1,6 @@
 import React from 'react';
 import HeroSection from '../components/layout/HeroSection';
+import Icon from '../assets/icons/components/Icon';
 
 const LAST_UPDATED = 'March 2025';
 
@@ -110,7 +111,7 @@ const PrivacyPage = () => (
                                 { right: 'Right to Object', desc: 'Object to processing based on legitimate interest, including direct marketing.' },
                             ].map(r => (
                                 <div key={r.right} style={{ display: 'flex', gap: 12, padding: '10px 14px', background: 'var(--color-surface)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)' }}>
-                                    <span style={{ fontSize: '1rem' }}>✅</span>
+                                    <span style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}><Icon name="success" size="sm" color="success" ariaLabel="" /></span>
                                     <div>
                                         <p style={{ margin: 0, fontWeight: 700, color: 'var(--color-primary)', fontSize: '.9rem' }}>{r.right}</p>
                                         <p style={{ margin: 0, fontSize: '.85rem' }}>{r.desc}</p>

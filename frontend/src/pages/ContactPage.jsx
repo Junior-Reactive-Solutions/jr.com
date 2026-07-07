@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { submissionService } from '../services/submissionService';
+import Icon from '../assets/icons/components/Icon';
 
 const CONTACT_DETAILS = [
-    { icon: '📞', label: 'Phone / WhatsApp', value: '+256 764 524 816', href: 'tel:+256764524816' },
-    { icon: '✉️', label: 'Email', value: 'juniorreactive@gmail.com', href: 'mailto:juniorreactive@gmail.com' },
-    { icon: '📍', label: 'Location', value: 'Kampala, Uganda', href: null },
-    { icon: '🕒', label: 'Response Time', value: 'Within 24 hours', href: null },
+    { icon: 'phone',    label: 'Phone / WhatsApp', value: '+256 764 524 816', href: 'tel:+256764524816' },
+    { icon: 'email',    label: 'Email', value: 'juniorreactive@gmail.com', href: 'mailto:juniorreactive@gmail.com' },
+    { icon: 'location', label: 'Location', value: 'Kampala, Uganda', href: null },
+    { icon: 'time',     label: 'Response Time', value: 'Within 24 hours', href: null },
 ];
 
 const ContactPage = () => {
@@ -59,7 +60,7 @@ const ContactPage = () => {
                             <div className="contact-cards">
                                 {CONTACT_DETAILS.map(item => (
                                     <div className="contact-card" key={item.label}>
-                                        <span className="contact-card-icon">{item.icon}</span>
+                                        <span className="contact-card-icon"><Icon name={item.icon} size="md" color="primary" ariaLabel={item.label} /></span>
                                         <div>
                                             <div className="contact-card-label">{item.label}</div>
                                             {item.href ? (
@@ -95,13 +96,13 @@ const ContactPage = () => {
                             </p>
 
                             {status === 'success' && (
-                                <div className="alert alert-success" style={{ marginBottom: 20 }}>
-                                    ✅ Message sent! We'll get back to you within 24 hours.
+                                <div className="alert alert-success" style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                    <Icon name="success" size="sm" color="success" ariaLabel="Success" /> Message sent! We'll get back to you within 24 hours.
                                 </div>
                             )}
                             {status === 'error' && (
-                                <div className="alert alert-error" style={{ marginBottom: 20 }}>
-                                    ⚠️ {errMsg}
+                                <div className="alert alert-error" style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                    <Icon name="warning" size="sm" color="error" ariaLabel="Error" /> {errMsg}
                                 </div>
                             )}
 
@@ -158,7 +159,7 @@ const ContactPage = () => {
                                     className="btn btn-full-width"
                                     disabled={status === 'loading'}
                                 >
-                                    {status === 'loading' ? 'Sending…' : 'Send Message →'}
+                                    {status === 'loading' ? 'Sending…' : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>Send Message <Icon name="arrow-right" size="xs" color="white" /></span>}
                                 </button>
                             </form>
                         </div>

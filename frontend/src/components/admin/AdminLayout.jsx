@@ -20,6 +20,7 @@ const ICONS = {
     menu:         'M3 12h18 M3 6h18 M3 18h18',
     close:        'M18 6L6 18 M6 6l12 12',
     logo:         'M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5',
+    external:     'M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6 M15 3h6v6 M10 14L21 3',
 };
 
 const NAV_SECTIONS = [
@@ -150,8 +151,8 @@ export default function AdminLayout({ children, unreadCount = 0, newAppsCount = 
                         &nbsp;Admin
                     </div>
                     <a href="https://jrcom.vercel.app" target="_blank" rel="noopener noreferrer"
-                        className="admin-view-site-btn">
-                        View site ↗
+                        className="admin-view-site-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                        View site <Icon d={ICONS.external} size={14} />
                     </a>
                 </header>
 

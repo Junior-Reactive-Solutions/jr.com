@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Icon from '../assets/icons/components/Icon';
 import './Chatbot.css';
 
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5005';
@@ -205,8 +206,8 @@ export default function Chatbot() {
               <div className="msg-content">
                 <div className="msg-bubble">{renderLines(msg.text)}</div>
                 {msg.navigate && (
-                  <div className="msg-navigate-hint">
-                    ↗ Taking you there in 2 seconds...
+                  <div className="msg-navigate-hint" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <Icon name="external" size="xs" /> Taking you there in 2 seconds...
                   </div>
                 )}
                 {msg.suggestions && msg.suggestions.length > 0 && msg.from === 'bot' && (

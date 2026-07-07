@@ -4,6 +4,7 @@ import { contentService } from '../services/contentService';
 import HeroSection from '../components/layout/HeroSection';
 import { SkeletonPortfolioCard, SkeletonGrid } from '../components/common/SkeletonLoader';
 import ErrorState from '../components/common/ErrorState';
+import Icon from '../assets/icons/components/Icon';
 
 // Deterministic gradient from title string
 function titleGradient(title = '') {
@@ -22,9 +23,9 @@ const PortfolioImage = ({ src, alt, gradient }) => {
             <div style={{
                 height: 200, background: gradient,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '2.5rem', color: 'rgba(255,255,255,.7)',
+                color: 'rgba(255,255,255,.7)',
             }}>
-                🖼️
+                <Icon name="image" size="xl" color="white" ariaLabel={alt || 'Project image'} />
             </div>
         );
     }
@@ -66,7 +67,7 @@ const PortfolioPage = () => {
                             onRetry={refetch}
                         />
                     ) : projects.length === 0 ? (
-                        <ErrorState icon="🗂️" title="No projects yet" message="Portfolio projects will appear here once added." />
+                        <ErrorState icon="files" title="No projects yet" message="Portfolio projects will appear here once added." />
                     ) : (
                         <div className="services-grid">
                             {projects.map((project) => (

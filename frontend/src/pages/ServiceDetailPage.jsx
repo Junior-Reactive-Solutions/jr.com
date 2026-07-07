@@ -46,8 +46,8 @@ const ServiceDetailPage = () => {
                             message="This service doesn't exist or couldn't be loaded."
                             onRetry={refetch}
                         >
-                            <Link to="/services" className="btn btn-outline" style={{ marginTop: 16 }}>
-                                ← Back to Services
+                            <Link to="/services" className="btn btn-outline" style={{ marginTop: 16, display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                                <Icon name="arrow-left" size="xs" /> Back to Services
                             </Link>
                         </ErrorState>
                     </div>
@@ -60,7 +60,7 @@ const ServiceDetailPage = () => {
         <main>
             <HeroSection
                 badge="Service Detail"
-                title={`${service.icon ? service.icon + ' ' : ''}${service.title}`}
+                title={service.title}
                 subtitle={service.shortDescription}
             />
 
@@ -77,18 +77,18 @@ const ServiceDetailPage = () => {
                         <h3 style={{ marginBottom: 16 }}>Key Benefits</h3>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
                             {[
-                                { icon: '✅', text: 'Expert consultation & planning' },
-                                { icon: '⚡', text: 'Scalable, future-proof solutions' },
-                                { icon: 'ui-lock', text: 'Secure & compliant delivery', isIconComponent: true },
-                                { icon: '📞', text: 'Ongoing support & maintenance' },
+                                { icon: 'success', color: 'success', text: 'Expert consultation & planning' },
+                                { icon: 'zap',     color: 'primary', text: 'Scalable, future-proof solutions' },
+                                { icon: 'ui-lock', color: 'primary', text: 'Secure & compliant delivery' },
+                                { icon: 'phone',   color: 'primary', text: 'Ongoing support & maintenance' },
                             ].map((b) => (
                                 <div key={b.text} style={{
                                     display: 'flex', gap: 12, alignItems: 'flex-start',
                                     background: 'var(--color-surface)', borderRadius: 'var(--radius-md)',
                                     padding: '12px 14px', border: '1px solid var(--color-border)',
                                 }}>
-                                    <span style={{ fontSize: '1.1rem', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-                                        {b.isIconComponent ? <Icon name={b.icon} size="sm" ariaLabel="Secure" /> : b.icon}
+                                    <span style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                                        <Icon name={b.icon} size="sm" color={b.color} ariaLabel="" />
                                     </span>
                                     <span style={{ fontSize: '0.875rem', color: 'var(--color-text-mid)', fontWeight: 500 }}>{b.text}</span>
                                 </div>
@@ -99,7 +99,7 @@ const ServiceDetailPage = () => {
                             <Link to={`/apply?service=${encodeURIComponent(service.title)}`} className="btn">
                                 Apply for This Service
                             </Link>
-                            <Link to="/services" className="btn btn-outline">← All Services</Link>
+                            <Link to="/services" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}><Icon name="arrow-left" size="xs" /> All Services</Link>
                         </div>
                     </div>
                 </div>

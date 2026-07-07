@@ -50,7 +50,7 @@ const FAQPage = () => {
                             onRetry={refetch}
                         />
                     ) : faqs.length === 0 ? (
-                        <ErrorState icon="❓" title="No FAQs yet" message="FAQs will appear here once added." />
+                        <ErrorState icon="faq" title="No FAQs yet" message="FAQs will appear here once added." />
                     ) : (
                         <div>
                             {faqs.map((faq) => <FAQItem key={faq.id} faq={faq} />)}

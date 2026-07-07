@@ -100,13 +100,13 @@ export default function AdminDashboard() {
                 <StatCard
                     icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>}
                     label="Total Messages" total={stats.messages.total} today={stats.messages.today}
-                    sub={unread > 0 ? `${unread} unread` : 'All read ✓'}
+                    sub={unread > 0 ? `${unread} unread` : 'All read'}
                     color="blue" link="/admin/messages"
                 />
                 <StatCard
                     icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>}
                     label="Applications" total={stats.applications.total} today={stats.applications.today}
-                    sub={newApps > 0 ? `${newApps} pending review` : 'All reviewed ✓'}
+                    sub={newApps > 0 ? `${newApps} pending review` : 'All reviewed'}
                     color="purple" link="/admin/applications"
                 />
                 <StatCard
@@ -158,7 +158,7 @@ export default function AdminDashboard() {
                 <div className="admin-card">
                     <div className="admin-card-header">
                         <h3>Recent Messages</h3>
-                        <Link to="/admin/messages" className="admin-card-link">View all →</Link>
+                        <Link to="/admin/messages" className="admin-card-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>View all <Icon name="arrow-right" size="xs" /></Link>
                     </div>
                     {recentMessages?.length ? (
                         <div className="admin-mini-list">
@@ -188,7 +188,7 @@ export default function AdminDashboard() {
                 <div className="admin-card">
                     <div className="admin-card-header">
                         <h3>Recent Applications</h3>
-                        <Link to="/admin/applications" className="admin-card-link">View all →</Link>
+                        <Link to="/admin/applications" className="admin-card-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>View all <Icon name="arrow-right" size="xs" /></Link>
                     </div>
                     {recentApps?.length ? (
                         <div className="admin-mini-list">

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { getApplications, updateAppStatus, deleteApplication } from '../../services/adminService';
+import Icon from '../../assets/icons/components/Icon';
 
 const fmt = (ts) => ts ? new Date(ts).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
 const STATUS_OPTS = ['new', 'reviewed', 'accepted', 'rejected'];
@@ -23,7 +24,7 @@ function AppModal({ app, onClose, onStatusChange }) {
             <div className="admin-modal admin-modal-lg" onClick={e => e.stopPropagation()}>
                 <div className="admin-modal-header">
                     <h3>Application — {app.name}</h3>
-                    <button className="admin-modal-close" onClick={onClose}>✕</button>
+                    <button className="admin-modal-close" onClick={onClose}><Icon name="close" size="sm" /></button>
                 </div>
                 <div className="admin-modal-body">
                     <div className="admin-app-detail-grid">
@@ -57,8 +58,8 @@ function AppModal({ app, onClose, onStatusChange }) {
                 <div className="admin-modal-footer">
                     <button className="admin-btn admin-btn-ghost" onClick={onClose}>Close</button>
                     <a href={`mailto:${app.email}?subject=Re: ${encodeURIComponent(app.service_type)} Application`}
-                        className="admin-btn admin-btn-primary">
-                        ✉️ Email Applicant
+                        className="admin-btn admin-btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                        <Icon name="email" size="xs" color="white" /> Email Applicant
                     </a>
                 </div>
             </div>
@@ -132,7 +133,7 @@ export default function AdminApplications() {
                     <div className="admin-loading"><div className="admin-spinner" /></div>
                 ) : filtered.length === 0 ? (
                     <div className="admin-empty-state">
-                        <div className="admin-empty-icon">📋</div>
+                        <div className="admin-empty-icon"><Icon name="notes" size="xl" color="muted" /></div>
                         <p>No applications here</p>
                     </div>
                 ) : (

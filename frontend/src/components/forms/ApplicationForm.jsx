@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { submissionService } from '../../services/submissionService';
 import Button from '../common/Button';
+import Icon from '../../assets/icons/components/Icon';
 
 const SERVICES = [
     'General Inquiry',
@@ -105,7 +106,7 @@ const ApplicationForm = () => {
 
                 {status.message && (
                     <div className={`alert alert-${status.type}`}>
-                        <span>{status.type === 'success' ? '✅' : '❌'}</span>
+                        <Icon name={status.type === 'success' ? 'success' : 'error'} size="sm" color={status.type === 'success' ? 'success' : 'error'} ariaLabel={status.type} />
                         <span>{status.message}</span>
                     </div>
                 )}

@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Icon from '../../assets/icons/components/Icon';
 
-const Card = ({ icon, title, description, linkTo, linkText = 'Learn More →' }) => (
+const Card = ({ icon, title, description, linkTo, linkText = 'Learn More' }) => (
     <div className="card">
-        {icon && <div className="card-icon">{icon}</div>}
+        {icon && <div className="card-icon"><Icon name={icon} size="lg" color="primary" ariaLabel={`${title || ''} icon`} /></div>}
         <h3 style={{ marginBottom: 10, fontSize: '1.15rem' }}>{title}</h3>
         <p style={{ fontSize: '0.9rem', flex: 1 }}>{description}</p>
         {linkTo && (
@@ -20,7 +21,7 @@ const Card = ({ icon, title, description, linkTo, linkText = 'Learn More →' })
                     transition: 'gap 0.2s',
                 }}
             >
-                {linkText}
+                {linkText} <Icon name="arrow-right" size="xs" />
             </Link>
         )}
     </div>

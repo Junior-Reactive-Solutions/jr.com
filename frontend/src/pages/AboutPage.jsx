@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import HeroSection from '../components/layout/HeroSection';
+import Icon from '../assets/icons/components/Icon';
 
 const VALUES = [
-    { icon: '💡', title: 'Innovation', desc: 'Constantly pushing the boundaries of what technology can do for your business.' },
-    { icon: '🤝', title: 'Integrity', desc: 'Transparent, honest relationships with every client — always.' },
-    { icon: '🏆', title: 'Excellence', desc: 'We hold every deliverable to the highest professional standard.' },
-    { icon: '🌱', title: 'Growth', desc: 'We grow with our clients, adapting and evolving as their needs change.' },
+    { icon: 'idea',        title: 'Innovation', desc: 'Constantly pushing the boundaries of what technology can do for your business.' },
+    { icon: 'partnership', title: 'Integrity', desc: 'Transparent, honest relationships with every client — always.' },
+    { icon: 'award',       title: 'Excellence', desc: 'We hold every deliverable to the highest professional standard.' },
+    { icon: 'growth',      title: 'Growth', desc: 'We grow with our clients, adapting and evolving as their needs change.' },
 ];
 
 const AboutPage = () => (
@@ -51,7 +52,7 @@ const AboutPage = () => (
                         position: 'relative',
                         overflow: 'hidden',
                     }}>
-                        <div style={{ fontSize: '4rem', marginBottom: 8 }}>🌍</div>
+                        <div style={{ marginBottom: 8 }}><Icon name="globe" size="xl" color="white" ariaLabel="Global reach" /></div>
                         <h3 style={{ color: 'white', margin: 0, fontFamily: 'var(--font-display)' }}>Built in Uganda,</h3>
                         <h3 style={{ color: 'rgba(255,255,255,.7)', margin: 0, fontFamily: 'var(--font-display)' }}>Built for the World</h3>
                         <p style={{ color: 'rgba(255,255,255,.7)', margin: '12px 0 0', fontSize: '0.9rem' }}>
@@ -72,7 +73,7 @@ const AboutPage = () => (
                 <div className="services-grid">
                     {VALUES.map((v) => (
                         <div className="card" key={v.title}>
-                            <div className="card-icon">{v.icon}</div>
+                            <div className="card-icon"><Icon name={v.icon} size="lg" color="primary" ariaLabel={`${v.title} icon`} /></div>
                             <h3>{v.title}</h3>
                             <p style={{ fontSize: '0.9rem' }}>{v.desc}</p>
                         </div>
@@ -99,7 +100,7 @@ const AboutPage = () => (
                                     e.target.parentElement.style.display = 'flex';
                                     e.target.parentElement.style.alignItems = 'center';
                                     e.target.parentElement.style.justifyContent = 'center';
-                                    e.target.parentElement.innerHTML = '<span style="font-size:4rem">👤</span>';
+                                    e.target.parentElement.innerHTML = '<span style="font-size:3rem;font-weight:800;color:#5269c3">PM</span>';
                                 }}
                             />
                         </div>

@@ -10,13 +10,13 @@ const ErrorState = ({
 }) => (
     <div className="error-state">
         <div className="error-icon">
-            {icon || <Icon name="ui-lock" size="xl" color="error" ariaLabel="Error" />}
+            <Icon name={icon || 'ui-lock'} size="xl" color="error" ariaLabel="Error" />
         </div>
         <h3>{title}</h3>
         {message && <p>{message}</p>}
         {onRetry && (
-            <button className="btn" onClick={onRetry}>
-                ↻ {retryLabel}
+            <button className="btn" onClick={onRetry} style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                <Icon name="refresh" size="xs" color="white" /> {retryLabel}
             </button>
         )}
     </div>

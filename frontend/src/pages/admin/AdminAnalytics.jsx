@@ -57,8 +57,8 @@ export default function AdminAnalytics() {
                     <p className="admin-page-sub">Custom page view tracking — last 30 days</p>
                 </div>
                 <a href="https://analytics.google.com" target="_blank" rel="noopener noreferrer"
-                    className="admin-btn admin-btn-ghost">
-                    Open Google Analytics ↗
+                    className="admin-btn admin-btn-ghost" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                    Open Google Analytics <Icon name="external" size="xs" />
                 </a>
             </div>
 
@@ -108,10 +108,10 @@ export default function AdminAnalytics() {
                         <div className="admin-device-list">
                             {data.devices.map((d, i) => {
                                 const pct = Math.round((parseInt(d.total) / totalDevices) * 100);
-                                const icons = { mobile: '📱', tablet: '📲', desktop: '🖥️' };
+                                const icons = { mobile: 'mobile', tablet: 'tablet', desktop: 'desktop' };
                                 return (
                                     <div className="admin-device-row" key={i}>
-                                        <span className="admin-device-icon">{icons[d.device_type] || '💻'}</span>
+                                        <span className="admin-device-icon"><Icon name={icons[d.device_type] || 'desktop'} size="md" color="primary" ariaLabel={d.device_type} /></span>
                                         <div className="admin-device-info">
                                             <div className="admin-device-name">
                                                 {d.device_type?.charAt(0).toUpperCase() + d.device_type?.slice(1)}
@@ -137,7 +137,7 @@ export default function AdminAnalytics() {
 
             {/* GA embed note */}
             <div className="admin-card admin-ga-note">
-                <div className="admin-ga-note-icon">📊</div>
+                <div className="admin-ga-note-icon"><Icon name="analytics" size="lg" color="primary" /></div>
                 <div>
                     <h4>Google Analytics also connected</h4>
                     <p>Full funnel analytics, acquisition data, and real-time visitors are available in your Google Analytics dashboard. Add your GA Measurement ID to <code>frontend/.env</code> as <code>REACT_APP_GA_ID</code> to activate it.</p>

@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { contentService } from '../services/contentService';
 import { SkeletonText } from '../components/common/SkeletonLoader';
 import ErrorState from '../components/common/ErrorState';
+import Icon from '../assets/icons/components/Icon';
 
 const BlogPostPage = () => {
     const { slug } = useParams();
@@ -40,7 +41,7 @@ const BlogPostPage = () => {
                             onRetry={refetch}
                         />
                         <div style={{ textAlign: 'center', marginTop: 24 }}>
-                            <Link to="/blog" className="btn btn-outline">← Back to Blog</Link>
+                            <Link to="/blog" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}><Icon name="arrow-left" size="xs" /> Back to Blog</Link>
                         </div>
                     </div>
                 </section>
@@ -65,7 +66,7 @@ const BlogPostPage = () => {
                         color: 'rgba(255,255,255,.7)', fontSize: '0.875rem',
                         fontWeight: 500, marginBottom: 24, transition: 'color .2s',
                     }}>
-                        ← Back to Blog
+                        <Icon name="arrow-left" size="xs" color="white" /> Back to Blog
                     </Link>
                     <h1 style={{ color: 'white', marginBottom: 20 }}>{post.title}</h1>
                     <div style={{
@@ -73,9 +74,9 @@ const BlogPostPage = () => {
                         alignItems: 'center', color: 'rgba(255,255,255,.7)',
                         fontSize: '0.875rem', flexWrap: 'wrap',
                     }}>
-                        <span>✍️ {post.author}</span>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="author" size="xs" color="white" /> {post.author}</span>
                         <span>·</span>
-                        <span>📅 {post.formattedDate}</span>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="calendar" size="xs" color="white" /> {post.formattedDate}</span>
                     </div>
                 </div>
             </section>
@@ -108,7 +109,7 @@ const BlogPostPage = () => {
 
                     {/* Footer nav */}
                     <div style={{ marginTop: 40, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-                        <Link to="/blog" className="btn btn-outline">← All Posts</Link>
+                        <Link to="/blog" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}><Icon name="arrow-left" size="xs" /> All Posts</Link>
                         <Link to="/contact" className="btn">Discuss This Topic</Link>
                     </div>
                 </div>

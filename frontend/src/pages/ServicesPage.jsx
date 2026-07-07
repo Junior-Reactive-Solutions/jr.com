@@ -5,17 +5,18 @@ import { contentService } from '../services/contentService';
 import HeroSection from '../components/layout/HeroSection';
 import { SkeletonGrid } from '../components/common/SkeletonLoader';
 import ErrorState from '../components/common/ErrorState';
+import Icon from '../assets/icons/components/Icon';
 
 const ServiceCard = ({ service }) => (
     <div className="card">
-        <div className="card-icon">{service.icon}</div>
+        <div className="card-icon"><Icon name={service.icon} size="lg" color="primary" ariaLabel={`${service.title} icon`} /></div>
         <h3 style={{ marginBottom: 10, fontSize: '1.1rem' }}>{service.title}</h3>
         <p style={{ fontSize: '.875rem', flex: 1 }}>{service.shortDescription}</p>
         <Link
             to={`/services/${service.key}`}
             style={{ display:'inline-flex',alignItems:'center',gap:6,color:'var(--color-secondary)',fontWeight:700,fontSize:'.875rem',marginTop:12 }}
         >
-            Learn More →
+            Learn More <Icon name="arrow-right" size="xs" />
         </Link>
     </div>
 );
@@ -50,7 +51,7 @@ const ServicesPage = () => {
                             onRetry={refetch}
                         />
                     ) : services.length === 0 ? (
-                        <ErrorState icon="📭" title="No services found" message="Run the seed script in SSMS to populate services." />
+                        <ErrorState icon="empty" title="No services found" message="Run the seed script to populate services." />
                     ) : (
                         <div className="services-grid">
                             {services.map(s => <ServiceCard key={s.id} service={s} />)}

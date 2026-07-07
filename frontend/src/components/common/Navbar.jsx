@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import Icon from '../../assets/icons/components/Icon';
 
 // ── SVG fallback (renders if logo192.png fails to load) ──────────
 const JRLogoSVG = ({ size = 36 }) => (
@@ -140,7 +141,7 @@ const Navbar = () => {
                         onClick={() => setMenuOpen(false)}
                         aria-label="Close menu"
                     >
-                        ✕
+                        <Icon name="close" size="sm" />
                     </button>
                 </div>
 

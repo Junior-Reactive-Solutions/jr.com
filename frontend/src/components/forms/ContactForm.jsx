@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { submissionService } from '../../services/submissionService';
 import Button from '../common/Button';
+import Icon from '../../assets/icons/components/Icon';
 
 const ContactForm = () => {
     const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
@@ -73,7 +74,7 @@ const ContactForm = () => {
 
                 {status.message && (
                     <div className={`alert alert-${status.type}`}>
-                        <span>{status.type === 'success' ? '✅' : '❌'}</span>
+                        <Icon name={status.type === 'success' ? 'success' : 'error'} size="sm" color={status.type === 'success' ? 'success' : 'error'} ariaLabel={status.type} />
                         <span>{status.message}</span>
                     </div>
                 )}

@@ -30,7 +30,7 @@ const Footer = () => {
                                 Junior <span style={{ color: 'rgba(255,255,255,.45)' }}>Reactive</span>
                             </span>
                         </div>
-                        <p>AI that works for you. Empowering businesses across East Africa with cutting-edge technology solutions.</p>
+                        <p>Practical AI and IT solutions for East African businesses. From strategy through deployment, we make technology work for you.</p>
                         <div className="social-links" style={{ marginTop: 20 }}>
                             <a href="https://wa.me/256764524816" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="WhatsApp">
                                 <i className="fab fa-whatsapp" />

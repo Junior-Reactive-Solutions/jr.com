@@ -37,7 +37,7 @@ const AboutPage = () => {
                             We believe that technology should serve people — not the other way around. Every solution we build is grounded in real-world business needs, not theoretical frameworks.
                         </p>
                         <p>
-                            From solo entrepreneurs to established organisations, we've helped clients harness the power of AI, data, and custom software to solve real problems and seize new opportunities.
+                            From solo entrepreneurs to established organisations, we've helped clients use AI, data, and custom software to solve concrete problems and find new opportunities.
                         </p>
                     </div>
                     <div style={{

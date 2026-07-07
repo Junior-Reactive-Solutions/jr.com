@@ -83,7 +83,7 @@ const HomePage = () => {
             <HeroSection
                 badge="AI & IT Solutions · Kampala, Uganda"
                 title="AI That Works For You"
-                subtitle="Empowering businesses with intelligent, scalable technology solutions — from AI consulting to N8N automation and custom software."
+                subtitle="Technology that solves real problems — from AI consulting to N8N automation and custom software. For businesses of any size."
                 primaryBtnText="Explore Services"
                 primaryBtnLink="/services"
                 secondaryBtnText="Get in Touch"
@@ -138,7 +138,7 @@ const HomePage = () => {
                         <div className="about-text">
                             <div className="section-label">About Us</div>
                             <h2 style={{ marginTop: 12 }}>Bridging Technology &amp; Business</h2>
-                            <p>Junior Reactive is a premier AI and IT services provider founded by Pharrell Aaron Mugumya. We make cutting-edge technology accessible and practical for businesses of all sizes.</p>
+                            <p>Junior Reactive is an AI and IT services provider founded by Pharrell Aaron Mugumya. We build practical technology solutions — from strategy and prototyping through full deployment — for businesses of all sizes.</p>
                             <p>From initial consultation to final deployment, we are your strategic technology partners — combining deep technical expertise with real-world business acumen.</p>
                             <div style={{ display: 'flex', gap: 16, marginTop: 32, flexWrap: 'wrap' }}>
                                 <Link to="/about" className="btn">Meet the Team</Link>

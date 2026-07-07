@@ -1,5 +1,7 @@
+const logger = require('../utils/logger');
+
 const errorHandler = (err, req, res, next) => {
-    console.error(err.stack);
+    logger.error({ err }, 'Unhandled request error');
 
     let error = { ...err };
     error.message = err.message;

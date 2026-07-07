@@ -1,5 +1,6 @@
 const { Pool } = require('pg');
 const dotenv = require('dotenv');
+const logger = require('../utils/logger');
 dotenv.config();
 
 let pool;
@@ -18,9 +19,9 @@ async function connectDB() {
         await client.query('SELECT 1');
         client.release();
 
-        console.log('✅ PostgreSQL connected successfully');
+        logger.info('PostgreSQL connected successfully');
     } catch (err) {
-        console.error('❌ Database connection failed:', err.message);
+        logger.error({ err }, 'Database connection failed');
         process.exit(1);
     }
 }

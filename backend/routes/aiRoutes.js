@@ -1,5 +1,6 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
+const logger = require('../utils/logger');
 const router = express.Router();
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
@@ -122,9 +123,16 @@ router.post('/chat', aiLimiter, async (req, res) => {
         if (!userMessage || typeof userMessage !== 'string') {
             return res.status(400).json({ success: false, error: 'userMessage is required.' });
         }
+        // Cap input size to limit token cost and prompt-injection surface.
+        if (userMessage.length > 2000) {
+            return res.status(400).json({ success: false, error: 'Message is too long (max 2000 characters).' });
+        }
 
-        // Build message history (last 8 turns max to stay within limits)
-        const history = Array.isArray(messages) ? messages.slice(-8) : [];
+        // Build message history (last 8 turns max to stay within limits),
+        // dropping any oversized entries and clamping content length.
+        const history = (Array.isArray(messages) ? messages : [])
+            .filter(m => m && typeof m.content === 'string' && m.content.length <= 2000)
+            .slice(-8);
         const groqMessages = [
             { role: 'system', content: JR_SYSTEM_PROMPT },
             ...history,
@@ -156,7 +164,7 @@ router.post('/chat', aiLimiter, async (req, res) => {
         res.json({ success: true, message: cleanText, suggestions, navigate });
 
     } catch (err) {
-        console.error('AI Chat error:', err.message);
+        logger.error({ err }, 'AI Chat error');
         res.status(500).json({
             success: false,
             error: 'AI service temporarily unavailable. Please contact us directly.',
@@ -179,6 +187,18 @@ router.post('/brief', aiLimiter, async (req, res) => {
                 success: false,
                 error: 'companyName, industry, and problem are required.',
             });
+        }
+        // Cap each field to limit token cost and prompt-injection surface.
+        const overLimit = [
+            ['companyName', companyName, 200],
+            ['industry', industry, 200],
+            ['problem', problem, 2000],
+            ['budget', budget, 200],
+            ['timeline', timeline, 200],
+            ['techLevel', techLevel, 200],
+        ].find(([, value, max]) => typeof value === 'string' && value.length > max);
+        if (overLimit) {
+            return res.status(400).json({ success: false, error: `${overLimit[0]} is too long (max ${overLimit[2]} characters).` });
         }
 
         const prompt = `Generate a professional project brief for a potential client of Junior Reactive (an AI & IT company in Kampala, Uganda).
@@ -230,7 +250,7 @@ Keep it professional, specific to their industry, and grounded in realistic East
         });
 
     } catch (err) {
-        console.error('AI Brief error:', err.message);
+        logger.error({ err }, 'AI Brief error');
         res.status(500).json({
             success: false,
             error: 'Brief generation failed. Please try again or contact us directly.',

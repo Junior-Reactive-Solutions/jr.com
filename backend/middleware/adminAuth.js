@@ -1,6 +1,15 @@
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'jr-admin-fallback-secret-change-this';
+const JWT_SECRET = process.env.JWT_SECRET;
+
+// Fail closed: a missing or weak secret would make admin tokens forgeable,
+// so the server must refuse to start rather than fall back to a known value.
+if (!JWT_SECRET || JWT_SECRET.length < 32) {
+    throw new Error(
+        'JWT_SECRET is not set or is shorter than 32 characters. ' +
+        'Set a strong JWT_SECRET in the environment before starting the server.'
+    );
+}
 
 /**
  * Middleware: verify admin JWT from httpOnly cookie.

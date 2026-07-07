@@ -24,6 +24,13 @@ const PORT = process.env.PORT || 5005;
 app.set('trust proxy', 1);
 
 // ─── CORS ─────────────────────────────────────────────────────────────────────
+// Extra origins (e.g. new preview URLs) can be added via ALLOWED_ORIGINS
+// as a comma-separated list without a code change.
+const extraOrigins = (process.env.ALLOWED_ORIGINS || '')
+    .split(',')
+    .map(o => o.trim())
+    .filter(Boolean);
+
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin) return callback(null, true);
@@ -31,12 +38,16 @@ app.use(cors({
             'http://localhost:3000',
             'http://localhost:3001',
             'http://localhost:5005',
+            'https://jrcom.vercel.app',
             'https://juniorreactive.com',
             'https://www.juniorreactive.com',
             process.env.FRONTEND_URL,
+            ...extraOrigins,
         ].filter(Boolean);
-        if (allowed.includes(origin))           return callback(null, true);
-        if (origin.endsWith('.vercel.app'))      return callback(null, true);
+        if (allowed.includes(origin)) return callback(null, true);
+        // Allow only THIS project's Vercel preview deployments (jrcom-*.vercel.app),
+        // not every *.vercel.app site.
+        if (/^https:\/\/jrcom[\w-]*\.vercel\.app$/.test(origin)) return callback(null, true);
         callback(new Error(`CORS: ${origin} not allowed`));
     },
     credentials: true,   // Required for cookies

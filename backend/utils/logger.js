@@ -18,15 +18,16 @@ const secretKeys = [
   'groqApiKey',
 ];
 
-const redactorOptions = {
-  redact: {
-    paths: secretKeys.map(key => `**.${key}`),
-    censor: '[REDACTED]',
-  },
-};
+// Redact secrets at the top level and one level of nesting (fast-redact does
+// not support a `**` deep wildcard, so we expand to bare + single-wildcard).
+const redactPaths = secretKeys.flatMap(key => [key, `*.${key}`]);
 
 const pinoConfig = {
   level: process.env.LOG_LEVEL || 'info',
+  redact: {
+    paths: redactPaths,
+    censor: '[REDACTED]',
+  },
 };
 
 if (process.env.NODE_ENV === 'development') {
@@ -40,6 +41,6 @@ if (process.env.NODE_ENV === 'development') {
   };
 }
 
-const logger = pino(pinoConfig, redactorOptions);
+const logger = pino(pinoConfig);
 
 module.exports = logger;

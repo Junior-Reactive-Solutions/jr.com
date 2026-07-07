@@ -14,26 +14,29 @@ jobs:
     steps:
       - name: Ping backend health endpoint
         run: |
-          # Simple health check (doesn't require database)
+          # A cold-start ping can exceed the timeout; `|| echo 000` stops `set -e`
+          # from aborting the step so the warm-up logic below always runs.
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
             --connect-timeout 5 \
-            --max-time 30 \
-            https://jr-backend-1edu.onrender.com/api/health)
+            --max-time 45 \
+            https://jr-backend-1edu.onrender.com/api/health || echo "000")
 
           echo "Response status: $STATUS"
 
           if [ "$STATUS" = "200" ]; then
-            echo "✅ Backend is alive and responding"
-            exit 0
+            echo "Backend is alive and responding"
           else
-            echo "⚠️  Backend returned HTTP $STATUS — attempting detailed health check"
+            echo "Backend returned HTTP $STATUS — likely a cold start, retrying detailed check"
 
-            # Detailed check (with database) - if this fails, still exit 0 for cold starts
+            # Detailed check (with database). A failure here is tolerated: the goal
+            # is to wake the instance, not to gate the workflow on cold starts.
             DETAILED_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
               --connect-timeout 5 \
-              --max-time 30 \
-              https://jr-backend-1edu.onrender.com/api/health/detailed)
+              --max-time 45 \
+              https://jr-backend-1edu.onrender.com/api/health/detailed || echo "000")
 
             echo "Detailed status: $DETAILED_STATUS"
-            exit 0
           fi
+
+          # Always succeed — this job only needs to nudge the instance awake.
+          exit 0

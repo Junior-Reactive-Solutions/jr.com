@@ -2,6 +2,7 @@ const jwt       = require('jsonwebtoken');
 const crypto    = require('crypto');
 const { Resend } = require('resend');
 const admin     = require('../models/adminModel');
+const logger    = require('../utils/logger');
 const { JWT_SECRET } = require('../middleware/adminAuth');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -18,7 +19,24 @@ function timingSafeCompare(a, b) {
     return crypto.timingSafeEqual(bufA, bufB);
 }
 
+// Escape HTML so visitor-submitted content can't inject markup into the email.
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 function buildEmailHtml({ toName, toEmail, replyBody, originalSubject, originalMessage, originalDate }) {
+    // Escape first, then turn newlines into <br/> for display.
+    const safeName    = escapeHtml(toName);
+    const safeEmail   = escapeHtml(toEmail);
+    const safeSubject = escapeHtml(originalSubject);
+    const safeDate    = escapeHtml(originalDate);
+    const safeReply   = escapeHtml(replyBody).replace(/\n/g, '<br/>');
+    const safeOriginal = originalMessage ? escapeHtml(originalMessage).replace(/\n/g, '<br/>') : '';
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,8 +64,8 @@ function buildEmailHtml({ toName, toEmail, replyBody, originalSubject, originalM
         <!-- Body -->
         <tr>
           <td style="padding:40px 40px 32px;">
-            <p style="margin:0 0 8px;font-size:15px;color:#6b7280;">Hello <strong style="color:#1a1a2e;">${toName}</strong>,</p>
-            <div style="font-size:15px;color:#374151;line-height:1.7;white-space:pre-line;margin:24px 0;">${replyBody.replace(/\n/g, '<br/>')}</div>
+            <p style="margin:0 0 8px;font-size:15px;color:#6b7280;">Hello <strong style="color:#1a1a2e;">${safeName}</strong>,</p>
+            <div style="font-size:15px;color:#374151;line-height:1.7;white-space:pre-line;margin:24px 0;">${safeReply}</div>
 
             <!-- Signature -->
             <div style="margin-top:32px;padding-top:24px;border-top:1px solid #e8eaf0;">
@@ -65,10 +83,10 @@ function buildEmailHtml({ toName, toEmail, replyBody, originalSubject, originalM
         <tr>
           <td style="padding:0 40px 32px;">
             <div style="background:#f8f9ff;border-left:3px solid #5269c3;border-radius:0 8px 8px 0;padding:16px 20px;">
-              <p style="margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;font-weight:700;color:#9ca3af;">Original message · ${originalDate}</p>
-              <p style="margin:0 0 4px;font-size:13px;color:#6b7280;"><strong>From:</strong> ${toName} &lt;${toEmail}&gt;</p>
-              <p style="margin:0 0 12px;font-size:13px;color:#6b7280;"><strong>Subject:</strong> ${originalSubject}</p>
-              <p style="margin:0;font-size:14px;color:#374151;line-height:1.6;white-space:pre-line;">${originalMessage.replace(/\n/g, '<br/>')}</p>
+              <p style="margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;font-weight:700;color:#9ca3af;">Original message · ${safeDate}</p>
+              <p style="margin:0 0 4px;font-size:13px;color:#6b7280;"><strong>From:</strong> ${safeName} &lt;${safeEmail}&gt;</p>
+              <p style="margin:0 0 12px;font-size:13px;color:#6b7280;"><strong>Subject:</strong> ${safeSubject}</p>
+              <p style="margin:0;font-size:14px;color:#374151;line-height:1.6;white-space:pre-line;">${safeOriginal}</p>
             </div>
           </td>
         </tr>` : ''}
@@ -189,7 +207,7 @@ async function replyToMessage(req, res, next) {
 
         if (error) {
             const detail = JSON.stringify(error);
-            console.error('Resend error:', detail);
+            logger.error({ resendError: error }, 'Resend email send failed');
             return res.status(500).json({
                 success: false,
                 error: `Email send failed: ${error.message || detail}. Check RESEND_API_KEY on Render.`

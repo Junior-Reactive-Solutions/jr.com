@@ -39,6 +39,8 @@ async function callGroq(model, messages, temperature = 0.7, max_tokens = 600) {
 //   POST /api/ai/chat  — Chatbot powered by Llama 3
 // ══════════════════════════════════════════════════════════════════════════════
 
+// TODO: services, team and pricing below are hardcoded and can drift from the
+// database-backed content. Consider sourcing these from the DB in a future pass.
 const JR_SYSTEM_PROMPT = `You are JR Assistant, the official AI chatbot for Junior Reactive — an AI & IT solutions company based in Kampala, Uganda.
 
 ## COMPANY INFO

@@ -144,7 +144,6 @@ app.get('/api/health', (req, res) => {
     res.json({
         status: 'OK',
         message: 'Junior Reactive API is running',
-        port: PORT,
         timestamp: new Date().toISOString(),
     });
 });
@@ -158,7 +157,6 @@ app.get('/api/health/detailed', async (req, res) => {
             status: 'OK',
             message: 'Junior Reactive API is fully operational',
             database: 'Connected',
-            port: PORT,
             timestamp: new Date().toISOString(),
         });
     } catch (err) {
@@ -167,7 +165,6 @@ app.get('/api/health/detailed', async (req, res) => {
             message: 'API is running but database unavailable',
             database: 'Disconnected',
             error: err.message,
-            port: PORT,
             timestamp: new Date().toISOString(),
         });
     }

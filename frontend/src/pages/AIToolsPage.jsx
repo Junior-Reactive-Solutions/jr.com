@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import ServiceRecommender from '../components/ServiceRecommender';
 import ProjectBriefGenerator from '../components/ProjectBriefGenerator';
 import Icon from '../assets/icons/components/Icon';
+import { useReveal } from '../hooks/useAnime';
 
 const TABS = [
   {
@@ -26,6 +27,7 @@ const TABS = [
 export default function AIToolsPage() {
   const [activeTab, setActiveTab] = useState('recommender');
   const activeData = TABS.find(t => t.id === activeTab);
+  const examplesRef = useReveal({ stagger: 100, y: 24 });
 
   return (
     <main>
@@ -128,7 +130,7 @@ export default function AIToolsPage() {
             <h2>What We Can Build For You</h2>
             <p>Every AI integration above is a template for what's possible in your product or workflow.</p>
           </div>
-          <div className="ai-examples-grid">
+          <div className="ai-examples-grid" ref={examplesRef}>
             {[
               { icon: 'bot',        title: 'Custom Chatbots', desc: 'Trained on your data, integrated with your CRM, live on your website 24/7.' },
               { icon: 'target',     title: 'Smart Recommenders', desc: 'Product recommenders, service matchers, lead qualifiers — pure logic or AI.' },

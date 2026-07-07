@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useReveal } from '../../hooks/useAnime';
 
 const HeroSection = ({
     badge,
@@ -11,9 +12,12 @@ const HeroSection = ({
     secondaryBtnLink,
     children,
 }) => {
+    // Stagger the hero's direct children (badge, heading, subtitle, buttons) in.
+    const heroRef = useReveal({ stagger: 90, y: 28, duration: 700 });
+
     return (
         <section className="hero">
-            <div className="container">
+            <div className="container" ref={heroRef}>
                 {badge && (
                     <div className="hero-badge">{badge}</div>
                 )}

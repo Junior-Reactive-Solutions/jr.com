@@ -6,6 +6,7 @@ import HeroSection from '../components/layout/HeroSection';
 import { SkeletonGrid } from '../components/common/SkeletonLoader';
 import ErrorState from '../components/common/ErrorState';
 import Icon from '../assets/icons/components/Icon';
+import { useReveal } from '../hooks/useAnime';
 
 const ServiceCard = ({ service }) => (
     <div className="card">
@@ -29,6 +30,7 @@ const ServicesPage = () => {
     });
 
     const services = data?.data?.data || data?.data || [];
+    const servicesRef = useReveal({ stagger: 80, y: 24 });
 
     return (
         <main>
@@ -53,7 +55,7 @@ const ServicesPage = () => {
                     ) : services.length === 0 ? (
                         <ErrorState icon="empty" title="No services found" message="Run the seed script to populate services." />
                     ) : (
-                        <div className="services-grid">
+                        <div className="services-grid" ref={servicesRef}>
                             {services.map(s => <ServiceCard key={s.id} service={s} />)}
                         </div>
                     )}

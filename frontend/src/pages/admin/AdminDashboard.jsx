@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
 import Icon from '../../assets/icons/components/Icon';
 import { getDashboard } from '../../services/adminService';
+import { useCountUp } from '../../hooks/useAnime';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 const fmt = (ts) => ts
@@ -13,11 +14,12 @@ const statusCls = { new: 'badge-blue', reviewed: 'badge-yellow', accepted: 'badg
 
 // ── Stat Card ─────────────────────────────────────────────────────────────────
 function StatCard({ icon, label, total, today, sub, color, link }) {
+    const countRef = useCountUp(total, { duration: 1200 });
     return (
         <Link to={link || '#'} className={`admin-stat-card admin-stat-${color}`}>
             <div className="admin-stat-icon">{icon}</div>
             <div className="admin-stat-body">
-                <div className="admin-stat-total">{total}</div>
+                <div className="admin-stat-total" ref={countRef}>{total}</div>
                 <div className="admin-stat-label">{label}</div>
                 {today !== undefined && (
                     <div className="admin-stat-today">+{today} today</div>

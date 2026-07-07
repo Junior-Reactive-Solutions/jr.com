@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../assets/icons/components/Icon';
+import { useReveal } from '../hooks/useAnime';
 
 // ── Quiz Questions ────────────────────────────────────────────────────────────
 const QUESTIONS = [
@@ -185,6 +186,7 @@ export default function ServiceRecommender() {
   const [answers, setAnswers]     = useState({});
   const [selected, setSelected]   = useState(null);
   const [animating, setAnimating] = useState(false);
+  const optionsRef = useReveal({ stagger: 60, y: 12, delay: 100 });
 
   const currentQ = QUESTIONS[step - 1];
   const isResult = step > QUESTIONS.length;
@@ -292,7 +294,7 @@ export default function ServiceRecommender() {
         <h3>{currentQ.question}</h3>
       </div>
 
-      <div className="sr-options">
+      <div className="sr-options" ref={optionsRef}>
         {currentQ.options.map(opt => (
           <button
             key={opt.value}

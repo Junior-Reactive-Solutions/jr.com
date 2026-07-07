@@ -5,6 +5,7 @@ import { contentService } from '../services/contentService';
 import HeroSection from '../components/layout/HeroSection';
 import { SkeletonGrid } from '../components/common/SkeletonLoader';
 import Icon from '../assets/icons/components/Icon';
+import { useReveal } from '../hooks/useAnime';
 
 const STATS = [
     { number: '50+',  label: 'Projects Delivered' },
@@ -74,6 +75,9 @@ const HomePage = () => {
     const services = data?.data?.data || data?.data || [];
     const displayServices = services.length > 0 ? services.slice(0, 3) : FALLBACK_SERVICES;
 
+    const statsRef = useReveal({ stagger: 80, y: 20 });
+    const whyRef   = useReveal({ stagger: 100, y: 28 });
+
     return (
         <main>
             <HeroSection
@@ -88,7 +92,7 @@ const HomePage = () => {
 
             {/* Stats */}
             <div className="container">
-                <div className="stats-bar">
+                <div className="stats-bar" ref={statsRef}>
                     {STATS.map(s => (
                         <div className="stat-item" key={s.label}>
                             <span className="stat-number">{s.number}</span>
@@ -153,7 +157,7 @@ const HomePage = () => {
                         <div className="section-label">Why Junior Reactive</div>
                         <h2 className="section-title">Built Differently</h2>
                     </div>
-                    <div className="services-grid">
+                    <div className="services-grid" ref={whyRef}>
                         {WHY_US.map(item => (
                             <div className="card" key={item.title}>
                                 <div className="card-icon"><Icon name={item.icon} size="lg" color="primary" ariaLabel={`${item.title} icon`} /></div>

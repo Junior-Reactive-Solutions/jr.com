@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import HeroSection from '../components/layout/HeroSection';
 import Icon from '../assets/icons/components/Icon';
+import { useReveal } from '../hooks/useAnime';
 
 const VALUES = [
     { icon: 'idea',        title: 'Innovation', desc: 'Constantly pushing the boundaries of what technology can do for your business.' },
@@ -10,7 +11,9 @@ const VALUES = [
     { icon: 'growth',      title: 'Growth', desc: 'We grow with our clients, adapting and evolving as their needs change.' },
 ];
 
-const AboutPage = () => (
+const AboutPage = () => {
+    const valuesRef = useReveal({ stagger: 90, y: 24 });
+    return (
     <main>
         <HeroSection
             badge="Our Story"
@@ -70,7 +73,7 @@ const AboutPage = () => (
                     <div className="section-label">What We Stand For</div>
                     <h2 className="section-title">Our Values</h2>
                 </div>
-                <div className="services-grid">
+                <div className="services-grid" ref={valuesRef}>
                     {VALUES.map((v) => (
                         <div className="card" key={v.title}>
                             <div className="card-icon"><Icon name={v.icon} size="lg" color="primary" ariaLabel={`${v.title} icon`} /></div>
@@ -130,6 +133,7 @@ const AboutPage = () => (
             </div>
         </section>
     </main>
-);
+    );
+};
 
 export default AboutPage;

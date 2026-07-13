@@ -22,7 +22,11 @@ async function connectDB() {
         logger.info('PostgreSQL connected successfully');
     } catch (err) {
         logger.error({ err }, 'Database connection failed');
-        process.exit(1);
+        if (process.env.NODE_ENV === 'production') {
+            process.exit(1);
+        } else {
+            logger.warn('Development mode: continuing without database');
+        }
     }
 }
 

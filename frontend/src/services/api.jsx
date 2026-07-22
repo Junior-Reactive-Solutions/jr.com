@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 // Port 5005 is the permanent development API port.
-// Update REACT_APP_API_URL in .env when deploying to production.
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5005/api';
+// Update VITE_API_URL in .env when deploying to production.
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5005/api';
 
 const api = axios.create({
     baseURL: API_BASE_URL,

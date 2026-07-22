@@ -69,7 +69,7 @@ function PageTracker() {
         );
 
         // Google Analytics (GA4) — only fires if GA_ID is set
-        const GA_ID = process.env.REACT_APP_GA_ID;
+        const GA_ID = import.meta.env.VITE_GA_ID;
         if (GA_ID && window.gtag) {
             window.gtag('config', GA_ID, { page_path: location.pathname });
         }
@@ -80,7 +80,7 @@ function PageTracker() {
 
 // ── Google Analytics loader ───────────────────────────────────────────────────
 function GoogleAnalytics() {
-    const GA_ID = process.env.REACT_APP_GA_ID;
+    const GA_ID = import.meta.env.VITE_GA_ID;
     useEffect(() => {
         if (!GA_ID) return;
         const script = document.createElement('script');

@@ -3,7 +3,7 @@ import AdminLayout from '../../components/admin/AdminLayout';
 import { createService, updateService, deleteService } from '../../services/adminService';
 import Icon from '../../assets/icons/components/Icon';
 
-const API = process.env.REACT_APP_API_URL || 'http://localhost:5005';
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5005';
 
 async function fetchServices() {
     const res  = await fetch(`${API}/api/services`, { credentials: 'include' });

@@ -152,7 +152,7 @@ const Icon = ({
 }) => {
   const LucideIcon = ICONS[name] || ICONS[EMOJI_ALIASES[name]];
   if (!LucideIcon) {
-    if (process.env.NODE_ENV !== 'production') {
+    if (import.meta.env.DEV) {
       console.warn(`Icon: unknown name "${name}"`);
     }
     return null;

@@ -140,7 +140,7 @@ export default function AdminAnalytics() {
                 <div className="admin-ga-note-icon"><Icon name="analytics" size="lg" color="primary" /></div>
                 <div>
                     <h4>Google Analytics also connected</h4>
-                    <p>Full funnel analytics, acquisition data, and real-time visitors are available in your Google Analytics dashboard. Add your GA Measurement ID to <code>frontend/.env</code> as <code>REACT_APP_GA_ID</code> to activate it.</p>
+                    <p>Full funnel analytics, acquisition data, and real-time visitors are available in your Google Analytics dashboard. Add your GA Measurement ID to <code>frontend/.env</code> as <code>VITE_GA_ID</code> to activate it.</p>
                 </div>
             </div>
         </AdminLayout>

@@ -1,184 +1,191 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { contentService } from '../services/contentService';
-import HeroSection from '../components/layout/HeroSection';
-import { SkeletonGrid } from '../components/common/SkeletonLoader';
+import ServiceRecommender from '../components/ServiceRecommender';
+import { Button, Kicker } from '../components/ui';
 import Icon from '../assets/icons/components/Icon';
-import { useReveal } from '../hooks/useAnime';
 
-const STATS = [
-    { number: '50+',  label: 'Projects Delivered' },
-    { number: '30+',  label: 'Happy Clients' },
-    { number: '9',    label: 'Core Services' },
-    { number: '100%', label: 'Client Satisfaction' },
+// Evidence figures are owner-supplied and shown without animation —
+// numbers state facts; they don't perform.
+const EVIDENCE = [
+    { num: '50+',  label: 'Projects delivered' },
+    { num: '30+',  label: 'Clients served' },
+    { num: '9',    label: 'Services offered' },
+    { num: '2022', label: 'Building since' },
 ];
 
 const FALLBACK_SERVICES = [
-    { id: 1, key: 'n8n-automation', icon: 'automation', title: 'N8N Workflow Automation',  shortDescription: 'Connect your tools and automate repetitive processes with powerful visual N8N workflows.' },
-    { id: 2, key: 'ai-consulting',  icon: 'ai',         title: 'AI Consulting',              shortDescription: 'Strategic AI roadmaps that turn business challenges into intelligent, automated solutions.' },
-    { id: 3, key: 'ai-courses',     icon: 'courses',    title: 'AI Courses & Training',      shortDescription: 'Structured, practical AI education programmes for individuals and corporate teams.' },
+    { id: 1, key: 'n8n-automation', title: 'N8N Workflow Automation', shortDescription: 'Connect the tools you already pay for and stop doing repetitive work by hand.' },
+    { id: 2, key: 'ai-consulting',  title: 'AI Consulting',           shortDescription: 'A concrete plan for where AI saves your business money — and where it will not.' },
+    { id: 3, key: 'ai-courses',     title: 'AI Courses & Training',   shortDescription: 'Practical AI training for teams, taught on your own workflows rather than toy examples.' },
 ];
-
-const WHY_US = [
-    { icon: 'ai',           title: 'AI-First Approach',    desc: "Every solution we build uses the latest AI capabilities — not as a buzzword, but as genuine business value." },
-    { icon: 'workflow',     title: 'End-to-End Ownership', desc: "We stay with you from strategy through deployment and beyond. Your success is our metric." },
-    { icon: 'globe',        title: 'Built for Africa',     desc: "Deep understanding of East African business environments means solutions that actually work in the real world." },
-];
-
-const ServiceCard = ({ service }) => (
-    <div className="card">
-        <div className="card-icon"><Icon name={service.icon} size="lg" color="primary" ariaLabel={`${service.title} icon`} /></div>
-        <h3 style={{ marginBottom: 10, fontSize: '1.1rem' }}>{service.title}</h3>
-        <p style={{ fontSize: '.875rem', flex: 1 }}>{service.shortDescription}</p>
-        <Link to={`/services/${service.key}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--color-secondary)', fontWeight: 700, fontSize: '.875rem', marginTop: 12 }}>
-            Learn More <Icon name="arrow-right" size="xs" />
-        </Link>
-    </div>
-);
-
-// CEO photo with beautiful gradient-avatar fallback
-const CEOPhoto = () => {
-    const [imgOk, setImgOk] = React.useState(true);
-    return (
-        <div className="ceo-photo-wrapper">
-            {imgOk ? (
-                <img
-                    src="/images/team/Pharrell.jpeg"
-                    alt="Pharrell Aaron Mugumya — Founder & CEO"
-                    className="ceo-photo"
-                    onError={() => setImgOk(false)}
-                />
-            ) : (
-                <div className="ceo-avatar-fallback">
-                    <span className="ceo-avatar-initials">PM</span>
-                    <span className="ceo-avatar-name">Pharrell Mugumya</span>
-                    <span className="ceo-avatar-title">Founder &amp; CEO</span>
-                </div>
-            )}
-            <div className="ceo-badge">
-                <span className="ceo-badge-dot" />
-                Founder &amp; CEO
-            </div>
-        </div>
-    );
-};
 
 const HomePage = () => {
-    const { data, isLoading, isError, refetch } = useQuery({
+    const { data } = useQuery({
         queryKey: ['services'],
         queryFn: () => contentService.getServices(),
         retry: 2,
         staleTime: 5 * 60 * 1000,
     });
 
-    const services = data?.data?.data || data?.data || [];
-    const displayServices = services.length > 0 ? services.slice(0, 3) : FALLBACK_SERVICES;
+    // Prewarm the backend so the hero demo doesn't hit a Render cold start
+    // (council reliability condition for the homepage tool demo).
+    useEffect(() => {
+        const base = import.meta.env.VITE_API_URL || 'http://localhost:5005/api';
+        fetch(`${base}/health`).catch(() => {});
+    }, []);
 
-    const statsRef = useReveal({ stagger: 80, y: 20 });
-    const whyRef   = useReveal({ stagger: 100, y: 28 });
+    const services = data?.data?.data || data?.data || [];
+    const displayServices = services.length > 0 ? services.slice(0, 6) : FALLBACK_SERVICES;
 
     return (
         <main>
-            <HeroSection
-                badge="AI & IT Solutions · Kampala, Uganda"
-                title="AI That Works For You"
-                subtitle="Technology that solves real problems — from AI consulting to N8N automation and custom software. For businesses of any size."
-                primaryBtnText="Explore Services"
-                primaryBtnLink="/services"
-                secondaryBtnText="Get in Touch"
-                secondaryBtnLink="/contact"
-            />
-
-            {/* Stats */}
-            <div className="container">
-                <div className="stats-bar" ref={statsRef}>
-                    {STATS.map(s => (
-                        <div className="stat-item" key={s.label}>
-                            <span className="stat-number">{s.number}</span>
-                            <span className="stat-label">{s.label}</span>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Services */}
-            <section className="section">
-                <div className="container">
-                    <div className="section-header">
-                        <div className="section-label">What We Do</div>
-                        <h2 className="section-title">Our Core Services</h2>
-                        <p className="section-sub">From strategy to deployment — end-to-end AI and IT solutions tailored to your business.</p>
-                    </div>
-                    {isLoading ? (
-                        <SkeletonGrid count={3} />
-                    ) : (
-                        <>
-                            {isError && (
-                                <div style={{ background: 'rgba(239,68,68,.06)', border: '1px solid rgba(239,68,68,.2)', borderRadius: 'var(--radius-md)', padding: '10px 16px', marginBottom: 24, fontSize: '.85rem', color: '#7f1d1d', display: 'flex', gap: 8, alignItems: 'center' }}>
-                                    <Icon name="warning" size="sm" color="error" ariaLabel="Warning" />
-                                    <span>Could not connect to the backend. Showing default services. <button onClick={refetch} style={{ background: 'none', border: 'none', color: 'var(--color-secondary)', fontWeight: 700, cursor: 'pointer', padding: 0 }}>Retry</button></span>
-                                </div>
-                            )}
-                            <div className="services-grid">
-                                {displayServices.map(s => <ServiceCard key={s.id} service={s} />)}
-                            </div>
-                            <div style={{ textAlign: 'center', marginTop: 40 }}>
-                                <Link to="/services" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>View All 9 Services <Icon name="arrow-right" size="xs" /></Link>
-                            </div>
-                        </>
-                    )}
-                </div>
-            </section>
-
-            {/* Who We Are */}
-            <section className="section" style={{ background: 'var(--color-white)' }}>
-                <div className="container">
-                    <div className="about-grid">
-                        <div className="about-text">
-                            <div className="section-label">About Us</div>
-                            <h2 style={{ marginTop: 12 }}>Bridging Technology &amp; Business</h2>
-                            <p>Junior Reactive is an AI and IT services provider founded by Pharrell Aaron Mugumya. We build practical technology solutions — from strategy and prototyping through full deployment — for businesses of all sizes.</p>
-                            <p>From initial consultation to final deployment, we are your strategic technology partners — combining deep technical expertise with real-world business acumen.</p>
-                            <div style={{ display: 'flex', gap: 16, marginTop: 32, flexWrap: 'wrap' }}>
-                                <Link to="/about" className="btn">Meet the Team</Link>
-                                <Link to="/portfolio" className="btn btn-ghost">View Portfolio</Link>
+            {/* Hero: thesis + live tool demo (show, then assert) */}
+            <section className="home-hero">
+                <div className="v2-container">
+                    <div className="v2-split v2-split--offset">
+                        <div>
+                            <Kicker>AI &amp; IT solutions · Kampala, Uganda</Kicker>
+                            <h1 className="v2-h1">Software and AI that earn their keep.</h1>
+                            <p className="v2-lead">
+                                We build N8N automations, AI assistants, and custom software for
+                                businesses across East Africa. Scoped in a week, delivered in weeks —
+                                and you own everything we build.
+                            </p>
+                            <div className="v2-actions">
+                                <Button to="/apply">Start a project</Button>
+                                <Button
+                                    variant="secondary"
+                                    href="https://wa.me/256764524816?text=Hello%20Junior%20Reactive%20—%20I%27d%20like%20to%20talk%20about%20a%20project."
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Message us on WhatsApp
+                                </Button>
                             </div>
                         </div>
-                        <CEOPhoto />
+                        <div className="home-hero-demo">
+                            <div className="home-hero-demo-frame">
+                                <span className="home-hero-demo-label">
+                                    <span className="home-hero-demo-dot" />
+                                    Live — one of our AI tools
+                                </span>
+                                <ServiceRecommender />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* Why Us */}
-            <section className="section">
-                <div className="container">
-                    <div className="section-header">
-                        <div className="section-label">Why Junior Reactive</div>
-                        <h2 className="section-title">Built Differently</h2>
-                    </div>
-                    <div className="services-grid" ref={whyRef}>
-                        {WHY_US.map(item => (
-                            <div className="card" key={item.title}>
-                                <div className="card-icon"><Icon name={item.icon} size="lg" color="primary" ariaLabel={`${item.title} icon`} /></div>
-                                <h3>{item.title}</h3>
-                                <p style={{ fontSize: '.9rem' }}>{item.desc}</p>
+            {/* Evidence strip */}
+            <section className="home-evidence">
+                <div className="v2-container">
+                    <div className="home-evidence-grid">
+                        {EVIDENCE.map((e) => (
+                            <div key={e.label}>
+                                <div className="home-evidence-num">{e.num}</div>
+                                <div className="home-evidence-label">{e.label}</div>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* CTA */}
-            <section className="section">
-                <div className="container">
-                    <div className="cta-band">
-                        <h2>Ready to Transform Your Business?</h2>
-                        <p>Join forward-thinking companies already leveraging our AI solutions.</p>
-                        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-                            <Link to="/apply" className="btn">Apply for Services</Link>
-                            <Link to="/faq" className="btn" style={{ background: 'transparent', border: '2px solid rgba(255,255,255,.45)', color: 'white', boxShadow: 'none' }}>View FAQs</Link>
+            {/* Services: numbered editorial rows, not cards */}
+            <section className="v2-section">
+                <div className="v2-container">
+                    <div className="v2-split v2-split--offset" style={{ alignItems: 'start' }}>
+                        <div>
+                            <Kicker>What we do</Kicker>
+                            <h2 className="v2-h2">Work we take on</h2>
+                            <p className="v2-body">
+                                Every engagement starts with a problem worth solving, not a
+                                technology looking for one. Fixed-scope quotes after a short
+                                discovery call.
+                            </p>
                         </div>
+                        <div>
+                            <div className="v2-rows">
+                                {displayServices.map((s, i) => (
+                                    <Link className="v2-row" to={`/services/${s.key}`} key={s.id}>
+                                        <span className="v2-row-num">{String(i + 1).padStart(2, '0')}</span>
+                                        <span>
+                                            <h3 className="v2-row-title">{s.title}</h3>
+                                            <p className="v2-row-desc">{s.shortDescription}</p>
+                                        </span>
+                                        <span className="v2-row-arrow"><Icon name="arrow-right" size="sm" ariaLabel="" /></span>
+                                    </Link>
+                                ))}
+                            </div>
+                            <div style={{ marginTop: 'var(--sp-6)' }}>
+                                <Button variant="ghost" to="/services">All services <Icon name="arrow-right" size="xs" ariaLabel="" /></Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Navy statement band */}
+            <section className="v2-band">
+                <div className="v2-container">
+                    <Kicker onDark>How we work</Kicker>
+                    <p className="v2-statement">
+                        Strategy, build, and support from one team in Kampala —
+                        accountable to outcomes, not hours billed.
+                    </p>
+                    <Button variant="on-dark" to="/about">How an engagement runs</Button>
+                </div>
+            </section>
+
+            {/* Founder: warm authority */}
+            <section className="v2-section">
+                <div className="v2-container">
+                    <div className="v2-split">
+                        <div>
+                            <img
+                                src="/images/team/Pharrell.jpeg"
+                                alt="Pharrell Aaron Mugumya, founder of Junior Reactive, in Kampala"
+                                className="home-founder-photo"
+                                loading="lazy"
+                            />
+                            <p className="home-founder-name">Pharrell Aaron Mugumya</p>
+                            <p className="home-founder-role">Founder, Junior Reactive</p>
+                        </div>
+                        <div>
+                            <Kicker>Who you work with</Kicker>
+                            <h2 className="v2-h2">A small team you can actually reach</h2>
+                            <p className="v2-body">
+                                Junior Reactive was founded in Kampala by Pharrell Aaron Mugumya.
+                                When you hire us, the person who scopes your project is the person
+                                who answers your messages — on WhatsApp, on a call, or in person.
+                            </p>
+                            <p className="v2-body" style={{ marginTop: 'var(--sp-4)' }}>
+                                We work with SMEs and organisations across East Africa, and every
+                                handover includes source code, documentation, and deployment access.
+                                Your systems stay yours.
+                            </p>
+                            <div className="v2-actions">
+                                <Button variant="secondary" to="/about">About the company</Button>
+                                <Button variant="ghost" to="/portfolio">See past work</Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Closing CTA */}
+            <section className="v2-section v2-section--wash">
+                <div className="v2-container">
+                    <Kicker>Next step</Kicker>
+                    <h2 className="v2-h2">Tell us what you're trying to build</h2>
+                    <p className="v2-lead">
+                        A short call is enough to tell you whether we can help, what it would
+                        cost, and how long it would take.
+                    </p>
+                    <div className="v2-actions">
+                        <Button to="/apply">Start a project</Button>
+                        <Button variant="secondary" to="/contact">Contact us</Button>
                     </div>
                 </div>
             </section>

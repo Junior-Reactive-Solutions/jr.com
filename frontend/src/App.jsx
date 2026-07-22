@@ -8,9 +8,10 @@ import './assets/css/admin.css';
 import { trackPageView } from './services/adminService';
 
 // ── Common components ────────────────────────────────────────────────────────
-import Header  from './components/common/Header';
-import Footer  from './components/common/Footer';
-import Chatbot from './components/Chatbot';
+import Header      from './components/common/Header';
+import Footer      from './components/common/Footer';
+import Chatbot     from './components/Chatbot';
+import WhatsAppCta from './components/common/WhatsAppCta';
 
 // ── Public pages ─────────────────────────────────────────────────────────────
 import HomePage         from './pages/HomePage';
@@ -108,6 +109,7 @@ function PublicLayout({ children }) {
             {children}
             {!isAdmin && <Footer />}
             {!isAdmin && <Chatbot />}
+            {!isAdmin && <WhatsAppCta />}
         </>
     );
 }

@@ -28,6 +28,7 @@ import PrivacyPage      from './pages/PrivacyPage';
 import TermsPage        from './pages/TermsPage';
 import NotFoundPage     from './pages/NotFoundPage';
 import AIToolsPage      from './pages/AIToolsPage';
+import StyleguidePage   from './pages/StyleguidePage';
 
 // ── Admin pages ───────────────────────────────────────────────────────────────
 import AdminLogin        from './pages/admin/AdminLogin';
@@ -134,6 +135,7 @@ function App() {
                         <Route path="/ai-tools"      element={<AIToolsPage />} />
                         <Route path="/terms"         element={<TermsPage />} />
                         <Route path="/privacy"       element={<PrivacyPage />} />
+                        <Route path="/styleguide"    element={<StyleguidePage />} />
 
                         {/* ── Admin ── */}
                         <Route path="/admin/login" element={<AdminLogin />} />

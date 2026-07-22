@@ -13,7 +13,7 @@ import {
   // States & feedback
   Inbox, CheckCircle2, Check, XCircle, X, AlertTriangle, HelpCircle, Hand,
   Smile, Zap, Plus, Pencil, Trash2, Eye, Send, ExternalLink, ArrowRight,
-  ArrowLeft, RefreshCw, Star,
+  ArrowLeft, RefreshCw, Star, ChevronDown, ChevronUp, ChevronRight, ChevronLeft,
 } from 'lucide-react';
 
 /**
@@ -86,6 +86,8 @@ const ICONS = {
 
   // ── States & feedback ──
   'state-empty': Inbox,              empty: Inbox,            inbox: Inbox,
+  'chevron-down': ChevronDown,       'chevron-up': ChevronUp,
+  'chevron-right': ChevronRight,     'chevron-left': ChevronLeft,
   success: CheckCircle2,             'check-circle': CheckCircle2,
   check: Check,
   error: XCircle,                    'x-circle': XCircle,
@@ -107,25 +109,10 @@ const ICONS = {
   star: Star,
 };
 
-// Legacy emoji values (e.g. service icons stored in the database) resolve to a
-// semantic name so existing/admin-created data keeps rendering a real icon.
-const EMOJI_ALIASES = {
-  '⚡': 'zap', '🧠': 'ai', '📚': 'courses', '🔧': 'settings', '🌍': 'globe',
-  '🌎': 'globe', '💡': 'idea', '🤝': 'partnership', '🏆': 'award', '🌱': 'growth',
-  '👤': 'user', '👥': 'team', '🏢': 'company', '🏛': 'company', '⚙': 'settings',
-  '⚙️': 'settings', '📊': 'analytics', '📈': 'trending', '💻': 'dev', '🔥': 'fire',
-  '📅': 'calendar', '🗓': 'calendar', '🗓️': 'calendar', '🔭': 'telescope',
-  '💵': 'money', '💰': 'money', '💎': 'gem', '📝': 'document', '📋': 'notes',
-  '🎓': 'training', '🔮': 'predictive', '🚀': 'rocket', '🎯': 'target',
-  '✓': 'check', '✔': 'check', '✅': 'success', '❌': 'error', '✕': 'close',
-  '✖': 'close', '⚠': 'warning', '⚠️': 'warning', '✨': 'sparkles', '🖨': 'print',
-  '📞': 'phone', '✉': 'email', '✉️': 'email', '📧': 'email', '📬': 'email',
-  '📭': 'empty', '📍': 'location', '🕒': 'time', '✍': 'author', '✍️': 'author',
-  '📰': 'blog', '🖼': 'image', '🖼️': 'image', '🗂': 'files', '🗂️': 'files',
-  '📱': 'mobile', '📲': 'mobile', '🖥': 'desktop', '🖥️': 'desktop', '☁': 'cloud',
-  '☁️': 'cloud', '😊': 'smile', '👋': 'wave', '🤔': 'question', '❓': 'faq',
-  '🤖': 'bot', '📄': 'document', '🔍': 'search',
-};
+// The no-emoji rule is absolute: unknown names (including any stale emoji
+// values still in the database before the Phase 3 data migration) render the
+// neutral fallback below — an emoji can never reach the screen.
+const FALLBACK_ICON = Settings;
 
 const SIZES = { xs: 16, sm: 24, md: 32, lg: 48, xl: 64 };
 
@@ -150,12 +137,9 @@ const Icon = ({
   strokeWidth = 2,
   ...props
 }) => {
-  const LucideIcon = ICONS[name] || ICONS[EMOJI_ALIASES[name]];
-  if (!LucideIcon) {
-    if (import.meta.env.DEV) {
-      console.warn(`Icon: unknown name "${name}"`);
-    }
-    return null;
+  const LucideIcon = ICONS[name] || FALLBACK_ICON;
+  if (!ICONS[name] && import.meta.env.DEV) {
+    console.warn(`Icon: unknown name "${name}" — rendering fallback`);
   }
 
   const px = SIZES[size] || SIZES.md;

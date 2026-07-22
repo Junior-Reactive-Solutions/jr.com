@@ -13,7 +13,7 @@ const WA_RECIPIENT = process.env.NOTIFY_WHATSAPP || ''; // e.g. 256764524816
 function createTransporter() {
     const { EMAIL_HOST, EMAIL_USER, EMAIL_PASS } = process.env;
     if (!EMAIL_HOST || !EMAIL_USER || !EMAIL_PASS) {
-        console.info('ℹ️  Email not configured — add EMAIL_* vars to backend/.env');
+        console.info('Email not configured — add EMAIL_* vars to backend/.env');
         return null;
     }
     return nodemailer.createTransport({
@@ -34,7 +34,7 @@ function createTransporter() {
 async function sendWhatsApp(text) {
     const { WA_PHONE_NUMBER_ID, WA_ACCESS_TOKEN } = process.env;
     if (!WA_PHONE_NUMBER_ID || !WA_ACCESS_TOKEN || !WA_RECIPIENT) {
-        console.info('ℹ️  WhatsApp not configured — add WA_* vars to backend/.env');
+        console.info('WhatsApp not configured — add WA_* vars to backend/.env');
         return;
     }
 
@@ -62,16 +62,16 @@ async function sendWhatsApp(text) {
                 res.on('data', chunk => { body += chunk; });
                 res.on('end', () => {
                     if (res.statusCode === 200 || res.statusCode === 201) {
-                        console.log(`✅ WhatsApp alert sent → ${WA_RECIPIENT}`);
+                        console.log(`WhatsApp alert sent -> ${WA_RECIPIENT}`);
                     } else {
-                        console.warn(`⚠️  WhatsApp API ${res.statusCode}: ${body}`);
+                        console.warn(`WARN: WhatsApp API ${res.statusCode}: ${body}`);
                     }
                     resolve();
                 });
             }
         );
         req.on('error', (err) => {
-            console.warn(`⚠️  WhatsApp send failed: ${err.message}`);
+            console.warn(`WARN: WhatsApp send failed: ${err.message}`);
             resolve(); // never crash the form submission
         });
         req.write(payload);
@@ -156,24 +156,24 @@ async function sendContactNotification(data) {
             await transporter.sendMail({
                 from: `"Junior Reactive Website" <${process.env.EMAIL_USER}>`,
                 to: RECIPIENT, replyTo: data.email,
-                subject: `📬 New Contact: ${data.subject}`,
+                subject: `New Contact: ${data.subject}`,
                 html: baseTemplate('New Contact Message', 'rgba(255,255,255,.25)', 'Contact Form', body),
             });
-            console.log(`✅ Contact email sent — ${data.email}`);
+            console.log(`Contact email sent — ${data.email}`);
         } catch (err) {
-            console.warn(`⚠️  Contact email failed: ${err.message}`);
+            console.warn(`WARN: Contact email failed: ${err.message}`);
         }
     }
 
     // WhatsApp
     await sendWhatsApp(
-`📬 *New Contact — JR Website*
+`*New Contact — JR Website*
 
-👤 *Name:* ${data.name}
-✉️ *Email:* ${data.email}
-📌 *Subject:* ${data.subject}
+*Name:* ${data.name}
+*Email:* ${data.email}
+*Subject:* ${data.subject}
 
-💬 *Message:*
+*Message:*
 ${data.message.length > 280 ? data.message.slice(0, 280) + '…' : data.message}`
     );
 }
@@ -197,24 +197,24 @@ async function sendApplicationNotification(data) {
             await transporter.sendMail({
                 from: `"Junior Reactive Website" <${process.env.EMAIL_USER}>`,
                 to: RECIPIENT, replyTo: data.email,
-                subject: `🚀 New Application: ${data.service_type} — ${data.company || data.name}`,
+                subject: `New Application: ${data.service_type} — ${data.company || data.name}`,
                 html: baseTemplate('New Service Application', 'rgba(255,255,255,.2)', 'Application', body),
             });
-            console.log(`✅ Application email sent — ${data.email}`);
+            console.log(`Application email sent — ${data.email}`);
         } catch (err) {
-            console.warn(`⚠️  Application email failed: ${err.message}`);
+            console.warn(`WARN: Application email failed: ${err.message}`);
         }
     }
 
     // WhatsApp
     await sendWhatsApp(
-`🚀 *New Application — JR Website*
+`*New Application — JR Website*
 
-${data.company ? `🏢 *Company:* ${data.company}\n` : ''}👤 *Name:* ${data.name}
-✉️ *Email:* ${data.email}
-${data.phone ? `📞 *Phone:* ${data.phone}\n` : ''}⚡ *Service:* ${data.service_type}
+${data.company ? `*Company:* ${data.company}\n` : ''}*Name:* ${data.name}
+*Email:* ${data.email}
+${data.phone ? `*Phone:* ${data.phone}\n` : ''}*Service:* ${data.service_type}
 
-📋 *Requirements:*
+*Requirements:*
 ${data.requirements.length > 280 ? data.requirements.slice(0, 280) + '…' : data.requirements}`
     );
 }

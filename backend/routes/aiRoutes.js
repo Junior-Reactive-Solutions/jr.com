@@ -170,7 +170,7 @@ router.post('/chat', aiLimiter, async (req, res) => {
         res.status(500).json({
             success: false,
             error: 'AI service temporarily unavailable. Please contact us directly.',
-            message: "I'm having a moment! 😅 You can reach the team directly at juniorreactive@gmail.com or WhatsApp +256 764 524 816.",
+            message: "The assistant is unavailable right now. You can reach the team directly at juniorreactive@gmail.com or WhatsApp +256 764 524 816.",
             suggestions: ['Contact Us', 'WhatsApp Us'],
         });
     }

@@ -72,7 +72,7 @@ function buildEmailHtml({ toName, toEmail, replyBody, originalSubject, originalM
               <p style="margin:0;font-size:14px;font-weight:700;color:#1c265e;">Pharrell Aaron Mugumya</p>
               <p style="margin:4px 0 0;font-size:13px;color:#6b7280;">Founder & CEO · Junior Reactive</p>
               <p style="margin:8px 0 0;font-size:13px;color:#5269c3;">
-                📧 juniorreactive@gmail.com &nbsp;|&nbsp; 📱 +256 764 524 816
+                juniorreactive@gmail.com &nbsp;|&nbsp; +256 764 524 816
               </p>
             </div>
           </td>
@@ -261,7 +261,7 @@ async function updateStatus(req, res, next) {
             return res.status(400).json({ success: false, error: `Status must be one of: ${valid.join(', ')}` });
         }
         await admin.updateApplicationStatus(req.params.id, status);
-        await admin.logAdminAction('update_application_status', `Application #${req.params.id} → ${status}`);
+        await admin.logAdminAction('update_application_status', `Application #${req.params.id} -> ${status}`);
         res.json({ success: true, message: `Status updated to ${status}` });
     } catch (err) { next(err); }
 }
@@ -281,7 +281,7 @@ async function createService(req, res, next) {
         if (!key || !title || !shortDescription) {
             return res.status(400).json({ success: false, error: 'key, title, and shortDescription are required.' });
         }
-        const result = await admin.createService({ key, title, icon: icon || '🔧', shortDescription, fullDescription: fullDescription || shortDescription });
+        const result = await admin.createService({ key, title, icon: icon || 'settings', shortDescription, fullDescription: fullDescription || shortDescription });
         await admin.logAdminAction('create_service', `Created service: ${title}`);
         res.status(201).json({ success: true, data: result });
     } catch (err) { next(err); }

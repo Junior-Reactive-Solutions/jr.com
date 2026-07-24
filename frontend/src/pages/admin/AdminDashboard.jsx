@@ -196,7 +196,7 @@ export default function AdminDashboard() {
                         <div className="admin-mini-list">
                             {recentApps.map(a => (
                                 <div className="admin-mini-item" key={a.id}>
-                                    <div className="admin-mini-avatar" style={{ background: '#7c3aed20', color: '#7c3aed' }}>
+                                    <div className="admin-mini-avatar" style={{ background: 'var(--surface-wash)', color: 'var(--ink-700)' }}>
                                         {a.name?.[0]?.toUpperCase()}
                                     </div>
                                     <div className="admin-mini-body">

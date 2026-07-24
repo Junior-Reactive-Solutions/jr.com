@@ -8,6 +8,7 @@ export { default as Field } from './Field';
 export { default as Tabs } from './Tabs';
 export { default as Accordion } from './Accordion';
 export { default as Modal } from './Modal';
+export { default as ConfirmDialog } from './ConfirmDialog';
 export { ToastProvider, useToast } from './Toast';
 export { default as EmptyState } from './EmptyState';
 export { default as Skeleton } from './Skeleton';

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ToastProvider } from './components/ui';
 import './assets/css/global.css';
 import './assets/css/admin.css';
 
@@ -36,6 +37,7 @@ import AdminDashboard    from './pages/admin/AdminDashboard';
 import AdminMessages     from './pages/admin/AdminMessages';
 import AdminApplications from './pages/admin/AdminApplications';
 import AdminServices     from './pages/admin/AdminServices';
+import AdminFAQs         from './pages/admin/AdminFAQs';
 import AdminAnalytics    from './pages/admin/AdminAnalytics';
 import ProtectedRoute    from './components/admin/ProtectedRoute';
 
@@ -115,6 +117,7 @@ function PublicLayout({ children }) {
 function App() {
     return (
         <QueryClientProvider client={queryClient}>
+            <ToastProvider>
             <Router>
                 <GoogleAnalytics />
                 <PageTracker />
@@ -143,6 +146,7 @@ function App() {
                         <Route path="/admin/messages"     element={<ProtectedRoute><AdminMessages /></ProtectedRoute>} />
                         <Route path="/admin/applications" element={<ProtectedRoute><AdminApplications /></ProtectedRoute>} />
                         <Route path="/admin/services"     element={<ProtectedRoute><AdminServices /></ProtectedRoute>} />
+                        <Route path="/admin/faqs"         element={<ProtectedRoute><AdminFAQs /></ProtectedRoute>} />
                         <Route path="/admin/analytics"    element={<ProtectedRoute><AdminAnalytics /></ProtectedRoute>} />
                         <Route path="/admin"              element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
 
@@ -150,6 +154,7 @@ function App() {
                     </Routes>
                 </PublicLayout>
             </Router>
+            </ToastProvider>
         </QueryClientProvider>
     );
 }

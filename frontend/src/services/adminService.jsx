@@ -44,6 +44,13 @@ export const createService = (data) => request('/api/admin/services', 'POST', da
 export const updateService = (id, data) => request(`/api/admin/services/${id}`, 'PUT', data);
 export const deleteService = (id) => request(`/api/admin/services/${id}`, 'DELETE');
 
+// FAQs
+export const getFAQsAdmin  = ()             => request('/api/admin/faqs');
+export const createFAQ     = (data)         => request('/api/admin/faqs', 'POST', data);
+export const updateFAQ     = (id, data)     => request(`/api/admin/faqs/${id}`, 'PUT', data);
+export const deleteFAQ     = (id)           => request(`/api/admin/faqs/${id}`, 'DELETE');
+export const reorderFAQs   = (orderedIds)   => request('/api/admin/faqs/reorder', 'PATCH', { orderedIds });
+
 // Analytics
 export const getAnalytics = () => request('/api/admin/analytics');
 

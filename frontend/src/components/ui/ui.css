@@ -41,6 +41,9 @@
 .ui-btn--on-dark { background: var(--neutral-0); color: var(--ink-800); }
 .ui-btn--on-dark:hover:not(:disabled) { background: var(--brand-wash); }
 
+.ui-btn--danger { background: var(--status-error); color: var(--text-inverse); }
+.ui-btn--danger:hover:not(:disabled) { background: #8f372f; }
+
 .ui-btn--sm { padding: 8px 14px; font-size: var(--text-sm); }
 .ui-btn--lg { padding: 14px 28px; font-size: var(--text-lg); }
 

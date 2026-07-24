@@ -4,10 +4,10 @@ const router   = express.Router();
 const ctrl     = require('../controllers/adminController');
 const { adminAuth } = require('../middleware/adminAuth');
 
-// ── Login rate limit: 10 attempts per 15 min ──────────────────────────────────
+// ── Login rate limit: 5 attempts per 15 min ────────────────────────────────────
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 10,
+    max: 5,
     message: { success: false, error: 'Too many login attempts. Try again in 15 minutes.' },
 });
 
@@ -38,6 +38,13 @@ router.delete('/applications/:id',       adminAuth, ctrl.deleteApplication);
 router.post('/services',       adminAuth, ctrl.createService);
 router.put('/services/:id',    adminAuth, ctrl.updateService);
 router.delete('/services/:id', adminAuth, ctrl.deleteService);
+
+// FAQs CRUD
+router.get('/faqs',           adminAuth, ctrl.getFAQsAdmin);
+router.post('/faqs',          adminAuth, ctrl.createFAQ);
+router.put('/faqs/:id',       adminAuth, ctrl.updateFAQ);
+router.delete('/faqs/:id',    adminAuth, ctrl.deleteFAQ);
+router.patch('/faqs/reorder', adminAuth, ctrl.reorderFAQs);
 
 // Analytics
 router.get('/analytics', adminAuth, ctrl.getAnalytics);

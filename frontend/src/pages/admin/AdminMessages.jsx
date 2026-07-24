@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { getMessages, replyToMessage, deleteMessage, markMessageRead } from '../../services/adminService';
+import { ConfirmDialog, useToast } from '../../components/ui';
 import Icon from '../../assets/icons/components/Icon';
 
 const fmt = (ts) => ts ? new Date(ts).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
@@ -106,12 +107,14 @@ function ViewModal({ message, onClose, onReply }) {
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 export default function AdminMessages() {
-    const [messages, setMessages] = useState([]);
-    const [loading,  setLoading]  = useState(true);
-    const [filter,   setFilter]   = useState('all'); // 'all' | 'unread' | 'replied'
-    const [viewing,  setViewing]  = useState(null);
-    const [replying, setReplying] = useState(null);
-    const [toast,    setToast]    = useState('');
+    const [messages,  setMessages]  = useState([]);
+    const [loading,   setLoading]   = useState(true);
+    const [filter,    setFilter]    = useState('all'); // 'all' | 'unread' | 'replied'
+    const [search,    setSearch]    = useState('');
+    const [viewing,   setViewing]   = useState(null);
+    const [replying,  setReplying]  = useState(null);
+    const [toDelete,  setToDelete]  = useState(null); // { id, name }
+    const toast = useToast();
 
     const load = () => {
         setLoading(true);
@@ -122,13 +125,12 @@ export default function AdminMessages() {
 
     useEffect(() => { load(); }, []);
 
-    const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000); };
-
-    const handleDelete = async (id, name) => {
-        if (!window.confirm(`Delete message from ${name}? This cannot be undone.`)) return;
+    const confirmDelete = async () => {
+        const { id, name } = toDelete;
+        setToDelete(null);
         await deleteMessage(id);
         setMessages(prev => prev.filter(m => m.id !== id));
-        showToast('Message deleted.');
+        toast.show(`Message from ${name} deleted.`, { tone: 'success' });
     };
 
     const handleMarkRead = async (id) => {
@@ -138,17 +140,29 @@ export default function AdminMessages() {
 
     const unread = messages.filter(m => !m.is_read).length;
 
-    const filtered = messages.filter(m => {
-        if (filter === 'unread')  return !m.is_read;
-        if (filter === 'replied') return !!m.replied_at;
-        return true;
-    });
+    const filtered = useMemo(() => {
+        const q = search.trim().toLowerCase();
+        return messages.filter(m => {
+            if (filter === 'unread'  && m.is_read)     return false;
+            if (filter === 'replied' && !m.replied_at) return false;
+            if (!q) return true;
+            return m.name.toLowerCase().includes(q) || m.email.toLowerCase().includes(q) || m.subject.toLowerCase().includes(q);
+        });
+    }, [messages, filter, search]);
 
     return (
         <AdminLayout unreadCount={unread}>
-            {toast && <div className="admin-toast">{toast}</div>}
             {viewing  && <ViewModal  message={viewing}  onClose={() => setViewing(null)}  onReply={() => { setReplying(viewing); setViewing(null); }} />}
-            {replying && <ReplyModal message={replying} onClose={() => setReplying(null)} onSent={() => { showToast(`Reply sent to ${replying.email}`); load(); }} />}
+            {replying && <ReplyModal message={replying} onClose={() => setReplying(null)} onSent={() => { toast.show(`Reply sent to ${replying.email}`, { tone: 'success' }); load(); }} />}
+            <ConfirmDialog
+                open={!!toDelete}
+                title="Delete message"
+                message={toDelete ? `Delete the message from ${toDelete.name}? This cannot be undone.` : ''}
+                confirmLabel="Delete"
+                danger
+                onConfirm={confirmDelete}
+                onCancel={() => setToDelete(null)}
+            />
 
             <div className="admin-page-header">
                 <div>
@@ -157,7 +171,7 @@ export default function AdminMessages() {
                 </div>
             </div>
 
-            {/* Filters */}
+            {/* Filters + search */}
             <div className="admin-filter-bar">
                 {['all','unread','replied'].map(f => (
                     <button key={f} className={`admin-filter-btn ${filter === f ? 'active' : ''}`}
@@ -166,6 +180,14 @@ export default function AdminMessages() {
                         {f === 'unread' && unread > 0 && <span className="admin-nav-badge" style={{marginLeft:6}}>{unread}</span>}
                     </button>
                 ))}
+                <input
+                    className="admin-input admin-search-input"
+                    type="search"
+                    placeholder="Search name, email, subject…"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    style={{ marginLeft: 'auto', maxWidth: 260 }}
+                />
             </div>
 
             <div className="admin-card admin-table-card">
@@ -220,7 +242,7 @@ export default function AdminMessages() {
                                             <button className="admin-icon-btn" title="Reply" onClick={() => setReplying(m)}>
                                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 00-4-4H4"/></svg>
                                             </button>
-                                            <button className="admin-icon-btn admin-icon-btn-danger" title="Delete" onClick={() => handleDelete(m.id, m.name)}>
+                                            <button className="admin-icon-btn admin-icon-btn-danger" title="Delete" onClick={() => setToDelete({ id: m.id, name: m.name })}>
                                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6 M14 11v6"/><path d="M9 6V4h6v2"/></svg>
                                             </button>
                                         </div>

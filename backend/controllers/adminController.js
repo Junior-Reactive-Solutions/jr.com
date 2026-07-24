@@ -1,9 +1,25 @@
 const jwt       = require('jsonwebtoken');
+const bcrypt    = require('bcryptjs');
 const crypto    = require('crypto');
 const { Resend } = require('resend');
 const admin     = require('../models/adminModel');
+const faqModel  = require('../models/faqModel');
 const logger    = require('../utils/logger');
 const { JWT_SECRET } = require('../middleware/adminAuth');
+
+// Session length for the admin JWT. A solo-admin panel doesn't need
+// enterprise-grade 15-minute expiry with refresh tokens (that needs a
+// server-side revocation store we don't have yet — see DECISIONS.md) but
+// 24h was too long. 8h covers a working day and forces a fresh login daily.
+const SESSION_MS = 8 * 60 * 60 * 1000;
+
+if (!process.env.ADMIN_PASSWORD_HASH && process.env.ADMIN_PASSWORD) {
+    logger.warn(
+        'ADMIN_PASSWORD_HASH is not set — falling back to plaintext ADMIN_PASSWORD comparison. ' +
+        'Generate a hash with: node -e "console.log(require(\'bcryptjs\').hashSync(\'yourpassword\', 12))" ' +
+        'and set it as ADMIN_PASSWORD_HASH, then remove ADMIN_PASSWORD.'
+    );
+}
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -108,22 +124,34 @@ function buildEmailHtml({ toName, toEmail, replyBody, originalSubject, originalM
 // ── Auth ──────────────────────────────────────────────────────────────────────
 async function login(req, res) {
     const { password } = req.body;
-    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+    const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
+    const ADMIN_PASSWORD      = process.env.ADMIN_PASSWORD;
 
-    if (!ADMIN_PASSWORD) {
+    if (!ADMIN_PASSWORD_HASH && !ADMIN_PASSWORD) {
         return res.status(500).json({ success: false, error: 'Admin not configured on server.' });
     }
-    if (!password || !timingSafeCompare(password, ADMIN_PASSWORD)) {
+    if (!password) {
         return res.status(401).json({ success: false, error: 'Incorrect password.' });
     }
 
-    const token = jwt.sign({ role: 'admin', name: 'Pharrell' }, JWT_SECRET, { expiresIn: '24h' });
+    // Prefer the bcrypt hash; fall back to legacy plaintext comparison only
+    // if no hash has been configured yet (safe migration path — see the
+    // startup warning above for how to generate ADMIN_PASSWORD_HASH).
+    const valid = ADMIN_PASSWORD_HASH
+        ? await bcrypt.compare(password, ADMIN_PASSWORD_HASH)
+        : timingSafeCompare(password, ADMIN_PASSWORD);
+
+    if (!valid) {
+        return res.status(401).json({ success: false, error: 'Incorrect password.' });
+    }
+
+    const token = jwt.sign({ role: 'admin', name: 'Pharrell' }, JWT_SECRET, { expiresIn: '8h' });
 
     res.cookie('adminToken', token, {
         httpOnly:  true,
         secure:    process.env.NODE_ENV === 'production',
         sameSite:  process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        maxAge:    24 * 60 * 60 * 1000, // 24 hours
+        maxAge:    SESSION_MS,
         path:      '/',
     });
 
@@ -304,6 +332,57 @@ async function deleteService(req, res, next) {
     } catch (err) { next(err); }
 }
 
+// ── FAQs ──────────────────────────────────────────────────────────────────────
+async function getFAQsAdmin(req, res, next) {
+    try {
+        const rows = await faqModel.getAllFAQs();
+        res.json({ success: true, data: rows });
+    } catch (err) { next(err); }
+}
+
+async function createFAQ(req, res, next) {
+    try {
+        const { question, answer } = req.body;
+        if (!question?.trim() || !answer?.trim()) {
+            return res.status(400).json({ success: false, error: 'question and answer are required.' });
+        }
+        const result = await faqModel.createFAQ({ question: question.trim(), answer: answer.trim() });
+        await admin.logAdminAction('create_faq', `Created FAQ: ${question.slice(0, 60)}`);
+        res.status(201).json({ success: true, data: result });
+    } catch (err) { next(err); }
+}
+
+async function updateFAQ(req, res, next) {
+    try {
+        const { question, answer } = req.body;
+        if (!question?.trim() || !answer?.trim()) {
+            return res.status(400).json({ success: false, error: 'question and answer are required.' });
+        }
+        await faqModel.updateFAQ(req.params.id, { question: question.trim(), answer: answer.trim() });
+        await admin.logAdminAction('update_faq', `Updated FAQ #${req.params.id}`);
+        res.json({ success: true, message: 'FAQ updated.' });
+    } catch (err) { next(err); }
+}
+
+async function deleteFAQ(req, res, next) {
+    try {
+        await faqModel.deleteFAQ(req.params.id);
+        await admin.logAdminAction('delete_faq', `Deleted FAQ #${req.params.id}`);
+        res.json({ success: true, message: 'FAQ deleted.' });
+    } catch (err) { next(err); }
+}
+
+async function reorderFAQs(req, res, next) {
+    try {
+        const { orderedIds } = req.body;
+        if (!Array.isArray(orderedIds) || orderedIds.length === 0) {
+            return res.status(400).json({ success: false, error: 'orderedIds must be a non-empty array.' });
+        }
+        await faqModel.reorderFAQs(orderedIds);
+        res.json({ success: true, message: 'Order updated.' });
+    } catch (err) { next(err); }
+}
+
 // ── Analytics ─────────────────────────────────────────────────────────────────
 async function getAnalytics(req, res, next) {
     try {
@@ -318,5 +397,6 @@ module.exports = {
     getMessages, getMessage, replyToMessage, markRead, deleteMessage,
     getApplications, getApplication, updateStatus, deleteApplication,
     createService, updateService, deleteService,
+    getFAQsAdmin, createFAQ, updateFAQ, deleteFAQ, reorderFAQs,
     getAnalytics,
 };

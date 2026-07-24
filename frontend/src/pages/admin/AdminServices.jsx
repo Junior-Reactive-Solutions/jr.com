@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { createService, updateService, deleteService } from '../../services/adminService';
+import { ConfirmDialog, useToast } from '../../components/ui';
 import Icon from '../../assets/icons/components/Icon';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5005';
@@ -96,7 +97,8 @@ export default function AdminServices() {
     const [services, setServices] = useState([]);
     const [loading,  setLoading]  = useState(true);
     const [modal,    setModal]    = useState(null); // null | 'add' | service obj
-    const [toast,    setToast]    = useState('');
+    const [toDelete, setToDelete] = useState(null); // { id, title }
+    const toast = useToast();
 
     const load = () => {
         setLoading(true);
@@ -105,24 +107,22 @@ export default function AdminServices() {
 
     useEffect(() => { load(); }, []);
 
-    const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000); };
-
-    const handleDelete = async (id, title) => {
-        if (!window.confirm(`Delete "${title}"? This will remove it from the website.`)) return;
+    const confirmDelete = async () => {
+        const { id, title } = toDelete;
+        setToDelete(null);
         await deleteService(id);
         setServices(prev => prev.filter(s => s.id !== id));
-        showToast(`"${title}" deleted.`);
+        toast.show(`"${title}" deleted.`, { tone: 'success' });
     };
 
     const handleSaved = () => {
         setModal(null);
-        showToast('Service saved successfully');
+        toast.show('Service saved successfully.', { tone: 'success' });
         load();
     };
 
     return (
         <AdminLayout>
-            {toast && <div className="admin-toast">{toast}</div>}
             {modal && (
                 <ServiceModal
                     service={modal === 'add' ? null : modal}
@@ -130,6 +130,15 @@ export default function AdminServices() {
                     onSaved={handleSaved}
                 />
             )}
+            <ConfirmDialog
+                open={!!toDelete}
+                title="Delete service"
+                message={toDelete ? `Delete "${toDelete.title}"? This will remove it from the live website.` : ''}
+                confirmLabel="Delete"
+                danger
+                onConfirm={confirmDelete}
+                onCancel={() => setToDelete(null)}
+            />
 
             <div className="admin-page-header">
                 <div>
@@ -156,7 +165,7 @@ export default function AdminServices() {
                                 <button className="admin-icon-btn" title="Edit" onClick={() => setModal(s)}>
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                 </button>
-                                <button className="admin-icon-btn admin-icon-btn-danger" title="Delete" onClick={() => handleDelete(s.id, s.title)}>
+                                <button className="admin-icon-btn admin-icon-btn-danger" title="Delete" onClick={() => setToDelete({ id: s.id, title: s.title })}>
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
                                 </button>
                             </div>

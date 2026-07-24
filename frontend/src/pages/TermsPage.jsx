@@ -1,26 +1,26 @@
 import React from 'react';
-import HeroSection from '../components/layout/HeroSection';
+import PageIntro from '../components/layout/PageIntro';
 
 const LAST_UPDATED = 'March 2025';
 
 const Section = ({ title, children }) => (
-    <div style={{ marginBottom: 40 }}>
-        <h3 style={{ marginBottom: 12, paddingBottom: 10, borderBottom: '1px solid var(--color-border)' }}>{title}</h3>
+    <div style={{ marginBottom: 'var(--sp-10)' }}>
+        <h2 style={{ fontFamily: 'var(--font-ui)', fontWeight: 600, fontSize: 'var(--text-xl)', color: 'var(--ink-900)', marginBottom: 'var(--sp-3)', paddingBottom: 'var(--sp-3)', borderBottom: '1px solid var(--border-subtle)' }}>{title}</h2>
         {children}
     </div>
 );
 
 const TermsPage = () => (
     <main>
-        <HeroSection
-            badge="Legal"
-            title="Terms of Service"
-            subtitle={`Last updated: ${LAST_UPDATED}`}
+        <PageIntro
+            kicker="Legal"
+            title="Terms of service"
+            lead={`Last updated: ${LAST_UPDATED}`}
         />
 
-        <section className="section">
-            <div className="container" style={{ maxWidth: 860 }}>
-                <div className="form-card">
+        <section className="v2-section">
+            <div className="v2-container" style={{ maxWidth: 800 }}>
+                <div className="v2-prose">
                     <p style={{ background: 'var(--color-light)', borderRadius: 'var(--radius-md)', padding: '14px 18px', fontSize: '.9rem', marginBottom: 32, borderLeft: '3px solid var(--color-secondary)' }}>
                         Please read these Terms of Service carefully before using our website or engaging our services. By accessing our website or entering into a service agreement with Junior Reactive, you accept and agree to be bound by these terms.
                     </p>

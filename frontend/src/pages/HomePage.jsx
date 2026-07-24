@@ -68,7 +68,6 @@ const HomePage = () => {
                         <div className="home-hero-demo">
                             <div className="home-hero-demo-frame">
                                 <span className="home-hero-demo-label">
-                                    <span className="home-hero-demo-dot" />
                                     Live — one of our AI tools
                                 </span>
                                 <ServiceRecommender />

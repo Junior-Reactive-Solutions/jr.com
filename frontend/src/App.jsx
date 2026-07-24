@@ -10,7 +10,6 @@ import { trackPageView } from './services/adminService';
 // ── Common components ────────────────────────────────────────────────────────
 import Header      from './components/common/Header';
 import Footer      from './components/common/Footer';
-import Chatbot     from './components/Chatbot';
 import WhatsAppCta from './components/common/WhatsAppCta';
 
 // ── Public pages ─────────────────────────────────────────────────────────────
@@ -108,7 +107,6 @@ function PublicLayout({ children }) {
             {!isAdmin && <Header />}
             {children}
             {!isAdmin && <Footer />}
-            {!isAdmin && <Chatbot />}
             {!isAdmin && <WhatsAppCta />}
         </>
     );

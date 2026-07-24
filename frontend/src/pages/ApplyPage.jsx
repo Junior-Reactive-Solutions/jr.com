@@ -1,17 +1,17 @@
 import React from 'react';
-import HeroSection from '../components/layout/HeroSection';
+import PageIntro from '../components/layout/PageIntro';
 import ApplicationForm from '../components/forms/ApplicationForm';
 
 const ApplyPage = () => (
     <main>
-        <HeroSection
-            badge="Start a Project"
-            title="Service Application"
-            subtitle="Ready to transform your business? Fill out the form and our team will get back to you within 24 hours."
+        <PageIntro
+            kicker="Start a project"
+            title="Tell us what you need built"
+            lead="Five minutes of detail is enough. We read every application ourselves and reply within one working day with next steps — or honest reasons why we're not the right fit."
         />
 
-        <section className="section">
-            <div className="container" style={{ maxWidth: 860 }}>
+        <section className="v2-section">
+            <div className="v2-container" style={{ maxWidth: 860 }}>
                 <ApplicationForm />
             </div>
         </section>

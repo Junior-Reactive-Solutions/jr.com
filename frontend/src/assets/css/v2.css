@@ -107,6 +107,22 @@
 .home-founder-name { font-family: var(--font-ui); font-weight: 600; font-size: var(--text-lg); color: var(--ink-900); margin: var(--sp-6) 0 0; }
 .home-founder-role { font-size: var(--text-sm); color: var(--text-muted); }
 
+/* ---- Page intro (inner pages) ------------------------------ */
+.v2-intro { padding: var(--sp-16) 0 var(--sp-12); border-bottom: 1px solid var(--border-subtle); }
+.v2-intro .v2-lead { margin-bottom: 0; }
+
+/* ---- Grid helpers ------------------------------------------ */
+.v2-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-5); }
+.v2-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-5); }
+@media (max-width: 960px) { .v2-grid-3 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .v2-grid-2, .v2-grid-3 { grid-template-columns: 1fr; } }
+
+/* ---- Prose (legal pages, blog posts) ----------------------- */
+.v2-prose { max-width: 720px; }
+.v2-prose h2 { font-family: var(--font-ui); font-weight: 600; font-size: var(--text-xl); color: var(--ink-900); margin: var(--sp-8) 0 var(--sp-3); }
+.v2-prose p, .v2-prose li { font-family: var(--font-ui); color: var(--text-secondary); line-height: var(--leading-body); margin-bottom: var(--sp-4); }
+.v2-prose ul { padding-left: var(--sp-5); list-style: disc; }
+
 /* ---- WhatsApp CTA (persistent, council amendment) ---------- */
 .wa-cta {
     position: fixed;

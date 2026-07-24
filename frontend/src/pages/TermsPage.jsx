@@ -1,7 +1,7 @@
 import React from 'react';
 import PageIntro from '../components/layout/PageIntro';
 
-const LAST_UPDATED = 'March 2025';
+const LAST_UPDATED = 'July 2026';
 
 const Section = ({ title, children }) => (
     <div style={{ marginBottom: 'var(--sp-10)' }}>
@@ -58,7 +58,7 @@ const TermsPage = () => (
                     </Section>
 
                     <Section title="6. Data and Privacy">
-                        <p>Our collection and use of personal data in connection with our website and services is governed by our <a href="/privacy" style={{ color: 'var(--color-secondary)', fontWeight: 600 }}>Privacy Policy</a>, which forms part of these Terms of Service.</p>
+                        <p>Our collection and use of personal data in connection with our website and services is governed by our <a href="/privacy" style={{ color: 'var(--color-secondary)', fontWeight: 600 }}>Privacy Policy</a>, which forms part of these Terms of Service and is drafted to comply with Uganda's Data Protection and Privacy Act, 2019.</p>
                         <p>In engagements involving client data, we act as a data processor. We implement appropriate technical and organisational measures to protect personal data and will not process client data except as instructed by the client or required by applicable law.</p>
                     </Section>
 
@@ -97,8 +97,8 @@ const TermsPage = () => (
                     </Section>
 
                     <Section title="11. Governing Law and Disputes">
-                        <p>These Terms of Service are governed by the laws of the Republic of Uganda. Any disputes that cannot be resolved amicably between the parties shall be referred to mediation before pursuing formal legal proceedings.</p>
-                        <p>The courts of Uganda shall have exclusive jurisdiction over any dispute arising from these terms or our services.</p>
+                        <p>These Terms of Service, and any service agreement entered into under them, are governed by the laws of the Republic of Uganda, including the Contracts Act, 2010 and the Electronic Transactions Act, 2011 for agreements formed or performed electronically.</p>
+                        <p>Any disputes that cannot be resolved amicably between the parties shall first be referred to mediation. If mediation fails, either party may proceed to arbitration under the Arbitration and Conciliation Act (Cap. 4), or to the courts of Uganda, which have exclusive jurisdiction over any dispute arising from these terms or our services.</p>
                     </Section>
 
                     <Section title="12. Changes to These Terms">

@@ -2,7 +2,7 @@ import React from 'react';
 import PageIntro from '../components/layout/PageIntro';
 import Icon from '../assets/icons/components/Icon';
 
-const LAST_UPDATED = 'March 2025';
+const LAST_UPDATED = 'July 2026';
 
 const Section = ({ title, children }) => (
     <div style={{ marginBottom: 'var(--sp-10)' }}>
@@ -28,7 +28,7 @@ const PrivacyPage = () => (
 
                     <Section title="1. Who We Are">
                         <p>Junior Reactive Ltd is an AI and IT solutions company based in Kampala, Uganda. We operate the website juniorreactive.com and provide AI consulting, software development, automation, training, and data services to businesses.</p>
-                        <p>For the purposes of applicable data protection law, Junior Reactive is the data controller for personal information collected through our website. For data processed in the course of client service delivery, we typically act as a data processor under the client's instructions.</p>
+                        <p>This policy is written to comply with Uganda's <strong>Data Protection and Privacy Act, 2019</strong> and the <strong>Data Protection and Privacy Regulations, 2021</strong>. For personal information collected through our website, Junior Reactive is the data controller. For data processed in the course of delivering a client's project, we typically act as a data processor under that client's instructions.</p>
                         <p><strong>Contact:</strong> <a href="mailto:juniorreactive@gmail.com" style={{ color: 'var(--color-secondary)' }}>juniorreactive@gmail.com</a> · +256 764 524 816</p>
                     </Section>
 
@@ -80,7 +80,7 @@ const PrivacyPage = () => (
                         <p>We take data security seriously and implement the following measures:</p>
                         <ul style={{ paddingLeft: 24, lineHeight: 2, color: 'var(--color-text-mid)' }}>
                             <li>All data transmitted through our website is encrypted via HTTPS/TLS</li>
-                            <li>Form submission data is stored in a password-protected SQL Server database with restricted access</li>
+                            <li>Form submission data is stored in a password-protected PostgreSQL database with restricted access</li>
                             <li>Database credentials are stored in environment variables, never in source code</li>
                             <li>Access to production systems is limited to authorised team members only</li>
                             <li>We conduct regular security reviews of our codebase and infrastructure</li>
@@ -119,7 +119,7 @@ const PrivacyPage = () => (
                                 </div>
                             ))}
                         </div>
-                        <p style={{ marginTop: 16 }}>To exercise any of these rights, please email <a href="mailto:juniorreactive@gmail.com" style={{ color: 'var(--color-secondary)' }}>juniorreactive@gmail.com</a>. We will respond within 30 days. We will ask you to verify your identity before processing your request.</p>
+                        <p style={{ marginTop: 16 }}>To exercise any of these rights, please email <a href="mailto:juniorreactive@gmail.com" style={{ color: 'var(--color-secondary)' }}>juniorreactive@gmail.com</a>. We will respond within 30 days, as required under the Data Protection and Privacy Act, 2019. We will ask you to verify your identity before processing your request.</p>
                     </Section>
 
                     <Section title="8. Cookies">
@@ -147,7 +147,7 @@ const PrivacyPage = () => (
                             Phone: <a href="tel:+256764524816" style={{ color: 'var(--color-secondary)' }}>+256 764 524 816</a><br />
                             Kampala, Uganda
                         </p>
-                        <p>If you are not satisfied with our response, you have the right to lodge a complaint with a relevant data protection authority.</p>
+                        <p>If you are not satisfied with our response, you have the right to lodge a complaint with the <strong>Personal Data Protection Office</strong> (PDPO), the national data protection authority operating under the National Information Technology Authority — Uganda (NITA-U).</p>
                     </Section>
                 </div>
             </div>

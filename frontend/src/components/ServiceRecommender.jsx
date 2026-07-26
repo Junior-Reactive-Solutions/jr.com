@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../assets/icons/components/Icon';
 import { useReveal } from '../hooks/useAnime';
+import './ServiceRecommender.css';
 
 // ── Quiz Questions ────────────────────────────────────────────────────────────
 const QUESTIONS = [
@@ -227,8 +228,8 @@ export default function ServiceRecommender() {
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="time" size="xs" /> Takes about 1 minute</span>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="check" size="xs" color="success" /> 100% free & no signup needed</span>
           </div>
-          <button className="btn sr-start-btn" onClick={handleNext} style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-            Start the Quiz <Icon name="arrow-right" size="xs" color="white" />
+          <button className="ui-btn ui-btn--primary sr-start-btn" onClick={handleNext}>
+            Start the Quiz <Icon name="arrow-right" size="xs" ariaLabel="" />
           </button>
         </div>
       </div>
@@ -267,12 +268,11 @@ export default function ServiceRecommender() {
           <div className="sr-result-actions">
             <Link
               to={`/apply?service=${recommendation.applyService}`}
-              className="btn sr-apply-btn"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
+              className="ui-btn ui-btn--primary sr-apply-btn"
             >
-              Apply for This Service <Icon name="arrow-right" size="xs" color="white" />
+              Apply for This Service <Icon name="arrow-right" size="xs" ariaLabel="" />
             </Link>
-            <Link to="/contact" className="btn btn-outline sr-contact-btn">
+            <Link to="/contact" className="ui-btn ui-btn--secondary sr-contact-btn">
               Ask a Question First
             </Link>
           </div>
@@ -318,12 +318,11 @@ export default function ServiceRecommender() {
           </button>
         )}
         <button
-          className={`btn sr-next-btn ${!selected ? 'disabled' : ''}`}
+          className="ui-btn ui-btn--primary sr-next-btn"
           onClick={handleNext}
           disabled={!selected}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
         >
-          {step === QUESTIONS.length ? 'See My Recommendation' : 'Next'} <Icon name="arrow-right" size="xs" color="white" />
+          {step === QUESTIONS.length ? 'See My Recommendation' : 'Next'} <Icon name="arrow-right" size="xs" ariaLabel="" />
         </button>
       </div>
     </div>

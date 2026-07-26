@@ -73,7 +73,7 @@ function getRecommendation(answers) {
       applyService: 'AI+Awareness+Sessions',
       urgencyNote: urgency === 'urgent' ? 'We can schedule a session within 2 weeks.' : 'We run cohorts monthly — easy to fit your calendar.',
       icon: 'training',
-      color: '#7c3aed',
+      color: '#1c265e',
     };
   }
 
@@ -87,7 +87,7 @@ function getRecommendation(answers) {
         applyService: 'N8N+Workflow+Automation',
         urgencyNote: 'Simple automations can go live in 1-2 weeks.',
         icon: 'zap',
-        color: '#0ea5e9',
+        color: '#1c265e',
       };
     }
     return {
@@ -98,7 +98,7 @@ function getRecommendation(answers) {
       applyService: 'N8N+Workflow+Automation',
       urgencyNote: urgency === 'urgent' ? 'We can deliver a first automation in under 3 weeks.' : 'Full automation suite typically delivered in 4-8 weeks.',
       icon: 'automation',
-      color: '#0ea5e9',
+      color: '#1c265e',
     };
   }
 
@@ -112,7 +112,7 @@ function getRecommendation(answers) {
         applyService: 'BI+Dashboards',
         urgencyNote: 'First dashboard prototype delivered within 2-3 weeks.',
         icon: 'analytics',
-        color: '#059669',
+        color: '#1c265e',
       };
     }
     return {
@@ -123,7 +123,7 @@ function getRecommendation(answers) {
       applyService: 'Predictive+Modeling',
       urgencyNote: 'Initial model and insights delivered within 4-6 weeks.',
       icon: 'predictive',
-      color: '#7c3aed',
+      color: '#1c265e',
     };
   }
 

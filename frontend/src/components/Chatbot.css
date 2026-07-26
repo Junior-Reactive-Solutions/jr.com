@@ -48,7 +48,7 @@
   position: absolute;
   top: -5px;
   right: -5px;
-  background: #e53e3e;
+  background: var(--status-error, #b0453c);
   color: #fff;
   font-size: 0.65rem;
   font-weight: 800;

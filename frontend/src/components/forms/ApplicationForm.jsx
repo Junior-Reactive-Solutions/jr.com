@@ -8,10 +8,13 @@ const SERVICES = [
     'General Inquiry',
     'AI Consulting',
     'Custom Software Development',
-    'Data Analytics & Insights',
+    'N8N Workflow Automation',
+    'Data Analytics & Business Intelligence',
+    'Predictive Modeling & Machine Learning',
     'Cloud Solutions',
-    'Predictive Modeling',
-    'AI Awareness Session',
+    'AI Awareness Sessions',
+    'AI Courses & Training',
+    'Business Intelligence Dashboards',
 ];
 
 const ApplicationForm = () => {
@@ -25,7 +28,10 @@ const ApplicationForm = () => {
 
     useEffect(() => {
         const serviceParam = searchParams.get('service');
-        if (serviceParam) {
+        // Only prefill when the incoming value actually matches a real option —
+        // an unmatched value would silently desync the visible <select> from
+        // the submitted form data.
+        if (serviceParam && SERVICES.includes(serviceParam)) {
             setFormData((prev) => ({ ...prev, service_type: serviceParam }));
         }
     }, [searchParams]);

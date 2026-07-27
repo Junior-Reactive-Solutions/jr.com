@@ -1,11 +1,14 @@
 /* Header v2 — paper surface, ink type, hairline border */
 header {
+    /* No backdrop-filter here: it creates a new containing block for
+       position:fixed descendants (same as transform/filter), which was
+       silently collapsing the mobile nav overlay's height to ~49px
+       instead of filling the viewport. Solid near-opaque background
+       instead — same visual effect without the containing-block trap. */
     position: sticky;
     top: 0;
     z-index: 950;
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.97);
     border-bottom: 1px solid var(--border-subtle);
 }
 header.scrolled { box-shadow: var(--shadow-1); }

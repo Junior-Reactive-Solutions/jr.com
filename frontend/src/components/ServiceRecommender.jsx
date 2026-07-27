@@ -64,14 +64,13 @@ function getRecommendation(answers) {
 
   // Primary recommendation based on challenge + budget + tech
   if (challenge === 'training') {
+    const isSmallBudget = budget === 'micro' || budget === 'small';
     return {
-      primary: budget === 'micro' || budget === 'small'
-        ? 'AI Awareness Session'
-        : 'AI Courses & Training Programme',
+      primary: isSmallBudget ? 'AI Awareness Session' : 'AI Courses & Training Programme',
       secondary: 'AI Consulting (Strategy Roadmap)',
       why: "Your team needs to build AI literacy before implementing tools. A structured training programme will give everyone the foundation to evaluate and use AI confidently.",
       outcome: "A team that can identify AI opportunities, evaluate tools, and champion adoption internally.",
-      applyService: 'AI+Awareness+Sessions',
+      applyService: isSmallBudget ? 'AI Awareness Sessions' : 'AI Courses & Training',
       urgencyNote: urgency === 'urgent' ? 'We can schedule a session within 2 weeks.' : 'We run cohorts monthly — easy to fit your calendar.',
       icon: 'training',
       color: '#1c265e',
@@ -85,7 +84,7 @@ function getRecommendation(answers) {
         secondary: 'Free Discovery Call',
         why: "We can automate 2-3 of your most painful manual processes with N8N at a budget-friendly entry point. Perfect for solo operators and small teams.",
         outcome: "Save 5-15 hours per week by automating repetitive tasks — email, forms, data syncing, reports.",
-        applyService: 'N8N+Workflow+Automation',
+        applyService: 'N8N Workflow Automation',
         urgencyNote: 'Simple automations can go live in 1-2 weeks.',
         icon: 'zap',
         color: '#1c265e',
@@ -96,7 +95,7 @@ function getRecommendation(answers) {
       secondary: size === 'large' ? 'Enterprise Integration Package' : 'Business Intelligence Dashboard',
       why: "N8N is the ideal tool to connect your existing software, eliminate manual data entry, and create reliable automated workflows — without changing your entire tech stack.",
       outcome: "End-to-end automated workflows that run 24/7, reducing errors and freeing your team for high-value work.",
-      applyService: 'N8N+Workflow+Automation',
+      applyService: 'N8N Workflow Automation',
       urgencyNote: urgency === 'urgent' ? 'We can deliver a first automation in under 3 weeks.' : 'Full automation suite typically delivered in 4-8 weeks.',
       icon: 'automation',
       color: '#1c265e',
@@ -110,7 +109,7 @@ function getRecommendation(answers) {
         secondary: 'Data Analytics & Insights',
         why: "A well-designed Power BI dashboard will give you clear, visual answers to your business questions without needing to understand the data yourself. Real-time, shareable, and built for non-technical users.",
         outcome: "Replace scattered spreadsheets with one live dashboard your whole leadership team can use daily.",
-        applyService: 'BI+Dashboards',
+        applyService: 'Business Intelligence Dashboards',
         urgencyNote: 'First dashboard prototype delivered within 2-3 weeks.',
         icon: 'analytics',
         color: '#1c265e',
@@ -121,7 +120,7 @@ function getRecommendation(answers) {
       secondary: 'Data Analytics & Business Intelligence',
       why: "With a technical foundation in place, you're ready for predictive analytics — forecasting demand, predicting churn, or identifying hidden patterns in your data.",
       outcome: "Data-driven decisions backed by statistical models, not guesswork. Measurable ROI from reduced churn or optimised operations.",
-      applyService: 'Predictive+Modeling',
+      applyService: 'Predictive Modeling & Machine Learning',
       urgencyNote: 'Initial model and insights delivered within 4-6 weeks.',
       icon: 'predictive',
       color: '#1c265e',
@@ -135,7 +134,7 @@ function getRecommendation(answers) {
         secondary: 'Custom Software Development (MVP)',
         why: "For urgent software needs, the fastest path is a free discovery call to define an MVP scope. Trying to build too fast without clear requirements leads to expensive rewrites.",
         outcome: "A clearly scoped MVP that can be delivered in 6-10 weeks, with full product roadmap for subsequent phases.",
-        applyService: 'Custom+Software+Development',
+        applyService: 'Custom Software Development',
         urgencyNote: 'Discovery call can be scheduled this week. MVP build starts immediately after.',
         icon: 'dev',
         color: '#1c265e',
@@ -146,7 +145,7 @@ function getRecommendation(answers) {
       secondary: 'AI Consulting (AI Features Integration)',
       why: "Junior Reactive builds end-to-end digital products — web apps, mobile apps, and APIs — with modern tech and AI features built in from the start rather than bolted on later.",
       outcome: "A production-ready application tailored to your users, with clear documentation and ongoing support options.",
-      applyService: 'Custom+Software+Development',
+      applyService: 'Custom Software Development',
       urgencyNote: 'Full project timeline scoped during free discovery call.',
       icon: 'rocket',
       color: '#1c265e',
@@ -159,7 +158,7 @@ function getRecommendation(answers) {
     secondary: 'Free Discovery Call',
     why: "A strategy-first approach saves significant time and money. Our AI consulting engagement identifies your highest-value opportunities, creates a phased roadmap, and ensures every investment is justified.",
     outcome: "A clear, prioritised AI roadmap with vendor recommendations, budget estimates, and a phased implementation plan.",
-    applyService: 'AI+Consulting',
+    applyService: 'AI Consulting',
     urgencyNote: 'Initial free consultation can be scheduled within 48 hours.',
     icon: 'ai',
     color: '#1c265e',
@@ -267,7 +266,7 @@ export default function ServiceRecommender() {
 
           <div className="sr-result-actions">
             <Link
-              to={`/apply?service=${recommendation.applyService}`}
+              to={`/apply?service=${encodeURIComponent(recommendation.applyService)}`}
               className="ui-btn ui-btn--primary sr-apply-btn"
             >
               Apply for This Service <Icon name="arrow-right" size="xs" ariaLabel="" />

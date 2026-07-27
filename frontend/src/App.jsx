@@ -118,7 +118,7 @@ function App() {
     return (
         <QueryClientProvider client={queryClient}>
             <ToastProvider>
-            <Router>
+            <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <GoogleAnalytics />
                 <PageTracker />
                 <PublicLayout>

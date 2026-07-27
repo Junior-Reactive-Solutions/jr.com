@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
+import AdminErrorState from '../../components/admin/AdminErrorState';
 import { getFAQsAdmin, createFAQ, updateFAQ, deleteFAQ, reorderFAQs } from '../../services/adminService';
 import { ConfirmDialog, useToast } from '../../components/ui';
 import Icon from '../../assets/icons/components/Icon';
@@ -66,13 +67,21 @@ function FAQModal({ faq, onClose, onSaved }) {
 export default function AdminFAQs() {
     const [faqs,     setFaqs]     = useState([]);
     const [loading,  setLoading]  = useState(true);
+    const [error,    setError]    = useState('');
     const [modal,    setModal]    = useState(null); // null | 'add' | faq obj
     const [toDelete, setToDelete] = useState(null); // { id, question }
     const toast = useToast();
 
     const load = () => {
         setLoading(true);
-        getFAQsAdmin().then((res) => { if (res.success) setFaqs(res.data); }).finally(() => setLoading(false));
+        setError('');
+        getFAQsAdmin()
+            .then((res) => {
+                if (res.success) setFaqs(res.data);
+                else setError(res.error || 'Could not load FAQs.');
+            })
+            .catch(() => setError('Could not connect to the server.'))
+            .finally(() => setLoading(false));
     };
 
     useEffect(() => { load(); }, []);
@@ -130,6 +139,8 @@ export default function AdminFAQs() {
             <div className="admin-card admin-table-card">
                 {loading ? (
                     <div className="admin-loading"><div className="admin-spinner" /></div>
+                ) : error ? (
+                    <AdminErrorState message={error} onRetry={load} />
                 ) : faqs.length === 0 ? (
                     <div className="admin-empty-state">
                         <div className="admin-empty-icon"><Icon name="faq" size="xl" color="muted" /></div>

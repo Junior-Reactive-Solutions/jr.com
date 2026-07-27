@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
+import AdminErrorState from '../../components/admin/AdminErrorState';
 import { createService, updateService, deleteService } from '../../services/adminService';
 import { ConfirmDialog, useToast } from '../../components/ui';
 import Icon from '../../assets/icons/components/Icon';
@@ -9,7 +10,8 @@ const API = import.meta.env.VITE_API_URL || 'http://localhost:5005';
 async function fetchServices() {
     const res  = await fetch(`${API}/api/services`, { credentials: 'include' });
     const data = await res.json();
-    return data.success ? data.data : [];
+    if (!data.success) throw new Error(data.error || 'Could not load services.');
+    return data.data;
 }
 
 const EMPTY_FORM = { key: '', title: '', icon: 'settings', shortDescription: '', fullDescription: '' };
@@ -96,13 +98,18 @@ function ServiceModal({ service, onClose, onSaved }) {
 export default function AdminServices() {
     const [services, setServices] = useState([]);
     const [loading,  setLoading]  = useState(true);
+    const [error,    setError]    = useState('');
     const [modal,    setModal]    = useState(null); // null | 'add' | service obj
     const [toDelete, setToDelete] = useState(null); // { id, title }
     const toast = useToast();
 
     const load = () => {
         setLoading(true);
-        fetchServices().then(setServices).finally(() => setLoading(false));
+        setError('');
+        fetchServices()
+            .then(setServices)
+            .catch((err) => setError(err.message || 'Could not connect to the server.'))
+            .finally(() => setLoading(false));
     };
 
     useEffect(() => { load(); }, []);
@@ -152,6 +159,15 @@ export default function AdminServices() {
 
             {loading ? (
                 <div className="admin-loading"><div className="admin-spinner" /></div>
+            ) : error ? (
+                <div className="admin-card"><AdminErrorState message={error} onRetry={load} /></div>
+            ) : services.length === 0 ? (
+                <div className="admin-card">
+                    <div className="admin-empty-state">
+                        <div className="admin-empty-icon"><Icon name="services" size="xl" color="muted" /></div>
+                        <p>No services yet</p>
+                    </div>
+                </div>
             ) : (
                 <div className="admin-services-grid">
                     {services.map(s => (

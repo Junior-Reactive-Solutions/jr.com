@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
+import AdminErrorState from '../../components/admin/AdminErrorState';
 import Icon from '../../assets/icons/components/Icon';
 import { getDashboard } from '../../services/adminService';
 import { useCountUp } from '../../hooks/useAnime';
@@ -61,12 +62,16 @@ export default function AdminDashboard() {
     const [loading, setLoading] = useState(true);
     const [error,   setError]   = useState('');
 
-    useEffect(() => {
+    const load = () => {
+        setLoading(true);
+        setError('');
         getDashboard()
-            .then(res => { if (res.success) setData(res.data); else setError(res.error); })
-            .catch(() => setError('Failed to load dashboard.'))
+            .then(res => { if (res.success) setData(res.data); else setError(res.error || 'Could not load the dashboard.'); })
+            .catch(() => setError('Could not connect to the server.'))
             .finally(() => setLoading(false));
-    }, []);
+    };
+
+    useEffect(() => { load(); }, []);
 
     const unread   = data?.stats?.messages?.unread   || 0;
     const newApps  = data?.stats?.applications?.new  || 0;
@@ -79,7 +84,7 @@ export default function AdminDashboard() {
 
     if (error) return (
         <AdminLayout>
-            <div className="admin-alert admin-alert-error">{error}</div>
+            <AdminErrorState message={error} onRetry={load} />
         </AdminLayout>
     );
 

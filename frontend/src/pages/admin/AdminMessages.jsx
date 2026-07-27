@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
+import AdminErrorState from '../../components/admin/AdminErrorState';
 import { getMessages, replyToMessage, deleteMessage, markMessageRead } from '../../services/adminService';
 import { ConfirmDialog, useToast } from '../../components/ui';
 import Icon from '../../assets/icons/components/Icon';
@@ -109,6 +110,7 @@ function ViewModal({ message, onClose, onReply }) {
 export default function AdminMessages() {
     const [messages,  setMessages]  = useState([]);
     const [loading,   setLoading]   = useState(true);
+    const [error,     setError]     = useState('');
     const [filter,    setFilter]    = useState('all'); // 'all' | 'unread' | 'replied'
     const [search,    setSearch]    = useState('');
     const [viewing,   setViewing]   = useState(null);
@@ -118,8 +120,13 @@ export default function AdminMessages() {
 
     const load = () => {
         setLoading(true);
+        setError('');
         getMessages()
-            .then(res => { if (res.success) setMessages(res.data); })
+            .then(res => {
+                if (res.success) setMessages(res.data);
+                else setError(res.error || 'Could not load messages.');
+            })
+            .catch(() => setError('Could not connect to the server.'))
             .finally(() => setLoading(false));
     };
 
@@ -193,6 +200,8 @@ export default function AdminMessages() {
             <div className="admin-card admin-table-card">
                 {loading ? (
                     <div className="admin-loading"><div className="admin-spinner" /></div>
+                ) : error ? (
+                    <AdminErrorState message={error} onRetry={load} />
                 ) : filtered.length === 0 ? (
                     <div className="admin-empty-state">
                         <div className="admin-empty-icon"><Icon name="email" size="xl" color="muted" /></div>

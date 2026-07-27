@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
+import AdminErrorState from '../../components/admin/AdminErrorState';
 import { getApplications, updateAppStatus, deleteApplication } from '../../services/adminService';
 import { ConfirmDialog, useToast } from '../../components/ui';
 import Icon from '../../assets/icons/components/Icon';
@@ -72,17 +73,26 @@ function AppModal({ app, onClose, onStatusChange }) {
 export default function AdminApplications() {
     const [apps,     setApps]     = useState([]);
     const [loading,  setLoading]  = useState(true);
+    const [error,    setError]    = useState('');
     const [filter,   setFilter]   = useState('all');
     const [search,   setSearch]   = useState('');
     const [viewing,  setViewing]  = useState(null);
     const [toDelete, setToDelete] = useState(null); // { id, name }
     const toast = useToast();
 
-    useEffect(() => {
+    const load = () => {
+        setLoading(true);
+        setError('');
         getApplications()
-            .then(res => { if (res.success) setApps(res.data); })
+            .then(res => {
+                if (res.success) setApps(res.data);
+                else setError(res.error || 'Could not load applications.');
+            })
+            .catch(() => setError('Could not connect to the server.'))
             .finally(() => setLoading(false));
-    }, []);
+    };
+
+    useEffect(() => { load(); }, []);
 
     const confirmDelete = async () => {
         const { id, name } = toDelete;
@@ -154,6 +164,8 @@ export default function AdminApplications() {
             <div className="admin-card admin-table-card">
                 {loading ? (
                     <div className="admin-loading"><div className="admin-spinner" /></div>
+                ) : error ? (
+                    <AdminErrorState message={error} onRetry={load} />
                 ) : filtered.length === 0 ? (
                     <div className="admin-empty-state">
                         <div className="admin-empty-icon"><Icon name="notes" size="xl" color="muted" /></div>

@@ -91,7 +91,13 @@
   .admin-sidebar-toggle { display: flex !important; }
 }
 
-.admin-nav { flex: 1; padding: 16px 10px 0; overflow-y: auto; }
+.admin-nav {
+  /* Explicit display/flex-direction so this isn't at the mercy of
+     Header.css's bare `nav { display:flex }` tag selector, which
+     targets every <nav> on the page including this sidebar one. */
+  display: flex; flex-direction: column;
+  flex: 1; padding: 16px 10px 0; overflow-y: auto;
+}
 .admin-nav-label {
   font-size: .65rem; text-transform: uppercase; letter-spacing: .1em;
   color: rgba(255,255,255,.35); padding: 0 8px 8px; font-weight: 700;

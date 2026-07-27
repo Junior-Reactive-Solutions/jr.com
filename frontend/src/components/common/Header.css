@@ -34,9 +34,9 @@ header.scrolled { box-shadow: var(--shadow-1); }
 }
 .logo-text span { color: var(--accent-600); }
 
-nav { display: flex; align-items: center; gap: var(--sp-8); }
-nav ul { display: flex; gap: var(--sp-6); list-style: none; margin: 0; padding: 0; }
-nav ul li a {
+.nav-container nav { display: flex; align-items: center; gap: var(--sp-8); }
+.nav-container nav ul { display: flex; gap: var(--sp-6); list-style: none; margin: 0; padding: 0; }
+.nav-container nav ul li a {
     font-family: var(--font-ui);
     font-size: var(--text-sm);
     font-weight: 500;
@@ -46,8 +46,8 @@ nav ul li a {
     border-bottom: 2px solid transparent;
     transition: color var(--dur-base) var(--ease-out);
 }
-nav ul li a:hover { color: var(--ink-900); }
-nav ul li a.active { color: var(--ink-900); font-weight: 600; border-bottom-color: var(--accent-600); }
+.nav-container nav ul li a:hover { color: var(--ink-900); }
+.nav-container nav ul li a.active { color: var(--ink-900); font-weight: 600; border-bottom-color: var(--accent-600); }
 
 .btn-nav {
     font-family: var(--font-ui);
@@ -89,7 +89,7 @@ nav ul li a.active { color: var(--ink-900); font-weight: 600; border-bottom-colo
 
 @media (max-width: 900px) {
     .mobile-menu-toggle { display: flex; }
-    nav {
+    .nav-container nav {
         position: fixed;
         top: 64px;
         left: 0;
@@ -105,10 +105,10 @@ nav ul li a.active { color: var(--ink-900); font-weight: 600; border-bottom-colo
         transition: transform var(--dur-slow) var(--ease-out);
         overflow-y: auto;
     }
-    nav.open { transform: translateX(0); }
-    nav ul { flex-direction: column; gap: 0; width: 100%; }
-    nav ul li { border-bottom: 1px solid var(--border-subtle); }
-    nav ul li a {
+    .nav-container nav.open { transform: translateX(0); }
+    .nav-container nav ul { flex-direction: column; gap: 0; width: 100%; }
+    .nav-container nav ul li { border-bottom: 1px solid var(--border-subtle); }
+    .nav-container nav ul li a {
         display: block;
         font-size: var(--text-lg);
         padding: var(--sp-4) 0;
@@ -118,5 +118,5 @@ nav ul li a.active { color: var(--ink-900); font-weight: 600; border-bottom-colo
 }
 
 @media (prefers-reduced-motion: reduce) {
-    nav, .mobile-menu-toggle span { transition: none; }
+    .nav-container nav, .mobile-menu-toggle span { transition: none; }
 }

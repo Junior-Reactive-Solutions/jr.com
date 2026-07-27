@@ -46,6 +46,13 @@ router.put('/faqs/:id',       adminAuth, ctrl.updateFAQ);
 router.delete('/faqs/:id',    adminAuth, ctrl.deleteFAQ);
 router.patch('/faqs/reorder', adminAuth, ctrl.reorderFAQs);
 
+// Blog CRUD
+router.get('/blog',        adminAuth, ctrl.getBlogPostsAdmin);
+router.get('/blog/:id',    adminAuth, ctrl.getBlogPostAdmin);
+router.post('/blog',       adminAuth, ctrl.createBlogPost);
+router.put('/blog/:id',    adminAuth, ctrl.updateBlogPost);
+router.delete('/blog/:id', adminAuth, ctrl.deleteBlogPost);
+
 // Analytics
 router.get('/analytics', adminAuth, ctrl.getAnalytics);
 

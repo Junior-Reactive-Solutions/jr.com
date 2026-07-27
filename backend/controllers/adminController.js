@@ -4,6 +4,7 @@ const crypto    = require('crypto');
 const { Resend } = require('resend');
 const admin     = require('../models/adminModel');
 const faqModel  = require('../models/faqModel');
+const blogModel = require('../models/blogModel');
 const logger    = require('../utils/logger');
 const { JWT_SECRET } = require('../middleware/adminAuth');
 
@@ -383,6 +384,85 @@ async function reorderFAQs(req, res, next) {
     } catch (err) { next(err); }
 }
 
+// ── Blog ──────────────────────────────────────────────────────────────────────
+function slugify(str) {
+    return String(str)
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 200);
+}
+
+async function getBlogPostsAdmin(req, res, next) {
+    try {
+        const rows = await blogModel.getAllBlogPostsAdmin();
+        res.json({ success: true, data: rows });
+    } catch (err) { next(err); }
+}
+
+async function getBlogPostAdmin(req, res, next) {
+    try {
+        const post = await blogModel.getBlogPostByIdAdmin(req.params.id);
+        if (!post) return res.status(404).json({ success: false, error: 'Post not found.' });
+        res.json({ success: true, data: post });
+    } catch (err) { next(err); }
+}
+
+async function createBlogPost(req, res, next) {
+    try {
+        const { title, excerpt, content, author, publishDate } = req.body;
+        let { slug } = req.body;
+        if (!title?.trim() || !excerpt?.trim() || !content?.trim() || !author?.trim()) {
+            return res.status(400).json({ success: false, error: 'title, excerpt, content, and author are required.' });
+        }
+        slug = slugify(slug?.trim() || title);
+        if (!slug) {
+            return res.status(400).json({ success: false, error: 'Could not generate a valid slug from the title.' });
+        }
+        if (await blogModel.slugExists(slug)) {
+            return res.status(409).json({ success: false, error: `A post with slug "${slug}" already exists.` });
+        }
+        const result = await blogModel.createBlogPost({
+            title: title.trim(), slug, excerpt: excerpt.trim(), content: content.trim(),
+            author: author.trim(), publishDate: publishDate || undefined,
+        });
+        await admin.logAdminAction('create_blog_post', `Created blog post: ${title.slice(0, 60)}`);
+        res.status(201).json({ success: true, data: { id: result.id, slug } });
+    } catch (err) { next(err); }
+}
+
+async function updateBlogPost(req, res, next) {
+    try {
+        const { title, excerpt, content, author, publishDate } = req.body;
+        let { slug } = req.body;
+        if (!title?.trim() || !excerpt?.trim() || !content?.trim() || !author?.trim()) {
+            return res.status(400).json({ success: false, error: 'title, excerpt, content, and author are required.' });
+        }
+        slug = slugify(slug?.trim() || title);
+        if (!slug) {
+            return res.status(400).json({ success: false, error: 'Could not generate a valid slug from the title.' });
+        }
+        if (await blogModel.slugExists(slug, req.params.id)) {
+            return res.status(409).json({ success: false, error: `A post with slug "${slug}" already exists.` });
+        }
+        await blogModel.updateBlogPost(req.params.id, {
+            title: title.trim(), slug, excerpt: excerpt.trim(), content: content.trim(),
+            author: author.trim(), publishDate,
+        });
+        await admin.logAdminAction('update_blog_post', `Updated blog post #${req.params.id}`);
+        res.json({ success: true, message: 'Post updated.', data: { slug } });
+    } catch (err) { next(err); }
+}
+
+async function deleteBlogPost(req, res, next) {
+    try {
+        await blogModel.deleteBlogPost(req.params.id);
+        await admin.logAdminAction('delete_blog_post', `Deleted blog post #${req.params.id}`);
+        res.json({ success: true, message: 'Post deleted.' });
+    } catch (err) { next(err); }
+}
+
 // ── Analytics ─────────────────────────────────────────────────────────────────
 async function getAnalytics(req, res, next) {
     try {
@@ -398,5 +478,6 @@ module.exports = {
     getApplications, getApplication, updateStatus, deleteApplication,
     createService, updateService, deleteService,
     getFAQsAdmin, createFAQ, updateFAQ, deleteFAQ, reorderFAQs,
+    getBlogPostsAdmin, getBlogPostAdmin, createBlogPost, updateBlogPost, deleteBlogPost,
     getAnalytics,
 };

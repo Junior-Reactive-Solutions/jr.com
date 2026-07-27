@@ -51,6 +51,13 @@ export const updateFAQ     = (id, data)     => request(`/api/admin/faqs/${id}`, 
 export const deleteFAQ     = (id)           => request(`/api/admin/faqs/${id}`, 'DELETE');
 export const reorderFAQs   = (orderedIds)   => request('/api/admin/faqs/reorder', 'PATCH', { orderedIds });
 
+// Blog
+export const getBlogPostsAdmin = ()         => request('/api/admin/blog');
+export const getBlogPostAdmin  = (id)       => request(`/api/admin/blog/${id}`);
+export const createBlogPost    = (data)     => request('/api/admin/blog', 'POST', data);
+export const updateBlogPost    = (id, data) => request(`/api/admin/blog/${id}`, 'PUT', data);
+export const deleteBlogPost    = (id)       => request(`/api/admin/blog/${id}`, 'DELETE');
+
 // Analytics
 export const getAnalytics = () => request('/api/admin/analytics');
 

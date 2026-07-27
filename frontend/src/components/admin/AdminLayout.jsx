@@ -16,6 +16,7 @@ const ICONS = {
     applications: 'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8',
     services:     'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z',
     faqs:         'M12 17h.01 M9.09 9a3 3 0 015.83 1c0 2-3 2-3 4',
+    blog:         'M4 19.5A2.5 2.5 0 016.5 17H20 M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z M8 7h8 M8 11h8 M8 15h5',
     analytics:    'M18 20V10 M12 20V4 M6 20v-6',
     logout:       'M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4 M16 17l5-5-5-5 M21 12H9',
     menu:         'M3 12h18 M3 6h18 M3 18h18',
@@ -43,6 +44,7 @@ const NAV_SECTIONS = [
         label: 'Content',
         items: [
             { to: '/admin/services', label: 'Services', icon: 'services' },
+            { to: '/admin/blog',     label: 'Blog',      icon: 'blog' },
             { to: '/admin/faqs',     label: 'FAQs',      icon: 'faqs' },
         ],
     },

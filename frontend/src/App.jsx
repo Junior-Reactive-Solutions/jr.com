@@ -37,6 +37,7 @@ import AdminDashboard    from './pages/admin/AdminDashboard';
 import AdminMessages     from './pages/admin/AdminMessages';
 import AdminApplications from './pages/admin/AdminApplications';
 import AdminServices     from './pages/admin/AdminServices';
+import AdminBlog         from './pages/admin/AdminBlog';
 import AdminFAQs         from './pages/admin/AdminFAQs';
 import AdminAnalytics    from './pages/admin/AdminAnalytics';
 import ProtectedRoute    from './components/admin/ProtectedRoute';
@@ -146,6 +147,7 @@ function App() {
                         <Route path="/admin/messages"     element={<ProtectedRoute><AdminMessages /></ProtectedRoute>} />
                         <Route path="/admin/applications" element={<ProtectedRoute><AdminApplications /></ProtectedRoute>} />
                         <Route path="/admin/services"     element={<ProtectedRoute><AdminServices /></ProtectedRoute>} />
+                        <Route path="/admin/blog"         element={<ProtectedRoute><AdminBlog /></ProtectedRoute>} />
                         <Route path="/admin/faqs"         element={<ProtectedRoute><AdminFAQs /></ProtectedRoute>} />
                         <Route path="/admin/analytics"    element={<ProtectedRoute><AdminAnalytics /></ProtectedRoute>} />
                         <Route path="/admin"              element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />

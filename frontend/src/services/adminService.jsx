@@ -1,4 +1,4 @@
-const BASE = process.env.REACT_APP_API_URL || 'http://localhost:5005';
+const BASE = import.meta.env.VITE_API_URL || 'http://localhost:5005';
 
 const opts = (method, body) => ({
     method,
@@ -43,6 +43,20 @@ export const deleteApplication  = (id)        => request(`/api/admin/application
 export const createService = (data) => request('/api/admin/services', 'POST', data);
 export const updateService = (id, data) => request(`/api/admin/services/${id}`, 'PUT', data);
 export const deleteService = (id) => request(`/api/admin/services/${id}`, 'DELETE');
+
+// FAQs
+export const getFAQsAdmin  = ()             => request('/api/admin/faqs');
+export const createFAQ     = (data)         => request('/api/admin/faqs', 'POST', data);
+export const updateFAQ     = (id, data)     => request(`/api/admin/faqs/${id}`, 'PUT', data);
+export const deleteFAQ     = (id)           => request(`/api/admin/faqs/${id}`, 'DELETE');
+export const reorderFAQs   = (orderedIds)   => request('/api/admin/faqs/reorder', 'PATCH', { orderedIds });
+
+// Blog
+export const getBlogPostsAdmin = ()         => request('/api/admin/blog');
+export const getBlogPostAdmin  = (id)       => request(`/api/admin/blog/${id}`);
+export const createBlogPost    = (data)     => request('/api/admin/blog', 'POST', data);
+export const updateBlogPost    = (id, data) => request(`/api/admin/blog/${id}`, 'PUT', data);
+export const deleteBlogPost    = (id)       => request(`/api/admin/blog/${id}`, 'DELETE');
 
 // Analytics
 export const getAnalytics = () => request('/api/admin/analytics');

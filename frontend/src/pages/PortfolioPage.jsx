@@ -1,31 +1,27 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { contentService } from '../services/contentService';
-import HeroSection from '../components/layout/HeroSection';
-import { SkeletonPortfolioCard, SkeletonGrid } from '../components/common/SkeletonLoader';
+import PageIntro from '../components/layout/PageIntro';
 import ErrorState from '../components/common/ErrorState';
+import { Badge, Button, Card, Skeleton } from '../components/ui';
 import Icon from '../assets/icons/components/Icon';
 
-// Deterministic gradient from title string
-function titleGradient(title = '') {
-    const hues = [220, 240, 260, 280, 200, 180];
-    const idx = (title.charCodeAt(0) || 0) % hues.length;
-    const h1 = hues[idx];
-    const h2 = hues[(idx + 2) % hues.length];
-    return `linear-gradient(135deg, hsl(${h1},55%,38%) 0%, hsl(${h2},65%,52%) 100%)`;
-}
-
-const PortfolioImage = ({ src, alt, gradient }) => {
+const ProjectImage = ({ src, alt }) => {
     const [failed, setFailed] = React.useState(false);
 
     if (!src || failed) {
+        // Flat wash placeholder — no generated gradients.
         return (
-            <div style={{
-                height: 200, background: gradient,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: 'rgba(255,255,255,.7)',
-            }}>
-                <Icon name="image" size="xl" color="white" ariaLabel={alt || 'Project image'} />
+            <div
+                aria-hidden="true"
+                style={{
+                    width: '100%', aspectRatio: '16 / 9', borderRadius: 'var(--r-md)',
+                    background: 'var(--surface-wash)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: 'var(--accent-400)',
+                }}
+            >
+                <Icon name="image" size="lg" ariaLabel="" />
             </div>
         );
     }
@@ -34,8 +30,9 @@ const PortfolioImage = ({ src, alt, gradient }) => {
         <img
             src={`/images/portfolio/${src}`}
             alt={alt}
-            style={{ width: '100%', height: 200, objectFit: 'cover', display: 'block' }}
+            style={{ width: '100%', aspectRatio: '16 / 9', objectFit: 'cover', borderRadius: 'var(--r-md)', display: 'block' }}
             onError={() => setFailed(true)}
+            loading="lazy"
         />
     );
 };
@@ -50,44 +47,56 @@ const PortfolioPage = () => {
 
     return (
         <main>
-            <HeroSection
-                badge="Our Work"
-                title="Portfolio"
-                subtitle="A selection of projects that showcase our expertise across industries and technologies."
+            <PageIntro
+                kicker="Past work"
+                title="Projects we've shipped"
+                lead="Real deliverables for real clients. Where an engagement is under NDA, we describe the work without naming the name."
             />
 
-            <section className="section">
-                <div className="container">
+            <section className="v2-section">
+                <div className="v2-container">
                     {isLoading ? (
-                        <SkeletonGrid count={6} Card={SkeletonPortfolioCard} />
+                        <div className="v2-grid-3">
+                            {[1, 2, 3].map((i) => (
+                                <Card key={i}>
+                                    <Skeleton height={140} style={{ marginBottom: 16 }} />
+                                    <Skeleton height={18} width="70%" style={{ marginBottom: 8 }} />
+                                    <Skeleton height={12} />
+                                </Card>
+                            ))}
+                        </div>
                     ) : isError ? (
                         <ErrorState
                             title="Couldn't load portfolio"
-                            message="Make sure the backend is running on port 5005."
+                            message="The server did not respond. Try again in a moment."
                             onRetry={refetch}
                         />
                     ) : projects.length === 0 ? (
-                        <ErrorState icon="files" title="No projects yet" message="Portfolio projects will appear here once added." />
+                        <ErrorState icon="files" title="No projects yet" message="Case studies will appear here once published." />
                     ) : (
-                        <div className="services-grid">
+                        <div className="v2-grid-3">
                             {projects.map((project) => (
-                                <div key={project.id} className="portfolio-card">
-                                    <PortfolioImage
-                                        src={project.image}
-                                        alt={project.title}
-                                        gradient={titleGradient(project.title)}
-                                    />
-                                    <div className="portfolio-body">
-                                        <span className="tag" style={{ marginBottom: 10, display: 'inline-block' }}>
-                                            {project.category}
-                                        </span>
-                                        <h3 style={{ marginBottom: 8, fontSize: '1.1rem' }}>{project.title}</h3>
-                                        <p style={{ fontSize: '0.875rem' }}>{project.description}</p>
+                                <Card key={project.id} interactive>
+                                    <ProjectImage src={project.image} alt={project.title} />
+                                    <div style={{ marginTop: 'var(--sp-4)' }}>
+                                        <Badge tone="accent">{project.category}</Badge>
                                     </div>
-                                </div>
+                                    <h2 className="v2-row-title" style={{ marginTop: 'var(--sp-3)' }}>{project.title}</h2>
+                                    <p className="v2-body" style={{ fontSize: 'var(--text-sm)' }}>{project.description}</p>
+                                </Card>
                             ))}
                         </div>
                     )}
+                </div>
+            </section>
+
+            <section className="v2-section v2-section--wash">
+                <div className="v2-container">
+                    <h2 className="v2-h2">Your project could be next</h2>
+                    <p className="v2-lead">Tell us what you're working on and we'll tell you honestly whether we're the right team for it.</p>
+                    <div className="v2-actions">
+                        <Button to="/apply">Start a project</Button>
+                    </div>
                 </div>
             </section>
         </main>

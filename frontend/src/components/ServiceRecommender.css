@@ -1,0 +1,171 @@
+/* Service Recommender — v2 tokens. Previously had no stylesheet at all;
+   this component now sits in the homepage hero and the AI Tools page,
+   the two most visible surfaces on the site. */
+
+.sr-card {
+    background: var(--surface-raised);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-lg);
+    padding: var(--sp-6);
+}
+.sr-card.sr-animating { opacity: 0.5; transition: opacity var(--dur-base) var(--ease-out); }
+
+/* ---- Intro screen ------------------------------------------- */
+.sr-intro { text-align: center; padding: var(--sp-4) 0; }
+.sr-intro-icon {
+    width: 56px; height: 56px; margin: 0 auto var(--sp-4);
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface-wash); border-radius: var(--r-lg);
+    color: var(--accent-700);
+}
+.sr-intro h3 {
+    font-family: var(--font-ui); font-size: var(--text-xl); font-weight: 600;
+    color: var(--ink-900); margin: 0 0 var(--sp-3);
+}
+.sr-intro p {
+    font-size: var(--text-sm); color: var(--text-secondary);
+    line-height: var(--leading-body); margin: 0 0 var(--sp-5);
+}
+.sr-intro-meta {
+    display: flex; justify-content: center; flex-wrap: wrap;
+    gap: var(--sp-5); margin-bottom: var(--sp-6);
+    font-size: var(--text-sm); color: var(--text-muted); font-weight: 500;
+}
+.sr-start-btn { width: 100%; justify-content: center; }
+
+/* ---- Progress bar --------------------------------------------- */
+.sr-progress { margin-bottom: var(--sp-6); }
+.sr-progress-bar {
+    height: 4px; background: var(--neutral-200); border-radius: var(--r-pill);
+    overflow: hidden; margin-bottom: var(--sp-2);
+}
+.sr-progress-fill {
+    height: 100%; background: var(--accent-600); border-radius: var(--r-pill);
+    transition: width var(--dur-slow) var(--ease-out);
+}
+.sr-progress-label {
+    font-size: var(--text-xs); color: var(--text-muted); font-weight: 500;
+}
+
+/* ---- Question --------------------------------------------------- */
+.sr-question h3 {
+    font-family: var(--font-ui); font-size: var(--text-lg); font-weight: 600;
+    color: var(--ink-900); line-height: var(--leading-snug); margin: 0 0 var(--sp-5);
+}
+
+/* ---- Options: two-column grid, roomy tap targets --------------- */
+.sr-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-6);
+}
+@media (max-width: 420px) {
+    .sr-options { grid-template-columns: 1fr; }
+}
+.sr-option {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    padding: var(--sp-4);
+    background: var(--surface-page);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-md);
+    cursor: pointer;
+    text-align: left;
+    font-family: var(--font-ui);
+    transition: border-color var(--dur-base) var(--ease-out),
+                background-color var(--dur-base) var(--ease-out);
+    position: relative;
+    min-height: 64px;
+}
+.sr-option:hover { border-color: var(--border-strong); background: var(--neutral-100); }
+.sr-option.selected {
+    border-color: var(--accent-600);
+    background: var(--accent-50);
+}
+.sr-option-icon {
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface-wash);
+    border-radius: var(--r-md);
+    color: var(--accent-700);
+}
+.sr-option.selected .sr-option-icon { background: var(--accent-600); color: var(--text-inverse); }
+.sr-option-label {
+    flex: 1;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    line-height: var(--leading-snug);
+    color: var(--ink-900);
+}
+.sr-option-check {
+    flex-shrink: 0;
+    color: var(--status-success);
+}
+
+/* ---- Nav row ---------------------------------------------------- */
+.sr-nav { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
+.sr-back-btn {
+    background: none; border: none; cursor: pointer;
+    font-family: var(--font-ui); font-size: var(--text-sm); font-weight: 600;
+    color: var(--text-muted); padding: var(--sp-2) var(--sp-3);
+}
+.sr-back-btn:hover { color: var(--ink-900); }
+.sr-next-btn { margin-left: auto; }
+.sr-next-btn.disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ---- Result screen ------------------------------------------------ */
+.sr-result-card { padding: 0; overflow: hidden; }
+.sr-result-header {
+    padding: var(--sp-6);
+    background: var(--surface-wash);
+    border-bottom: 1px solid var(--border-subtle);
+}
+.sr-result-icon {
+    width: 48px; height: 48px; margin-bottom: var(--sp-3);
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface-raised); border-radius: var(--r-md);
+}
+.sr-result-badge {
+    font-size: var(--text-xs); font-weight: 600; text-transform: uppercase;
+    letter-spacing: var(--tracking-kicker); color: var(--accent-700);
+    margin-bottom: var(--sp-2);
+}
+.sr-result-title {
+    font-family: var(--font-ui); font-size: var(--text-xl); font-weight: 600;
+    color: var(--ink-900); margin: 0 0 var(--sp-2); line-height: var(--leading-snug);
+}
+.sr-result-secondary { font-size: var(--text-sm); color: var(--text-secondary); margin: 0; }
+.sr-result-secondary strong { color: var(--ink-900); }
+
+.sr-result-body { padding: var(--sp-6); }
+.sr-result-section { margin-bottom: var(--sp-5); }
+.sr-result-section h4 {
+    font-family: var(--font-ui); font-size: var(--text-sm); font-weight: 600;
+    color: var(--ink-900); margin: 0 0 var(--sp-2);
+}
+.sr-result-section p {
+    font-size: var(--text-sm); color: var(--text-secondary);
+    line-height: var(--leading-body); margin: 0;
+}
+.sr-result-timing {
+    display: flex; align-items: center; gap: var(--sp-2);
+    background: var(--surface-sunken); border-radius: var(--r-md);
+    padding: var(--sp-3) var(--sp-4); margin-bottom: var(--sp-5);
+    font-size: var(--text-sm); color: var(--text-secondary);
+}
+.sr-result-actions { display: flex; flex-direction: column; gap: var(--sp-3); }
+.sr-apply-btn, .sr-contact-btn { width: 100%; justify-content: center; }
+.sr-restart-btn {
+    display: block; width: 100%; text-align: center;
+    background: none; border: none; cursor: pointer;
+    font-family: var(--font-ui); font-size: var(--text-sm); font-weight: 600;
+    color: var(--text-muted); padding: var(--sp-4) 0 0;
+}
+.sr-restart-btn:hover { color: var(--accent-700); }
+
+@media (prefers-reduced-motion: reduce) {
+    .sr-progress-fill, .sr-option, .sr-card { transition: none; }
+}

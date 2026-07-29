@@ -6,6 +6,14 @@ const router = express.Router();
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_KEY = process.env.GROQ_API_KEY;
 
+// Defense-in-depth: the system prompt instructs the model not to use emoji,
+// but instructions alone are not reliable — strip any that slip through
+// before a response ever reaches the client (project-wide no-emoji rule).
+const EMOJI_PATTERN = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\u{FE0F}]/gu;
+function stripEmoji(text) {
+    return typeof text === 'string' ? text.replace(EMOJI_PATTERN, '').replace(/[ \t]{2,}/g, ' ').trim() : text;
+}
+
 // ── Rate limiting for AI endpoints ────────────────────────────────────────────
 const aiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,   // 15 minutes
@@ -107,6 +115,7 @@ const JR_SYSTEM_PROMPT = `You are JR Assistant, the official AI chatbot for Juni
 5. Work begins — no commitment until happy with proposal
 
 ## YOUR BEHAVIOUR RULES
+- Never use emoji, emoticons, or decorative symbols anywhere in a response, including in suggestions. Plain text only.
 - Be warm, professional, and concise. Max 3-4 sentences per response unless asked for detail.
 - ALWAYS end responses with 1-3 actionable suggestions as a JSON block like this:
   {"suggestions": ["Book a free discovery call", "See our services", "View portfolio"]}
@@ -163,14 +172,19 @@ router.post('/chat', aiLimiter, async (req, res) => {
             suggestions = ['Tell me about your services', 'How do I get started?', 'View pricing'];
         }
 
-        res.json({ success: true, message: cleanText, suggestions, navigate });
+        res.json({
+            success: true,
+            message: stripEmoji(cleanText),
+            suggestions: suggestions.map(stripEmoji),
+            navigate,
+        });
 
     } catch (err) {
         logger.error({ err }, 'AI Chat error');
         res.status(500).json({
             success: false,
             error: 'AI service temporarily unavailable. Please contact us directly.',
-            message: "I'm having a moment! 😅 You can reach the team directly at juniorreactive@gmail.com or WhatsApp +256 764 524 816.",
+            message: "The assistant is unavailable right now. You can reach the team directly at juniorreactive@gmail.com or WhatsApp +256 764 524 816.",
             suggestions: ['Contact Us', 'WhatsApp Us'],
         });
     }
@@ -247,7 +261,7 @@ Keep it professional, specific to their industry, and grounded in realistic East
 
         res.json({
             success: true,
-            brief,
+            brief: stripEmoji(brief),
             meta: { companyName, industry, generatedAt: new Date().toISOString() },
         });
 

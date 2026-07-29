@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ToastProvider } from './components/ui';
 import './assets/css/global.css';
 import './assets/css/admin.css';
 
@@ -8,9 +9,9 @@ import './assets/css/admin.css';
 import { trackPageView } from './services/adminService';
 
 // ── Common components ────────────────────────────────────────────────────────
-import Header  from './components/common/Header';
-import Footer  from './components/common/Footer';
-import Chatbot from './components/Chatbot';
+import Header      from './components/common/Header';
+import Footer      from './components/common/Footer';
+import WhatsAppCta from './components/common/WhatsAppCta';
 
 // ── Public pages ─────────────────────────────────────────────────────────────
 import HomePage         from './pages/HomePage';
@@ -28,6 +29,7 @@ import PrivacyPage      from './pages/PrivacyPage';
 import TermsPage        from './pages/TermsPage';
 import NotFoundPage     from './pages/NotFoundPage';
 import AIToolsPage      from './pages/AIToolsPage';
+import StyleguidePage   from './pages/StyleguidePage';
 
 // ── Admin pages ───────────────────────────────────────────────────────────────
 import AdminLogin        from './pages/admin/AdminLogin';
@@ -35,6 +37,8 @@ import AdminDashboard    from './pages/admin/AdminDashboard';
 import AdminMessages     from './pages/admin/AdminMessages';
 import AdminApplications from './pages/admin/AdminApplications';
 import AdminServices     from './pages/admin/AdminServices';
+import AdminBlog         from './pages/admin/AdminBlog';
+import AdminFAQs         from './pages/admin/AdminFAQs';
 import AdminAnalytics    from './pages/admin/AdminAnalytics';
 import ProtectedRoute    from './components/admin/ProtectedRoute';
 
@@ -69,7 +73,7 @@ function PageTracker() {
         );
 
         // Google Analytics (GA4) — only fires if GA_ID is set
-        const GA_ID = process.env.REACT_APP_GA_ID;
+        const GA_ID = import.meta.env.VITE_GA_ID;
         if (GA_ID && window.gtag) {
             window.gtag('config', GA_ID, { page_path: location.pathname });
         }
@@ -80,7 +84,7 @@ function PageTracker() {
 
 // ── Google Analytics loader ───────────────────────────────────────────────────
 function GoogleAnalytics() {
-    const GA_ID = process.env.REACT_APP_GA_ID;
+    const GA_ID = import.meta.env.VITE_GA_ID;
     useEffect(() => {
         if (!GA_ID) return;
         const script = document.createElement('script');
@@ -106,7 +110,7 @@ function PublicLayout({ children }) {
             {!isAdmin && <Header />}
             {children}
             {!isAdmin && <Footer />}
-            {!isAdmin && <Chatbot />}
+            {!isAdmin && <WhatsAppCta />}
         </>
     );
 }
@@ -114,7 +118,8 @@ function PublicLayout({ children }) {
 function App() {
     return (
         <QueryClientProvider client={queryClient}>
-            <Router>
+            <ToastProvider>
+            <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <GoogleAnalytics />
                 <PageTracker />
                 <PublicLayout>
@@ -134,6 +139,7 @@ function App() {
                         <Route path="/ai-tools"      element={<AIToolsPage />} />
                         <Route path="/terms"         element={<TermsPage />} />
                         <Route path="/privacy"       element={<PrivacyPage />} />
+                        <Route path="/styleguide"    element={<StyleguidePage />} />
 
                         {/* ── Admin ── */}
                         <Route path="/admin/login" element={<AdminLogin />} />
@@ -141,6 +147,8 @@ function App() {
                         <Route path="/admin/messages"     element={<ProtectedRoute><AdminMessages /></ProtectedRoute>} />
                         <Route path="/admin/applications" element={<ProtectedRoute><AdminApplications /></ProtectedRoute>} />
                         <Route path="/admin/services"     element={<ProtectedRoute><AdminServices /></ProtectedRoute>} />
+                        <Route path="/admin/blog"         element={<ProtectedRoute><AdminBlog /></ProtectedRoute>} />
+                        <Route path="/admin/faqs"         element={<ProtectedRoute><AdminFAQs /></ProtectedRoute>} />
                         <Route path="/admin/analytics"    element={<ProtectedRoute><AdminAnalytics /></ProtectedRoute>} />
                         <Route path="/admin"              element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
 
@@ -148,6 +156,7 @@ function App() {
                     </Routes>
                 </PublicLayout>
             </Router>
+            </ToastProvider>
         </QueryClientProvider>
     );
 }

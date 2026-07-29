@@ -1,27 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
 import { contentService } from '../services/contentService';
-import HeroSection from '../components/layout/HeroSection';
-import { SkeletonFAQ } from '../components/common/SkeletonLoader';
+import PageIntro from '../components/layout/PageIntro';
 import ErrorState from '../components/common/ErrorState';
-
-const FAQItem = ({ faq }) => {
-    const [open, setOpen] = useState(false);
-    return (
-        <div className="faq-item">
-            <button className={`faq-question ${open ? 'open' : ''}`} onClick={() => setOpen(!open)}>
-                <span>{faq.question}</span>
-                <div className={`faq-icon ${open ? 'open' : ''}`}>▾</div>
-            </button>
-            {open && (
-                <div className="faq-answer">
-                    <p style={{ margin: '12px 0 0' }}>{faq.answer}</p>
-                </div>
-            )}
-        </div>
-    );
-};
+import { Accordion, Button, Skeleton } from '../components/ui';
 
 const FAQPage = () => {
     const { data, isLoading, isError, refetch } = useQuery({
@@ -33,40 +15,50 @@ const FAQPage = () => {
 
     return (
         <main>
-            <HeroSection
-                badge="Help Center"
-                title="Frequently Asked Questions"
-                subtitle="Find answers to the most common questions about our services and process."
+            <PageIntro
+                kicker="Questions"
+                title="Asked before you asked"
+                lead="Straight answers about pricing, timelines, ownership, and how we work. If yours isn't here, WhatsApp us — a person replies, not a bot."
             />
 
-            <section className="section">
-                <div className="container" style={{ maxWidth: 800 }}>
+            <section className="v2-section">
+                <div className="v2-container" style={{ maxWidth: 800 }}>
                     {isLoading ? (
-                        <div>{Array.from({ length: 6 }).map((_, i) => <SkeletonFAQ key={i} />)}</div>
+                        <div>
+                            {[1, 2, 3, 4].map((i) => (
+                                <div key={i} style={{ padding: 'var(--sp-5) 0', borderBottom: '1px solid var(--border-subtle)' }}>
+                                    <Skeleton height={18} width="65%" />
+                                </div>
+                            ))}
+                        </div>
                     ) : isError ? (
                         <ErrorState
                             title="Couldn't load FAQs"
-                            message="Make sure the backend is running on port 5005."
+                            message="The server did not respond. Try again in a moment."
                             onRetry={refetch}
                         />
                     ) : faqs.length === 0 ? (
-                        <ErrorState icon="faq" title="No FAQs yet" message="FAQs will appear here once added." />
+                        <ErrorState icon="faq" title="No FAQs yet" message="Answers will appear here once published." />
                     ) : (
-                        <div>
-                            {faqs.map((faq) => <FAQItem key={faq.id} faq={faq} />)}
-                        </div>
+                        <Accordion
+                            items={faqs.map((f) => ({ id: String(f.id), title: f.question, content: f.answer }))}
+                        />
                     )}
 
-                    {/* Still have questions CTA */}
                     {!isLoading && !isError && (
-                        <div style={{
-                            marginTop: 48, background: 'var(--gradient-light)',
-                            borderRadius: 'var(--radius-lg)', padding: '32px 40px',
-                            textAlign: 'center', border: '1px solid var(--color-border)',
-                        }}>
-                            <h3 style={{ marginBottom: 8 }}>Still have questions?</h3>
-                            <p style={{ marginBottom: 24 }}>Our team is happy to help. Reach out directly.</p>
-                            <Link to="/contact" className="btn">Contact Us</Link>
+                        <div style={{ marginTop: 'var(--sp-12)' }}>
+                            <h2 className="v2-h2">Something we didn't cover?</h2>
+                            <div className="v2-actions">
+                                <Button to="/contact">Contact us</Button>
+                                <Button
+                                    variant="secondary"
+                                    href="https://wa.me/256764524816"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    WhatsApp us
+                                </Button>
+                            </div>
                         </div>
                     )}
                 </div>

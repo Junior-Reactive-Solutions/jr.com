@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { contentService } from '../services/contentService';
-import HeroSection from '../components/layout/HeroSection';
-import { SkeletonBlogCard, SkeletonGrid } from '../components/common/SkeletonLoader';
+import PageIntro from '../components/layout/PageIntro';
 import ErrorState from '../components/common/ErrorState';
+import { Skeleton } from '../components/ui';
 import Icon from '../assets/icons/components/Icon';
 
 const BlogPage = () => {
@@ -17,57 +17,45 @@ const BlogPage = () => {
 
     return (
         <main>
-            <HeroSection
-                badge="Latest Insights"
-                title="Blog & Insights"
-                subtitle="News, trends, and thoughts on AI, technology, and business from the Junior Reactive team."
+            <PageIntro
+                kicker="Writing"
+                title="Notes from the work"
+                lead="What we're learning building AI and automation for East African businesses — written for business owners, not engineers."
             />
 
-            <section className="section">
-                <div className="container">
+            <section className="v2-section">
+                <div className="v2-container" style={{ maxWidth: 800 }}>
                     {isLoading ? (
-                        <SkeletonGrid count={6} Card={SkeletonBlogCard} />
+                        <div>
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} style={{ padding: 'var(--sp-6) 0', borderBottom: '1px solid var(--border-subtle)' }}>
+                                    <Skeleton height={12} width={140} style={{ marginBottom: 10 }} />
+                                    <Skeleton height={22} width="70%" style={{ marginBottom: 10 }} />
+                                    <Skeleton height={14} width="90%" />
+                                </div>
+                            ))}
+                        </div>
                     ) : isError ? (
                         <ErrorState
                             title="Couldn't load posts"
-                            message="Make sure the backend is running on port 5005."
+                            message="The server did not respond. Try again in a moment."
                             onRetry={refetch}
                         />
                     ) : posts.length === 0 ? (
-                        <ErrorState
-                            icon="document"
-                            title="No posts yet"
-                            message="Blog posts will appear here once published."
-                        />
+                        <ErrorState icon="document" title="No posts yet" message="Articles will appear here once published." />
                     ) : (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+                        <div className="v2-rows">
                             {posts.map((post) => (
-                                <article key={post.id} className="blog-card">
-                                    {/* Placeholder header image */}
-                                    <div style={{
-                                        height: 160,
-                                        background: 'var(--gradient-primary)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                    }}>
-                                        <Icon name="blog" size="xl" color="white" ariaLabel="" />
-                                    </div>
-                                    <div className="blog-card-body">
-                                        <div className="blog-meta">
-                                            <span>{post.formattedDate}</span>
-                                            <span>·</span>
-                                            <span>{post.author}</span>
-                                        </div>
-                                        <h3>
-                                            <Link to={`/blog/${post.slug}`}>{post.title}</Link>
-                                        </h3>
-                                        <p>{post.excerpt}</p>
-                                        <Link to={`/blog/${post.slug}`} className="read-more" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                                            Read More <Icon name="arrow-right" size="xs" />
-                                        </Link>
-                                    </div>
-                                </article>
+                                <Link className="v2-row" to={`/blog/${post.slug}`} key={post.id} style={{ gridTemplateColumns: '1fr auto' }}>
+                                    <span>
+                                        <span style={{ display: 'block', fontSize: 'var(--text-xs)', color: 'var(--text-muted)', marginBottom: 'var(--sp-2)' }}>
+                                            {post.formattedDate} · {post.author}
+                                        </span>
+                                        <h2 className="v2-row-title">{post.title}</h2>
+                                        <p className="v2-row-desc">{post.excerpt}</p>
+                                    </span>
+                                    <span className="v2-row-arrow"><Icon name="arrow-right" size="sm" ariaLabel="" /></span>
+                                </Link>
                             ))}
                         </div>
                     )}

@@ -1,7 +1,8 @@
 const nodemailer = require('nodemailer');
 const https = require('https');
+const logger = require('./logger');
 
-// ─── BRAND ────────────────────────────────────────────────────────────────────
+// Brand colors for email templates
 const BRAND = {
     primary: '#1c265e', secondary: '#5269c3',
     accent: '#a8ccee', light: '#e4eaf9',
@@ -9,11 +10,11 @@ const BRAND = {
 const RECIPIENT    = process.env.NOTIFY_EMAIL    || 'juniorreactive@gmail.com';
 const WA_RECIPIENT = process.env.NOTIFY_WHATSAPP || ''; // e.g. 256764524816
 
-// ─── EMAIL TRANSPORTER ────────────────────────────────────────────────────────
+// Email transporter
 function createTransporter() {
     const { EMAIL_HOST, EMAIL_USER, EMAIL_PASS } = process.env;
     if (!EMAIL_HOST || !EMAIL_USER || !EMAIL_PASS) {
-        console.info('ℹ️  Email not configured — add EMAIL_* vars to backend/.env');
+        logger.info('Email not configured — add EMAIL_* vars to backend/.env');
         return null;
     }
     return nodemailer.createTransport({
@@ -25,7 +26,7 @@ function createTransporter() {
     });
 }
 
-// ─── WHATSAPP CLOUD API ───────────────────────────────────────────────────────
+// WhatsApp Cloud API
 // Sends a message to your WhatsApp number via Meta's free Cloud API.
 // Required env vars:
 //   WA_PHONE_NUMBER_ID  — Sender phone number ID (from Meta Developer Console)
@@ -34,7 +35,7 @@ function createTransporter() {
 async function sendWhatsApp(text) {
     const { WA_PHONE_NUMBER_ID, WA_ACCESS_TOKEN } = process.env;
     if (!WA_PHONE_NUMBER_ID || !WA_ACCESS_TOKEN || !WA_RECIPIENT) {
-        console.info('ℹ️  WhatsApp not configured — add WA_* vars to backend/.env');
+        console.info('WhatsApp not configured — add WA_* vars to backend/.env');
         return;
     }
 
@@ -62,16 +63,16 @@ async function sendWhatsApp(text) {
                 res.on('data', chunk => { body += chunk; });
                 res.on('end', () => {
                     if (res.statusCode === 200 || res.statusCode === 201) {
-                        console.log(`✅ WhatsApp alert sent → ${WA_RECIPIENT}`);
+                        logger.info('WhatsApp alert sent');
                     } else {
-                        console.warn(`⚠️  WhatsApp API ${res.statusCode}: ${body}`);
+                        logger.warn({ statusCode: res.statusCode }, 'WhatsApp API request failed');
                     }
                     resolve();
                 });
             }
         );
         req.on('error', (err) => {
-            console.warn(`⚠️  WhatsApp send failed: ${err.message}`);
+            console.warn(`WARN: WhatsApp send failed: ${err.message}`);
             resolve(); // never crash the form submission
         });
         req.write(payload);
@@ -79,7 +80,7 @@ async function sendWhatsApp(text) {
     });
 }
 
-// ─── EMAIL HTML HELPERS ───────────────────────────────────────────────────────
+// Email HTML helpers
 function baseTemplate(title, accentColor, badgeText, bodyHtml) {
     return `<!DOCTYPE html>
 <html lang="en">
@@ -139,7 +140,7 @@ function replyButton(email, subject, firstName) {
     </div>`;
 }
 
-// ─── CONTACT NOTIFICATION ─────────────────────────────────────────────────────
+// Contact notification
 async function sendContactNotification(data) {
     // Email
     const transporter = createTransporter();
@@ -156,29 +157,29 @@ async function sendContactNotification(data) {
             await transporter.sendMail({
                 from: `"Junior Reactive Website" <${process.env.EMAIL_USER}>`,
                 to: RECIPIENT, replyTo: data.email,
-                subject: `📬 New Contact: ${data.subject}`,
+                subject: `New Contact: ${data.subject}`,
                 html: baseTemplate('New Contact Message', 'rgba(255,255,255,.25)', 'Contact Form', body),
             });
-            console.log(`✅ Contact email sent — ${data.email}`);
+            logger.info('Contact email sent');
         } catch (err) {
-            console.warn(`⚠️  Contact email failed: ${err.message}`);
+            logger.warn({ err }, 'Contact email failed');
         }
     }
 
     // WhatsApp
     await sendWhatsApp(
-`📬 *New Contact — JR Website*
+`*New Contact — JR Website*
 
-👤 *Name:* ${data.name}
-✉️ *Email:* ${data.email}
-📌 *Subject:* ${data.subject}
+*Name:* ${data.name}
+*Email:* ${data.email}
+*Subject:* ${data.subject}
 
-💬 *Message:*
+*Message:*
 ${data.message.length > 280 ? data.message.slice(0, 280) + '…' : data.message}`
     );
 }
 
-// ─── APPLICATION NOTIFICATION ─────────────────────────────────────────────────
+// Application notification
 async function sendApplicationNotification(data) {
     // Email
     const transporter = createTransporter();
@@ -197,24 +198,24 @@ async function sendApplicationNotification(data) {
             await transporter.sendMail({
                 from: `"Junior Reactive Website" <${process.env.EMAIL_USER}>`,
                 to: RECIPIENT, replyTo: data.email,
-                subject: `🚀 New Application: ${data.service_type} — ${data.company || data.name}`,
+                subject: `New Application: ${data.service_type} — ${data.company || data.name}`,
                 html: baseTemplate('New Service Application', 'rgba(255,255,255,.2)', 'Application', body),
             });
-            console.log(`✅ Application email sent — ${data.email}`);
+            logger.info('Application email sent');
         } catch (err) {
-            console.warn(`⚠️  Application email failed: ${err.message}`);
+            logger.warn({ err }, 'Application email failed');
         }
     }
 
     // WhatsApp
     await sendWhatsApp(
-`🚀 *New Application — JR Website*
+`*New Application — JR Website*
 
-${data.company ? `🏢 *Company:* ${data.company}\n` : ''}👤 *Name:* ${data.name}
-✉️ *Email:* ${data.email}
-${data.phone ? `📞 *Phone:* ${data.phone}\n` : ''}⚡ *Service:* ${data.service_type}
+${data.company ? `*Company:* ${data.company}\n` : ''}*Name:* ${data.name}
+*Email:* ${data.email}
+${data.phone ? `*Phone:* ${data.phone}\n` : ''}*Service:* ${data.service_type}
 
-📋 *Requirements:*
+*Requirements:*
 ${data.requirements.length > 280 ? data.requirements.slice(0, 280) + '…' : data.requirements}`
     );
 }

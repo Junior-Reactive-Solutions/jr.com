@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
 import { submissionService } from '../services/submissionService';
+import PageIntro from '../components/layout/PageIntro';
+import { Button, Card, Field, Kicker } from '../components/ui';
 import Icon from '../assets/icons/components/Icon';
 
-const CONTACT_DETAILS = [
+const CHANNELS = [
     { icon: 'phone',    label: 'Phone / WhatsApp', value: '+256 764 524 816', href: 'tel:+256764524816' },
     { icon: 'email',    label: 'Email', value: 'juniorreactive@gmail.com', href: 'mailto:juniorreactive@gmail.com' },
     { icon: 'location', label: 'Location', value: 'Kampala, Uganda', href: null },
-    { icon: 'time',     label: 'Response Time', value: 'Within 24 hours', href: null },
+    { icon: 'time',     label: 'Response time', value: 'Within 24 hours', href: null },
 ];
 
 const ContactPage = () => {
-    const [form, setForm]       = useState({ name: '', email: '', subject: '', message: '' });
-    const [status, setStatus]   = useState(null); // 'loading' | 'success' | 'error'
-    const [errMsg, setErrMsg]   = useState('');
+    const [form, setForm]     = useState({ name: '', email: '', subject: '', message: '' });
+    const [status, setStatus] = useState(null); // 'loading' | 'success' | 'error'
+    const [errMsg, setErrMsg] = useState('');
 
-    const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+    const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
-    const handleSubmit = async e => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setStatus('loading');
         setErrMsg('');
@@ -32,138 +34,70 @@ const ContactPage = () => {
 
     return (
         <main>
-            {/* Hero */}
-            <section className="hero" style={{ padding: '80px 0 70px' }}>
-                <div className="container">
-                    <div className="hero-badge">Get In Touch</div>
-                    <h1>Contact Us</h1>
-                    <p className="hero-sub">
-                        Have a question or ready to start a project? We'd love to hear from you.
-                        We respond to every message within 24 hours.
-                    </p>
-                </div>
-            </section>
+            <PageIntro
+                kicker="Contact"
+                title="Talk to a person, not a pipeline"
+                lead="WhatsApp is fastest — most messages get a reply the same working day. The form works too; everything lands with the same small team."
+            />
 
-            {/* Contact Grid */}
-            <section className="section">
-                <div className="container">
-                    <div className="contact-grid">
-
-                        {/* ── LEFT: Details ───────────────────────── */}
-                        <div className="contact-details">
-                            <h2 style={{ marginBottom: 8 }}>Get In Touch</h2>
-                            <p style={{ marginBottom: 32 }}>
-                                Reach out through any of the channels below, or fill in the form
-                                and we'll get back to you promptly.
-                            </p>
-
-                            <div className="contact-cards">
-                                {CONTACT_DETAILS.map(item => (
-                                    <div className="contact-card" key={item.label}>
-                                        <span className="contact-card-icon"><Icon name={item.icon} size="md" color="primary" ariaLabel={item.label} /></span>
-                                        <div>
-                                            <div className="contact-card-label">{item.label}</div>
-                                            {item.href ? (
-                                                <a href={item.href} className="contact-card-value contact-card-link">
-                                                    {item.value}
-                                                </a>
-                                            ) : (
-                                                <div className="contact-card-value">{item.value}</div>
-                                            )}
-                                        </div>
+            <section className="v2-section">
+                <div className="v2-container">
+                    <div className="v2-split v2-split--offset" style={{ alignItems: 'start' }}>
+                        <div>
+                            <Kicker>Channels</Kicker>
+                            <div className="v2-rows">
+                                {CHANNELS.map((c) => (
+                                    <div className="v2-row" key={c.label} style={{ cursor: 'default', gridTemplateColumns: '40px 1fr' }}>
+                                        <span style={{ color: 'var(--accent-600)' }}><Icon name={c.icon} size="sm" ariaLabel="" /></span>
+                                        <span>
+                                            <span style={{ display: 'block', fontSize: 'var(--text-xs)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 'var(--tracking-kicker)', color: 'var(--text-muted)', marginBottom: 2 }}>{c.label}</span>
+                                            {c.href
+                                                ? <a href={c.href} style={{ color: 'var(--ink-900)', fontWeight: 600 }}>{c.value}</a>
+                                                : <span style={{ color: 'var(--ink-900)', fontWeight: 600 }}>{c.value}</span>}
+                                        </span>
                                     </div>
                                 ))}
                             </div>
-
-                            {/* WhatsApp CTA */}
-                            <a
-                                href="https://wa.me/256764524816?text=Hello%20Junior%20Reactive%2C%20I%20would%20like%20to%20enquire%20about%20your%20services."
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="btn"
-                                style={{ marginTop: 32, width: '100%', justifyContent: 'center' }}
-                            >
-                                <i className="fab fa-whatsapp" style={{ fontSize: '1.1rem' }} />
-                                Chat on WhatsApp
-                            </a>
+                            <div className="v2-actions">
+                                <Button
+                                    href="https://wa.me/256764524816?text=Hello%20Junior%20Reactive%2C%20I%20would%20like%20to%20enquire%20about%20your%20services."
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Chat on WhatsApp
+                                </Button>
+                            </div>
                         </div>
 
-                        {/* ── RIGHT: Form ─────────────────────────── */}
-                        <div className="form-card contact-form-card">
-                            <h3 style={{ marginBottom: 6 }}>Send a Message</h3>
-                            <p style={{ fontSize: '.9rem', marginBottom: 24 }}>
-                                Fill in the form below and we'll be in touch within 24 hours.
+                        <Card>
+                            <h2 className="v2-row-title" style={{ marginBottom: 'var(--sp-2)' }}>Send a message</h2>
+                            <p className="v2-body" style={{ fontSize: 'var(--text-sm)', marginBottom: 'var(--sp-6)' }}>
+                                We reply within one working day.
                             </p>
 
                             {status === 'success' && (
-                                <div className="alert alert-success" style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
-                                    <Icon name="success" size="sm" color="success" ariaLabel="Success" /> Message sent! We'll get back to you within 24 hours.
-                                </div>
+                                <p style={{ display: 'flex', gap: 8, alignItems: 'center', color: 'var(--status-success)', background: 'var(--status-success-bg)', padding: '10px 14px', borderRadius: 'var(--r-md)', marginBottom: 'var(--sp-4)', fontSize: 'var(--text-sm)', fontWeight: 500 }}>
+                                    <Icon name="success" size="sm" ariaLabel="" /> Message sent. We'll get back to you within 24 hours.
+                                </p>
                             )}
                             {status === 'error' && (
-                                <div className="alert alert-error" style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
-                                    <Icon name="warning" size="sm" color="error" ariaLabel="Error" /> {errMsg}
-                                </div>
+                                <p style={{ display: 'flex', gap: 8, alignItems: 'center', color: 'var(--status-error)', background: 'var(--status-error-bg)', padding: '10px 14px', borderRadius: 'var(--r-md)', marginBottom: 'var(--sp-4)', fontSize: 'var(--text-sm)', fontWeight: 500 }}>
+                                    <Icon name="warning" size="sm" ariaLabel="" /> {errMsg}
+                                </p>
                             )}
 
-                            <form onSubmit={handleSubmit}>
-                                <div className="contact-form-row">
-                                    <div className="form-group">
-                                        <label htmlFor="name">Full Name *</label>
-                                        <input
-                                            id="name" name="name" type="text"
-                                            placeholder="Your name"
-                                            value={form.name}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="email">Email Address *</label>
-                                        <input
-                                            id="email" name="email" type="email"
-                                            placeholder="your@email.com"
-                                            value={form.email}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                    </div>
+                            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
+                                <div className="v2-grid-2">
+                                    <Field label="Full name" name="name" placeholder="Your name" value={form.name} onChange={handleChange} required />
+                                    <Field label="Email" name="email" type="email" placeholder="you@company.com" value={form.email} onChange={handleChange} required />
                                 </div>
-
-                                <div className="form-group">
-                                    <label htmlFor="subject">Subject *</label>
-                                    <input
-                                        id="subject" name="subject" type="text"
-                                        placeholder="What is this about?"
-                                        value={form.subject}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label htmlFor="message">Message *</label>
-                                    <textarea
-                                        id="message" name="message"
-                                        placeholder="Tell us how we can help..."
-                                        rows={5}
-                                        value={form.message}
-                                        onChange={handleChange}
-                                        required
-                                        style={{ resize: 'vertical', minHeight: 120 }}
-                                    />
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    className="btn btn-full-width"
-                                    disabled={status === 'loading'}
-                                >
-                                    {status === 'loading' ? 'Sending…' : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>Send Message <Icon name="arrow-right" size="xs" color="white" /></span>}
-                                </button>
+                                <Field label="Subject" name="subject" placeholder="What is this about?" value={form.subject} onChange={handleChange} required />
+                                <Field label="Message" name="message" as="textarea" placeholder="Tell us what you need." value={form.message} onChange={handleChange} required />
+                                <Button type="submit" disabled={status === 'loading'}>
+                                    {status === 'loading' ? 'Sending...' : 'Send message'}
+                                </Button>
                             </form>
-                        </div>
-
+                        </Card>
                     </div>
                 </div>
             </section>

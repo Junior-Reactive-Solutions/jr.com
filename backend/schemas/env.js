@@ -36,7 +36,7 @@ function validateEnv() {
     const validated = envSchema.parse(env);
     return validated;
   } catch (error) {
-    console.error('❌ Environment validation failed:');
+    console.error('Environment validation failed:');
     if (error.errors) {
       error.errors.forEach((err) => {
         console.error(`  - ${err.path.join('.')}: ${err.message}`);

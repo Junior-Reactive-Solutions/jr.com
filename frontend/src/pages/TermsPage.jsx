@@ -1,26 +1,26 @@
 import React from 'react';
-import HeroSection from '../components/layout/HeroSection';
+import PageIntro from '../components/layout/PageIntro';
 
-const LAST_UPDATED = 'March 2025';
+const LAST_UPDATED = 'July 2026';
 
 const Section = ({ title, children }) => (
-    <div style={{ marginBottom: 40 }}>
-        <h3 style={{ marginBottom: 12, paddingBottom: 10, borderBottom: '1px solid var(--color-border)' }}>{title}</h3>
+    <div style={{ marginBottom: 'var(--sp-10)' }}>
+        <h2 style={{ fontFamily: 'var(--font-ui)', fontWeight: 600, fontSize: 'var(--text-xl)', color: 'var(--ink-900)', marginBottom: 'var(--sp-3)', paddingBottom: 'var(--sp-3)', borderBottom: '1px solid var(--border-subtle)' }}>{title}</h2>
         {children}
     </div>
 );
 
 const TermsPage = () => (
     <main>
-        <HeroSection
-            badge="Legal"
-            title="Terms of Service"
-            subtitle={`Last updated: ${LAST_UPDATED}`}
+        <PageIntro
+            kicker="Legal"
+            title="Terms of service"
+            lead={`Last updated: ${LAST_UPDATED}`}
         />
 
-        <section className="section">
-            <div className="container" style={{ maxWidth: 860 }}>
-                <div className="form-card">
+        <section className="v2-section">
+            <div className="v2-container" style={{ maxWidth: 800 }}>
+                <div className="v2-prose">
                     <p style={{ background: 'var(--color-light)', borderRadius: 'var(--radius-md)', padding: '14px 18px', fontSize: '.9rem', marginBottom: 32, borderLeft: '3px solid var(--color-secondary)' }}>
                         Please read these Terms of Service carefully before using our website or engaging our services. By accessing our website or entering into a service agreement with Junior Reactive, you accept and agree to be bound by these terms.
                     </p>
@@ -58,7 +58,7 @@ const TermsPage = () => (
                     </Section>
 
                     <Section title="6. Data and Privacy">
-                        <p>Our collection and use of personal data in connection with our website and services is governed by our <a href="/privacy" style={{ color: 'var(--color-secondary)', fontWeight: 600 }}>Privacy Policy</a>, which forms part of these Terms of Service.</p>
+                        <p>Our collection and use of personal data in connection with our website and services is governed by our <a href="/privacy" style={{ color: 'var(--color-secondary)', fontWeight: 600 }}>Privacy Policy</a>, which forms part of these Terms of Service and is drafted to comply with Uganda's Data Protection and Privacy Act, 2019.</p>
                         <p>In engagements involving client data, we act as a data processor. We implement appropriate technical and organisational measures to protect personal data and will not process client data except as instructed by the client or required by applicable law.</p>
                     </Section>
 
@@ -97,8 +97,8 @@ const TermsPage = () => (
                     </Section>
 
                     <Section title="11. Governing Law and Disputes">
-                        <p>These Terms of Service are governed by the laws of the Republic of Uganda. Any disputes that cannot be resolved amicably between the parties shall be referred to mediation before pursuing formal legal proceedings.</p>
-                        <p>The courts of Uganda shall have exclusive jurisdiction over any dispute arising from these terms or our services.</p>
+                        <p>These Terms of Service, and any service agreement entered into under them, are governed by the laws of the Republic of Uganda, including the Contracts Act, 2010 and the Electronic Transactions Act, 2011 for agreements formed or performed electronically.</p>
+                        <p>Any disputes that cannot be resolved amicably between the parties shall first be referred to mediation. If mediation fails, either party may proceed to arbitration under the Arbitration and Conciliation Act (Cap. 4), or to the courts of Uganda, which have exclusive jurisdiction over any dispute arising from these terms or our services.</p>
                     </Section>
 
                     <Section title="12. Changes to These Terms">

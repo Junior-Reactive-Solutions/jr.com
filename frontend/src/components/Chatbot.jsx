@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Icon from '../assets/icons/components/Icon';
 import './Chatbot.css';
 
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5005';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5005';
 
 // ── Format **bold** and line breaks ─────────────────────────────────────────
 function renderLines(text) {

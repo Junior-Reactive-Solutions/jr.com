@@ -5,11 +5,24 @@ dotenv.config();
 
 let pool;
 
+// SSL based on the actual host being connected to, not NODE_ENV — a
+// cloud-hosted Postgres (Neon, Render, etc.) requires SSL even when
+// connecting from local dev. Only skip it for a genuinely local server.
+function needsSSL(connectionString) {
+    if (!connectionString) return false;
+    try {
+        const { hostname } = new URL(connectionString);
+        return hostname !== 'localhost' && hostname !== '127.0.0.1';
+    } catch {
+        return false;
+    }
+}
+
 async function connectDB() {
     try {
         pool = new Pool({
             connectionString: process.env.DATABASE_URL,
-            ssl: process.env.NODE_ENV === 'production'
+            ssl: needsSSL(process.env.DATABASE_URL)
                 ? { rejectUnauthorized: false }
                 : false,
         });
@@ -22,7 +35,11 @@ async function connectDB() {
         logger.info('PostgreSQL connected successfully');
     } catch (err) {
         logger.error({ err }, 'Database connection failed');
-        process.exit(1);
+        if (process.env.NODE_ENV === 'production') {
+            process.exit(1);
+        } else {
+            logger.warn('Development mode: continuing without database');
+        }
     }
 }
 

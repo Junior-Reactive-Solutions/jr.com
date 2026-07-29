@@ -1,9 +1,26 @@
 const jwt       = require('jsonwebtoken');
+const bcrypt    = require('bcryptjs');
 const crypto    = require('crypto');
 const { Resend } = require('resend');
 const admin     = require('../models/adminModel');
+const faqModel  = require('../models/faqModel');
+const blogModel = require('../models/blogModel');
 const logger    = require('../utils/logger');
 const { JWT_SECRET } = require('../middleware/adminAuth');
+
+// Session length for the admin JWT. A solo-admin panel doesn't need
+// enterprise-grade 15-minute expiry with refresh tokens (that needs a
+// server-side revocation store we don't have yet — see DECISIONS.md) but
+// 24h was too long. 8h covers a working day and forces a fresh login daily.
+const SESSION_MS = 8 * 60 * 60 * 1000;
+
+if (!process.env.ADMIN_PASSWORD_HASH && process.env.ADMIN_PASSWORD) {
+    logger.warn(
+        'ADMIN_PASSWORD_HASH is not set — falling back to plaintext ADMIN_PASSWORD comparison. ' +
+        'Generate a hash with: node -e "console.log(require(\'bcryptjs\').hashSync(\'yourpassword\', 12))" ' +
+        'and set it as ADMIN_PASSWORD_HASH, then remove ADMIN_PASSWORD.'
+    );
+}
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -72,7 +89,7 @@ function buildEmailHtml({ toName, toEmail, replyBody, originalSubject, originalM
               <p style="margin:0;font-size:14px;font-weight:700;color:#1c265e;">Pharrell Aaron Mugumya</p>
               <p style="margin:4px 0 0;font-size:13px;color:#6b7280;">Founder & CEO · Junior Reactive</p>
               <p style="margin:8px 0 0;font-size:13px;color:#5269c3;">
-                📧 juniorreactive@gmail.com &nbsp;|&nbsp; 📱 +256 764 524 816
+                juniorreactive@gmail.com &nbsp;|&nbsp; +256 764 524 816
               </p>
             </div>
           </td>
@@ -108,22 +125,34 @@ function buildEmailHtml({ toName, toEmail, replyBody, originalSubject, originalM
 // ── Auth ──────────────────────────────────────────────────────────────────────
 async function login(req, res) {
     const { password } = req.body;
-    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+    const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
+    const ADMIN_PASSWORD      = process.env.ADMIN_PASSWORD;
 
-    if (!ADMIN_PASSWORD) {
+    if (!ADMIN_PASSWORD_HASH && !ADMIN_PASSWORD) {
         return res.status(500).json({ success: false, error: 'Admin not configured on server.' });
     }
-    if (!password || !timingSafeCompare(password, ADMIN_PASSWORD)) {
+    if (!password) {
         return res.status(401).json({ success: false, error: 'Incorrect password.' });
     }
 
-    const token = jwt.sign({ role: 'admin', name: 'Pharrell' }, JWT_SECRET, { expiresIn: '24h' });
+    // Prefer the bcrypt hash; fall back to legacy plaintext comparison only
+    // if no hash has been configured yet (safe migration path — see the
+    // startup warning above for how to generate ADMIN_PASSWORD_HASH).
+    const valid = ADMIN_PASSWORD_HASH
+        ? await bcrypt.compare(password, ADMIN_PASSWORD_HASH)
+        : timingSafeCompare(password, ADMIN_PASSWORD);
+
+    if (!valid) {
+        return res.status(401).json({ success: false, error: 'Incorrect password.' });
+    }
+
+    const token = jwt.sign({ role: 'admin', name: 'Pharrell' }, JWT_SECRET, { expiresIn: '8h' });
 
     res.cookie('adminToken', token, {
         httpOnly:  true,
         secure:    process.env.NODE_ENV === 'production',
         sameSite:  process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        maxAge:    24 * 60 * 60 * 1000, // 24 hours
+        maxAge:    SESSION_MS,
         path:      '/',
     });
 
@@ -261,7 +290,7 @@ async function updateStatus(req, res, next) {
             return res.status(400).json({ success: false, error: `Status must be one of: ${valid.join(', ')}` });
         }
         await admin.updateApplicationStatus(req.params.id, status);
-        await admin.logAdminAction('update_application_status', `Application #${req.params.id} → ${status}`);
+        await admin.logAdminAction('update_application_status', `Application #${req.params.id} -> ${status}`);
         res.json({ success: true, message: `Status updated to ${status}` });
     } catch (err) { next(err); }
 }
@@ -281,7 +310,7 @@ async function createService(req, res, next) {
         if (!key || !title || !shortDescription) {
             return res.status(400).json({ success: false, error: 'key, title, and shortDescription are required.' });
         }
-        const result = await admin.createService({ key, title, icon: icon || '🔧', shortDescription, fullDescription: fullDescription || shortDescription });
+        const result = await admin.createService({ key, title, icon: icon || 'settings', shortDescription, fullDescription: fullDescription || shortDescription });
         await admin.logAdminAction('create_service', `Created service: ${title}`);
         res.status(201).json({ success: true, data: result });
     } catch (err) { next(err); }
@@ -304,6 +333,136 @@ async function deleteService(req, res, next) {
     } catch (err) { next(err); }
 }
 
+// ── FAQs ──────────────────────────────────────────────────────────────────────
+async function getFAQsAdmin(req, res, next) {
+    try {
+        const rows = await faqModel.getAllFAQs();
+        res.json({ success: true, data: rows });
+    } catch (err) { next(err); }
+}
+
+async function createFAQ(req, res, next) {
+    try {
+        const { question, answer } = req.body;
+        if (!question?.trim() || !answer?.trim()) {
+            return res.status(400).json({ success: false, error: 'question and answer are required.' });
+        }
+        const result = await faqModel.createFAQ({ question: question.trim(), answer: answer.trim() });
+        await admin.logAdminAction('create_faq', `Created FAQ: ${question.slice(0, 60)}`);
+        res.status(201).json({ success: true, data: result });
+    } catch (err) { next(err); }
+}
+
+async function updateFAQ(req, res, next) {
+    try {
+        const { question, answer } = req.body;
+        if (!question?.trim() || !answer?.trim()) {
+            return res.status(400).json({ success: false, error: 'question and answer are required.' });
+        }
+        await faqModel.updateFAQ(req.params.id, { question: question.trim(), answer: answer.trim() });
+        await admin.logAdminAction('update_faq', `Updated FAQ #${req.params.id}`);
+        res.json({ success: true, message: 'FAQ updated.' });
+    } catch (err) { next(err); }
+}
+
+async function deleteFAQ(req, res, next) {
+    try {
+        await faqModel.deleteFAQ(req.params.id);
+        await admin.logAdminAction('delete_faq', `Deleted FAQ #${req.params.id}`);
+        res.json({ success: true, message: 'FAQ deleted.' });
+    } catch (err) { next(err); }
+}
+
+async function reorderFAQs(req, res, next) {
+    try {
+        const { orderedIds } = req.body;
+        if (!Array.isArray(orderedIds) || orderedIds.length === 0) {
+            return res.status(400).json({ success: false, error: 'orderedIds must be a non-empty array.' });
+        }
+        await faqModel.reorderFAQs(orderedIds);
+        res.json({ success: true, message: 'Order updated.' });
+    } catch (err) { next(err); }
+}
+
+// ── Blog ──────────────────────────────────────────────────────────────────────
+function slugify(str) {
+    return String(str)
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 200);
+}
+
+async function getBlogPostsAdmin(req, res, next) {
+    try {
+        const rows = await blogModel.getAllBlogPostsAdmin();
+        res.json({ success: true, data: rows });
+    } catch (err) { next(err); }
+}
+
+async function getBlogPostAdmin(req, res, next) {
+    try {
+        const post = await blogModel.getBlogPostByIdAdmin(req.params.id);
+        if (!post) return res.status(404).json({ success: false, error: 'Post not found.' });
+        res.json({ success: true, data: post });
+    } catch (err) { next(err); }
+}
+
+async function createBlogPost(req, res, next) {
+    try {
+        const { title, excerpt, content, author, publishDate } = req.body;
+        let { slug } = req.body;
+        if (!title?.trim() || !excerpt?.trim() || !content?.trim() || !author?.trim()) {
+            return res.status(400).json({ success: false, error: 'title, excerpt, content, and author are required.' });
+        }
+        slug = slugify(slug?.trim() || title);
+        if (!slug) {
+            return res.status(400).json({ success: false, error: 'Could not generate a valid slug from the title.' });
+        }
+        if (await blogModel.slugExists(slug)) {
+            return res.status(409).json({ success: false, error: `A post with slug "${slug}" already exists.` });
+        }
+        const result = await blogModel.createBlogPost({
+            title: title.trim(), slug, excerpt: excerpt.trim(), content: content.trim(),
+            author: author.trim(), publishDate: publishDate || undefined,
+        });
+        await admin.logAdminAction('create_blog_post', `Created blog post: ${title.slice(0, 60)}`);
+        res.status(201).json({ success: true, data: { id: result.id, slug } });
+    } catch (err) { next(err); }
+}
+
+async function updateBlogPost(req, res, next) {
+    try {
+        const { title, excerpt, content, author, publishDate } = req.body;
+        let { slug } = req.body;
+        if (!title?.trim() || !excerpt?.trim() || !content?.trim() || !author?.trim()) {
+            return res.status(400).json({ success: false, error: 'title, excerpt, content, and author are required.' });
+        }
+        slug = slugify(slug?.trim() || title);
+        if (!slug) {
+            return res.status(400).json({ success: false, error: 'Could not generate a valid slug from the title.' });
+        }
+        if (await blogModel.slugExists(slug, req.params.id)) {
+            return res.status(409).json({ success: false, error: `A post with slug "${slug}" already exists.` });
+        }
+        await blogModel.updateBlogPost(req.params.id, {
+            title: title.trim(), slug, excerpt: excerpt.trim(), content: content.trim(),
+            author: author.trim(), publishDate,
+        });
+        await admin.logAdminAction('update_blog_post', `Updated blog post #${req.params.id}`);
+        res.json({ success: true, message: 'Post updated.', data: { slug } });
+    } catch (err) { next(err); }
+}
+
+async function deleteBlogPost(req, res, next) {
+    try {
+        await blogModel.deleteBlogPost(req.params.id);
+        await admin.logAdminAction('delete_blog_post', `Deleted blog post #${req.params.id}`);
+        res.json({ success: true, message: 'Post deleted.' });
+    } catch (err) { next(err); }
+}
+
 // ── Analytics ─────────────────────────────────────────────────────────────────
 async function getAnalytics(req, res, next) {
     try {
@@ -318,5 +477,7 @@ module.exports = {
     getMessages, getMessage, replyToMessage, markRead, deleteMessage,
     getApplications, getApplication, updateStatus, deleteApplication,
     createService, updateService, deleteService,
+    getFAQsAdmin, createFAQ, updateFAQ, deleteFAQ, reorderFAQs,
+    getBlogPostsAdmin, getBlogPostAdmin, createBlogPost, updateBlogPost, deleteBlogPost,
     getAnalytics,
 };

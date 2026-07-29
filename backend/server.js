@@ -37,7 +37,9 @@ app.use(cors({
         const allowed = [
             'http://localhost:3000',
             'http://localhost:3001',
+            'http://localhost:3333',
             'http://localhost:5005',
+            'http://localhost:5006',
             'https://jrcom.vercel.app',
             'https://juniorreactive.com',
             'https://www.juniorreactive.com',

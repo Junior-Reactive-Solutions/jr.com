@@ -1,73 +1,52 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { contentService } from '../services/contentService';
-import HeroSection from '../components/layout/HeroSection';
-import { SkeletonGrid, SkeletonTeamCard } from '../components/common/SkeletonLoader';
+import PageIntro from '../components/layout/PageIntro';
 import ErrorState from '../components/common/ErrorState';
-
-// Generate a deterministic gradient and initials avatar for each team member
-const AVATAR_GRADIENTS = [
-    ['#1c265e','#5269c3'],
-    ['#5269c3','#90a0da'],
-    ['#2d3d8a','#a8ccee'],
-    ['#1c265e','#7b91d4'],
-    ['#3b4f9e','#90a0da'],
-    ['#1c265e','#5269c3'],
-];
+import { Card, Skeleton } from '../components/ui';
 
 function getInitials(name = '') {
-    return name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+    return name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase();
 }
 
-const MemberAvatar = ({ member, index }) => {
+const MemberPhoto = ({ member }) => {
     const [imgFailed, setImgFailed] = React.useState(false);
-    const [g1, g2] = AVATAR_GRADIENTS[index % AVATAR_GRADIENTS.length];
-    const initials = getInitials(member.name);
 
     if (member.image && !imgFailed) {
         return (
-            <div className="team-img-wrap">
-                <img
-                    src={`/images/team/${member.image}`}
-                    alt={member.name}
-                    onError={() => setImgFailed(true)}
-                />
-            </div>
+            <img
+                src={`/images/team/${member.image}`}
+                alt={member.name}
+                onError={() => setImgFailed(true)}
+                style={{ width: '100%', aspectRatio: '4 / 3', objectFit: 'cover', borderRadius: 'var(--r-md)', display: 'block' }}
+                loading="lazy"
+            />
         );
     }
 
-    // Beautiful gradient avatar with initials
+    // Flat initials tile — quiet wash, ink type, no gradients.
     return (
-        <div className="team-img-wrap" style={{ background: `linear-gradient(135deg, ${g1} 0%, ${g2} 100%)` }}>
-            <div style={{
+        <div
+            aria-hidden="true"
+            style={{
+                width: '100%',
+                aspectRatio: '4 / 3',
+                borderRadius: 'var(--r-md)',
+                background: 'var(--surface-wash)',
                 display: 'flex',
-                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                height: '100%',
-                gap: 8,
+            }}
+        >
+            <span style={{
+                fontFamily: 'var(--font-display)',
+                fontWeight: 600,
+                fontSize: 'var(--text-4xl)',
+                color: 'var(--accent-700)',
+                letterSpacing: 'var(--tracking-display)',
             }}>
-                <span style={{
-                    fontFamily: 'var(--font-display)',
-                    fontWeight: 800,
-                    fontSize: '2.8rem',
-                    color: 'rgba(255,255,255,.9)',
-                    letterSpacing: '-0.02em',
-                    lineHeight: 1,
-                }}>
-                    {initials}
-                </span>
-                <span style={{
-                    fontFamily: 'var(--font-display)',
-                    fontWeight: 600,
-                    fontSize: '0.7rem',
-                    color: 'rgba(255,255,255,.6)',
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                }}>
-                    {member.position.split(' ')[0]}
-                </span>
-            </div>
+                {getInitials(member.name)}
+            </span>
         </div>
     );
 };
@@ -83,35 +62,43 @@ const TeamPage = () => {
 
     return (
         <main>
-            <HeroSection
-                badge="The People"
-                title="Our Team"
-                subtitle="The minds and talent behind every solution we deliver."
+            <PageIntro
+                kicker="Team"
+                title="The people who build the work"
+                lead="Small enough that you know who is on your project. Senior enough that you don't pay for anyone learning on your time."
             />
 
-            <section className="section">
-                <div className="container">
+            <section className="v2-section">
+                <div className="v2-container">
                     {isLoading ? (
-                        <SkeletonGrid count={6} Card={SkeletonTeamCard} />
+                        <div className="v2-grid-3">
+                            {[1, 2, 3].map((i) => (
+                                <Card key={i}>
+                                    <Skeleton height={160} style={{ marginBottom: 16 }} />
+                                    <Skeleton height={18} width="60%" style={{ marginBottom: 8 }} />
+                                    <Skeleton height={12} width="40%" />
+                                </Card>
+                            ))}
+                        </div>
                     ) : isError ? (
                         <ErrorState
                             title="Couldn't load team members"
-                            message={error?.userMessage || 'Make sure the backend is running on port 5005.'}
+                            message={error?.userMessage || 'The server did not respond. Try again in a moment.'}
                             onRetry={refetch}
                         />
                     ) : members.length === 0 ? (
-                        <ErrorState icon="team" title="No team members yet" message="Team profiles will appear here once added to the database." />
+                        <ErrorState icon="team" title="No team members yet" message="Team profiles will appear here once added." />
                     ) : (
-                        <div className="services-grid">
-                            {members.map((member, i) => (
-                                <div key={member.id} className="team-card">
-                                    <MemberAvatar member={member} index={i} />
-                                    <div className="team-card-body">
-                                        <h3 style={{ marginBottom: 4 }}>{member.name}</h3>
-                                        <p className="position">{member.position}</p>
-                                        <p style={{ fontSize: '0.875rem' }}>{member.bio}</p>
-                                    </div>
-                                </div>
+                        <div className="v2-grid-3">
+                            {members.map((member) => (
+                                <Card key={member.id}>
+                                    <MemberPhoto member={member} />
+                                    <h2 className="v2-row-title" style={{ marginTop: 'var(--sp-4)' }}>{member.name}</h2>
+                                    <p style={{ fontSize: 'var(--text-sm)', color: 'var(--accent-700)', fontWeight: 600, margin: '2px 0 var(--sp-3)' }}>
+                                        {member.position}
+                                    </p>
+                                    <p className="v2-body" style={{ fontSize: 'var(--text-sm)' }}>{member.bio}</p>
+                                </Card>
                             ))}
                         </div>
                     )}

@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
+import AdminErrorState from '../../components/admin/AdminErrorState';
 import { getApplications, updateAppStatus, deleteApplication } from '../../services/adminService';
+import { ConfirmDialog, useToast } from '../../components/ui';
 import Icon from '../../assets/icons/components/Icon';
 
 const fmt = (ts) => ts ? new Date(ts).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
@@ -69,41 +71,55 @@ function AppModal({ app, onClose, onStatusChange }) {
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 export default function AdminApplications() {
-    const [apps,    setApps]    = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [filter,  setFilter]  = useState('all');
-    const [viewing, setViewing] = useState(null);
-    const [toast,   setToast]   = useState('');
+    const [apps,     setApps]     = useState([]);
+    const [loading,  setLoading]  = useState(true);
+    const [error,    setError]    = useState('');
+    const [filter,   setFilter]   = useState('all');
+    const [search,   setSearch]   = useState('');
+    const [viewing,  setViewing]  = useState(null);
+    const [toDelete, setToDelete] = useState(null); // { id, name }
+    const toast = useToast();
 
-    useEffect(() => {
+    const load = () => {
+        setLoading(true);
+        setError('');
         getApplications()
-            .then(res => { if (res.success) setApps(res.data); })
+            .then(res => {
+                if (res.success) setApps(res.data);
+                else setError(res.error || 'Could not load applications.');
+            })
+            .catch(() => setError('Could not connect to the server.'))
             .finally(() => setLoading(false));
-    }, []);
+    };
 
-    const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000); };
+    useEffect(() => { load(); }, []);
 
-    const handleDelete = async (id, name) => {
-        if (!window.confirm(`Delete application from ${name}?`)) return;
+    const confirmDelete = async () => {
+        const { id, name } = toDelete;
+        setToDelete(null);
         await deleteApplication(id);
         setApps(prev => prev.filter(a => a.id !== id));
-        showToast('Application deleted.');
+        toast.show(`Application from ${name} deleted.`, { tone: 'success' });
     };
 
     const handleStatusChange = (id, status) => {
         setApps(prev => prev.map(a => a.id === id ? { ...a, status } : a));
-        showToast(`Status updated to "${status}"`);
+        toast.show(`Status updated to "${status}"`, { tone: 'success' });
     };
 
     const newCount = apps.filter(a => a.status === 'new').length;
 
-    const filtered = filter === 'all'
-        ? apps
-        : apps.filter(a => a.status === filter);
+    const filtered = useMemo(() => {
+        const q = search.trim().toLowerCase();
+        return apps.filter(a => {
+            if (filter !== 'all' && a.status !== filter) return false;
+            if (!q) return true;
+            return a.name.toLowerCase().includes(q) || a.email.toLowerCase().includes(q) || (a.company || '').toLowerCase().includes(q);
+        });
+    }, [apps, filter, search]);
 
     return (
         <AdminLayout newAppsCount={newCount}>
-            {toast && <div className="admin-toast">{toast}</div>}
             {viewing && (
                 <AppModal
                     app={viewing}
@@ -111,6 +127,15 @@ export default function AdminApplications() {
                     onStatusChange={handleStatusChange}
                 />
             )}
+            <ConfirmDialog
+                open={!!toDelete}
+                title="Delete application"
+                message={toDelete ? `Delete the application from ${toDelete.name}? This cannot be undone.` : ''}
+                confirmLabel="Delete"
+                danger
+                onConfirm={confirmDelete}
+                onCancel={() => setToDelete(null)}
+            />
 
             <div className="admin-page-header">
                 <div>
@@ -126,11 +151,21 @@ export default function AdminApplications() {
                         {f.charAt(0).toUpperCase() + f.slice(1)}
                     </button>
                 ))}
+                <input
+                    className="admin-input admin-search-input"
+                    type="search"
+                    placeholder="Search name, email, company…"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    style={{ marginLeft: 'auto', maxWidth: 260 }}
+                />
             </div>
 
             <div className="admin-card admin-table-card">
                 {loading ? (
                     <div className="admin-loading"><div className="admin-spinner" /></div>
+                ) : error ? (
+                    <AdminErrorState message={error} onRetry={load} />
                 ) : filtered.length === 0 ? (
                     <div className="admin-empty-state">
                         <div className="admin-empty-icon"><Icon name="notes" size="xl" color="muted" /></div>
@@ -154,7 +189,7 @@ export default function AdminApplications() {
                                     <td>
                                         <div className="admin-table-person">
                                             <div className="admin-mini-avatar admin-mini-avatar-sm"
-                                                style={{ background: '#7c3aed20', color: '#7c3aed' }}>
+                                                style={{ background: 'var(--surface-wash)', color: 'var(--ink-700)' }}>
                                                 {a.name?.[0]?.toUpperCase()}
                                             </div>
                                             <div>
@@ -176,7 +211,7 @@ export default function AdminApplications() {
                                             <button className="admin-icon-btn" title="View details" onClick={() => setViewing(a)}>
                                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                                             </button>
-                                            <button className="admin-icon-btn admin-icon-btn-danger" title="Delete" onClick={() => handleDelete(a.id, a.name)}>
+                                            <button className="admin-icon-btn admin-icon-btn-danger" title="Delete" onClick={() => setToDelete({ id: a.id, name: a.name })}>
                                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
                                             </button>
                                         </div>

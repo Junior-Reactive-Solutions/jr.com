@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
+import AdminErrorState from '../../components/admin/AdminErrorState';
 import Icon from '../../assets/icons/components/Icon';
 import { getAnalytics } from '../../services/adminService';
 
@@ -36,15 +37,28 @@ function BarChart({ data }) {
 export default function AdminAnalytics() {
     const [data,    setData]    = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error,   setError]   = useState('');
 
-    useEffect(() => {
+    const load = () => {
+        setLoading(true);
+        setError('');
         getAnalytics()
-            .then(res => { if (res.success) setData(res.data); })
+            .then(res => {
+                if (res.success) setData(res.data);
+                else setError(res.error || 'Could not load analytics.');
+            })
+            .catch(() => setError('Could not connect to the server.'))
             .finally(() => setLoading(false));
-    }, []);
+    };
+
+    useEffect(() => { load(); }, []);
 
     if (loading) return (
         <AdminLayout><div className="admin-loading"><div className="admin-spinner" /></div></AdminLayout>
+    );
+
+    if (error) return (
+        <AdminLayout><AdminErrorState message={error} onRetry={load} /></AdminLayout>
     );
 
     const totalDevices = data?.devices?.reduce((s, d) => s + parseInt(d.total), 0) || 1;
@@ -140,7 +154,7 @@ export default function AdminAnalytics() {
                 <div className="admin-ga-note-icon"><Icon name="analytics" size="lg" color="primary" /></div>
                 <div>
                     <h4>Google Analytics also connected</h4>
-                    <p>Full funnel analytics, acquisition data, and real-time visitors are available in your Google Analytics dashboard. Add your GA Measurement ID to <code>frontend/.env</code> as <code>REACT_APP_GA_ID</code> to activate it.</p>
+                    <p>Full funnel analytics, acquisition data, and real-time visitors are available in your Google Analytics dashboard. Add your GA Measurement ID to <code>frontend/.env</code> as <code>VITE_GA_ID</code> to activate it.</p>
                 </div>
             </div>
         </AdminLayout>

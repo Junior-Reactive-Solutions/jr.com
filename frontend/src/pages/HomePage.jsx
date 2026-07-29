@@ -32,7 +32,7 @@ const HomePage = () => {
     // Prewarm the backend so the hero demo doesn't hit a Render cold start
     // (council reliability condition for the homepage tool demo).
     useEffect(() => {
-        const base = import.meta.env.VITE_API_URL || 'http://localhost:5005/api';
+        const base = `${import.meta.env.VITE_API_URL || 'http://localhost:5005'}/api`;
         fetch(`${base}/health`).catch(() => {});
     }, []);
 

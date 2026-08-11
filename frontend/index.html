@@ -20,13 +20,17 @@
           content="AI consulting, N8N automation, custom software, data analytics, Uganda, East Africa, Junior Reactive" />
     <meta name="author" content="Junior Reactive" />
 
+    <!-- ── CANONICAL (default; overridden per-route by <Seo>) ──────── -->
+    <link rel="canonical" href="https://juniorreactive.com/" />
+
     <!-- ── OPEN GRAPH (social sharing previews) ──────────────────── -->
     <!-- Uses the 3840×2160 logo.png — social platforms crop/resize this automatically -->
     <meta property="og:type"        content="website" />
     <meta property="og:site_name"   content="Junior Reactive" />
+    <meta property="og:url"         content="https://juniorreactive.com/" />
     <meta property="og:title"       content="Junior Reactive — AI & IT Solutions" />
     <meta property="og:description" content="N8N automations, AI assistants, and custom software for businesses across East Africa. Based in Kampala, Uganda." />
-    <meta property="og:image"       content="/logo.png" />
+    <meta property="og:image"       content="https://juniorreactive.com/logo.png" />
     <meta property="og:image:width"  content="3840" />
     <meta property="og:image:height" content="2160" />
 
@@ -34,7 +38,28 @@
     <meta name="twitter:card"        content="summary_large_image" />
     <meta name="twitter:title"       content="Junior Reactive — AI & IT Solutions" />
     <meta name="twitter:description" content="N8N automations, AI assistants, and custom software for businesses across East Africa." />
-    <meta name="twitter:image"       content="/logo.png" />
+    <meta name="twitter:image"       content="https://juniorreactive.com/logo.png" />
+
+    <!-- ── STRUCTURED DATA (sitewide Organization) ─────────────────── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Junior Reactive",
+      "url": "https://juniorreactive.com",
+      "logo": "https://juniorreactive.com/logo.png",
+      "description": "AI and IT solutions provider based in Kampala, Uganda, serving businesses across East Africa.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Kampala",
+        "addressCountry": "UG"
+      },
+      "sameAs": [
+        "https://instagram.com/juniorreactive",
+        "https://tiktok.com/@juniorreactive"
+      ]
+    }
+    </script>
 
     <!-- ── PWA MANIFEST ──────────────────────────────────────────── -->
     <link rel="manifest" href="/manifest.json" />
@@ -43,9 +68,6 @@
     <!-- Actual font family loading lives in global.css (single source of truth) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-    <!-- ── FONT AWESOME ───────────────────────────────────────────── -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <title>Junior Reactive — AI &amp; IT Solutions</title>
   </head>

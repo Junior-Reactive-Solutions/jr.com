@@ -3,6 +3,7 @@ import { submissionService } from '../services/submissionService';
 import PageIntro from '../components/layout/PageIntro';
 import { Button, Card, Field, Kicker } from '../components/ui';
 import Icon from '../assets/icons/components/Icon';
+import Seo from '../components/Seo';
 
 const CHANNELS = [
     { icon: 'phone',    label: 'Phone / WhatsApp', value: '+256 764 524 816', href: 'tel:+256764524816' },
@@ -34,6 +35,11 @@ const ContactPage = () => {
 
     return (
         <main>
+            <Seo
+                title="Contact"
+                description="Reach Junior Reactive by WhatsApp, phone, or the contact form. Based in Kampala, Uganda — replies within 24 hours."
+                path="/contact"
+            />
             <PageIntro
                 kicker="Contact"
                 title="Talk to a person, not a pipeline"

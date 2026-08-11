@@ -1,6 +1,7 @@
 import React from 'react';
 import PageIntro from '../components/layout/PageIntro';
 import Icon from '../assets/icons/components/Icon';
+import Seo from '../components/Seo';
 
 const LAST_UPDATED = 'July 2026';
 
@@ -13,6 +14,11 @@ const Section = ({ title, children }) => (
 
 const PrivacyPage = () => (
     <main>
+        <Seo
+            title="Privacy Policy"
+            description="How Junior Reactive collects, uses, and protects personal data, under Uganda's Data Protection and Privacy Act 2019."
+            path="/privacy"
+        />
         <PageIntro
             kicker="Legal"
             title="Privacy policy"

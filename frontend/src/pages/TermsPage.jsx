@@ -1,5 +1,6 @@
 import React from 'react';
 import PageIntro from '../components/layout/PageIntro';
+import Seo from '../components/Seo';
 
 const LAST_UPDATED = 'July 2026';
 
@@ -12,6 +13,11 @@ const Section = ({ title, children }) => (
 
 const TermsPage = () => (
     <main>
+        <Seo
+            title="Terms of Service"
+            description="The terms governing engagements with Junior Reactive, under Uganda's Contracts Act 2010 and Electronic Transactions Act 2011."
+            path="/terms"
+        />
         <PageIntro
             kicker="Legal"
             title="Terms of service"

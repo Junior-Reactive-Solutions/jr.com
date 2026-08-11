@@ -4,6 +4,7 @@ import { contentService } from '../services/contentService';
 import PageIntro from '../components/layout/PageIntro';
 import ErrorState from '../components/common/ErrorState';
 import { Card, Skeleton } from '../components/ui';
+import Seo from '../components/Seo';
 
 function getInitials(name = '') {
     return name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase();
@@ -62,6 +63,11 @@ const TeamPage = () => {
 
     return (
         <main>
+            <Seo
+                title="Team"
+                description="Meet the people building Junior Reactive's AI systems, automations, and custom software for East African businesses."
+                path="/team"
+            />
             <PageIntro
                 kicker="Team"
                 title="The people who build the work"

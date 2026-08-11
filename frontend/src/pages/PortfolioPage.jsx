@@ -5,6 +5,7 @@ import PageIntro from '../components/layout/PageIntro';
 import ErrorState from '../components/common/ErrorState';
 import { Badge, Button, Card, Skeleton } from '../components/ui';
 import Icon from '../assets/icons/components/Icon';
+import Seo from '../components/Seo';
 
 const ProjectImage = ({ src, alt }) => {
     const [failed, setFailed] = React.useState(false);
@@ -47,6 +48,11 @@ const PortfolioPage = () => {
 
     return (
         <main>
+            <Seo
+                title="Portfolio"
+                description="Projects Junior Reactive has delivered for businesses across East Africa — AI systems, automation, and custom software."
+                path="/portfolio"
+            />
             <PageIntro
                 kicker="Past work"
                 title="Projects we've shipped"

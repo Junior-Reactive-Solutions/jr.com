@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastProvider } from './components/ui';
@@ -14,32 +14,36 @@ import Footer      from './components/common/Footer';
 import WhatsAppCta from './components/common/WhatsAppCta';
 
 // ── Public pages ─────────────────────────────────────────────────────────────
-import HomePage         from './pages/HomePage';
-import ServicesPage     from './pages/ServicesPage';
-import ServiceDetailPage from './pages/ServiceDetailPage';
-import BlogPage         from './pages/BlogPage';
-import BlogPostPage     from './pages/BlogPostPage';
-import AboutPage        from './pages/AboutPage';
-import ContactPage      from './pages/ContactPage';
-import ApplyPage        from './pages/ApplyPage';
-import PortfolioPage    from './pages/PortfolioPage';
-import TeamPage         from './pages/TeamPage';
-import FAQPage          from './pages/FAQPage';
-import PrivacyPage      from './pages/PrivacyPage';
-import TermsPage        from './pages/TermsPage';
-import NotFoundPage     from './pages/NotFoundPage';
-import AIToolsPage      from './pages/AIToolsPage';
-import StyleguidePage   from './pages/StyleguidePage';
+// Home stays eager (it's the most common landing route); everything else
+// splits into its own chunk so first paint doesn't pay for pages the visitor
+// may never open — including the entire admin panel, which used to ship
+// inside the main bundle for every public visitor.
+import HomePage          from './pages/HomePage';
+const ServicesPage       = lazy(() => import('./pages/ServicesPage'));
+const ServiceDetailPage  = lazy(() => import('./pages/ServiceDetailPage'));
+const BlogPage           = lazy(() => import('./pages/BlogPage'));
+const BlogPostPage       = lazy(() => import('./pages/BlogPostPage'));
+const AboutPage          = lazy(() => import('./pages/AboutPage'));
+const ContactPage        = lazy(() => import('./pages/ContactPage'));
+const ApplyPage          = lazy(() => import('./pages/ApplyPage'));
+const PortfolioPage      = lazy(() => import('./pages/PortfolioPage'));
+const TeamPage           = lazy(() => import('./pages/TeamPage'));
+const FAQPage            = lazy(() => import('./pages/FAQPage'));
+const PrivacyPage        = lazy(() => import('./pages/PrivacyPage'));
+const TermsPage          = lazy(() => import('./pages/TermsPage'));
+const NotFoundPage       = lazy(() => import('./pages/NotFoundPage'));
+const AIToolsPage        = lazy(() => import('./pages/AIToolsPage'));
+const StyleguidePage     = lazy(() => import('./pages/StyleguidePage'));
 
 // ── Admin pages ───────────────────────────────────────────────────────────────
-import AdminLogin        from './pages/admin/AdminLogin';
-import AdminDashboard    from './pages/admin/AdminDashboard';
-import AdminMessages     from './pages/admin/AdminMessages';
-import AdminApplications from './pages/admin/AdminApplications';
-import AdminServices     from './pages/admin/AdminServices';
-import AdminBlog         from './pages/admin/AdminBlog';
-import AdminFAQs         from './pages/admin/AdminFAQs';
-import AdminAnalytics    from './pages/admin/AdminAnalytics';
+const AdminLogin         = lazy(() => import('./pages/admin/AdminLogin'));
+const AdminDashboard     = lazy(() => import('./pages/admin/AdminDashboard'));
+const AdminMessages      = lazy(() => import('./pages/admin/AdminMessages'));
+const AdminApplications  = lazy(() => import('./pages/admin/AdminApplications'));
+const AdminServices      = lazy(() => import('./pages/admin/AdminServices'));
+const AdminBlog          = lazy(() => import('./pages/admin/AdminBlog'));
+const AdminFAQs          = lazy(() => import('./pages/admin/AdminFAQs'));
+const AdminAnalytics     = lazy(() => import('./pages/admin/AdminAnalytics'));
 import ProtectedRoute    from './components/admin/ProtectedRoute';
 
 const queryClient = new QueryClient();
@@ -123,6 +127,7 @@ function App() {
                 <GoogleAnalytics />
                 <PageTracker />
                 <PublicLayout>
+                    <Suspense fallback={<div style={{ minHeight: '60vh' }} />}>
                     <Routes>
                         {/* ── Public ── */}
                         <Route path="/"              element={<HomePage />} />
@@ -154,6 +159,7 @@ function App() {
 
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>
+                    </Suspense>
                 </PublicLayout>
             </Router>
             </ToastProvider>

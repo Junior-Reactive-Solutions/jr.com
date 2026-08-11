@@ -3,6 +3,7 @@ import ServiceRecommender from '../components/ServiceRecommender';
 import ProjectBriefGenerator from '../components/ProjectBriefGenerator';
 import PageIntro from '../components/layout/PageIntro';
 import { Button, Kicker, Tabs } from '../components/ui';
+import Seo from '../components/Seo';
 
 const BUILD_LIST = [
     { title: 'Custom chatbots', desc: 'Trained on your data, integrated with your CRM, answering on your website day and night.' },
@@ -16,6 +17,11 @@ const BUILD_LIST = [
 export default function AIToolsPage() {
     return (
         <main>
+            <Seo
+                title="AI Tools"
+                description="Try the live AI tools Junior Reactive built and runs itself: a service recommender and a project brief generator."
+                path="/ai-tools"
+            />
             <PageIntro
                 kicker="Live tools"
                 title="Don't take our word for it — use the tools"

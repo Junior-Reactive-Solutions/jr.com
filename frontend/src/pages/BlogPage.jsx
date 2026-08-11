@@ -6,6 +6,7 @@ import PageIntro from '../components/layout/PageIntro';
 import ErrorState from '../components/common/ErrorState';
 import { Skeleton } from '../components/ui';
 import Icon from '../assets/icons/components/Icon';
+import Seo from '../components/Seo';
 
 const BlogPage = () => {
     const { data, isLoading, isError, refetch } = useQuery({
@@ -17,6 +18,11 @@ const BlogPage = () => {
 
     return (
         <main>
+            <Seo
+                title="Blog"
+                description="Notes on building AI and automation for East African businesses — written for business owners, not engineers."
+                path="/blog"
+            />
             <PageIntro
                 kicker="Writing"
                 title="Notes from the work"

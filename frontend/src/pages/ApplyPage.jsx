@@ -1,9 +1,15 @@
 import React from 'react';
 import PageIntro from '../components/layout/PageIntro';
 import ApplicationForm from '../components/forms/ApplicationForm';
+import Seo from '../components/Seo';
 
 const ApplyPage = () => (
     <main>
+        <Seo
+            title="Apply"
+            description="Tell Junior Reactive what you need built. We reply within one working day with next steps or an honest answer if we're not the right fit."
+            path="/apply"
+        />
         <PageIntro
             kicker="Start a project"
             title="Tell us what you need built"

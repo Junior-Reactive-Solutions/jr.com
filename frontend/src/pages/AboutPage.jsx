@@ -1,6 +1,7 @@
 import React from 'react';
 import PageIntro from '../components/layout/PageIntro';
 import { Button, Kicker } from '../components/ui';
+import Seo from '../components/Seo';
 
 const VALUES = [
     { title: 'Plain answers', desc: 'Quotes in writing, timelines you can hold us to, and a straight "no" when a technology will not pay for itself.' },
@@ -11,6 +12,11 @@ const VALUES = [
 
 const AboutPage = () => (
     <main>
+        <Seo
+            title="About"
+            description="Junior Reactive is a Kampala-based AI and IT company founded by Pharrell Aaron Mugumya, building automations and custom software for East African businesses."
+            path="/about"
+        />
         <PageIntro
             kicker="About"
             title="A Kampala software company that ships"

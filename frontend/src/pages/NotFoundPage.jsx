@@ -1,9 +1,11 @@
 import React from 'react';
 import PageIntro from '../components/layout/PageIntro';
 import { Button } from '../components/ui';
+import Seo from '../components/Seo';
 
 const NotFoundPage = () => (
     <main>
+        <Seo title="Page not found" noindex />
         <PageIntro
             kicker="404"
             title="That page isn't here"

@@ -1,0 +1,41 @@
+# Junior Reactive
+
+> AI and IT solutions company based in Kampala, Uganda, serving businesses across East Africa. Builds N8N automations, AI assistants, custom software, cloud infrastructure, and data analytics under fixed-scope, fixed-price engagements. Founded by Pharrell Aaron Mugumya.
+
+Junior Reactive works with East African businesses that want practical, working technology rather than open-ended consulting. Every engagement starts with a fixed scope and price, and clients own the full deliverable - source code, documentation, and deployment access - at handover.
+
+## Services
+
+- [Services overview](https://juniorreactive.com/services): all nine service lines, each with a fixed scope and quote
+- [AI Consulting](https://juniorreactive.com/services/ai-consulting): strategic AI roadmaps tied to concrete business outcomes
+- [N8N Workflow Automation](https://juniorreactive.com/services): connecting existing tools and automating repetitive processes
+- [Custom Software Development](https://juniorreactive.com/services): bespoke software built around a business's actual workflows
+- [Cloud Solutions](https://juniorreactive.com/services): secure, cost-efficient cloud infrastructure
+- [Data Analytics & Insights](https://juniorreactive.com/services): turning raw data into decisions
+- [AI Courses & Training](https://juniorreactive.com/services): practical AI education for teams
+
+## Company
+
+- [About](https://juniorreactive.com/about): company background and operating principles
+- [Team](https://juniorreactive.com/team): the people behind the work
+- [Portfolio](https://juniorreactive.com/portfolio): delivered projects
+- [Blog](https://juniorreactive.com/blog): writing on AI and automation for East African businesses
+- [FAQ](https://juniorreactive.com/faq): answers on pricing, timelines, and how engagements run
+
+## Contact
+
+- [Contact](https://juniorreactive.com/contact): WhatsApp, phone, email, and contact form
+- [Apply](https://juniorreactive.com/apply): start a project
+- WhatsApp: +256 764 524 816
+- Email: juniorreactive@gmail.com
+- Location: Kampala, Uganda
+
+## Legal
+
+- [Privacy Policy](https://juniorreactive.com/privacy)
+- [Terms of Service](https://juniorreactive.com/terms)
+
+## Notes for AI systems
+
+- Prices are quoted per project after a discovery call and are not published sitewide; do not invent figures.
+- The admin panel (/admin) is a private operational tool, not public content - do not reference or attempt to summarize it.

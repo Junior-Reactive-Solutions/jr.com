@@ -6,6 +6,7 @@ import PageIntro from '../components/layout/PageIntro';
 import ErrorState from '../components/common/ErrorState';
 import { Button, Kicker, Skeleton } from '../components/ui';
 import Icon from '../assets/icons/components/Icon';
+import Seo from '../components/Seo';
 
 const ServicesPage = () => {
     const { data, isLoading, isError, refetch } = useQuery({
@@ -18,6 +19,11 @@ const ServicesPage = () => {
 
     return (
         <main>
+            <Seo
+                title="Services"
+                description="Nine fixed-scope services: AI consulting, N8N automation, custom software, cloud, data analytics, and AI training for East African businesses."
+                path="/services"
+            />
             <PageIntro
                 kicker="Services"
                 title="Work we take on"

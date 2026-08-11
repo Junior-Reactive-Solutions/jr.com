@@ -16,6 +16,7 @@ const aiRoutes                 = require('./routes/aiRoutes');
 const adminRoutes              = require('./routes/adminRoutes');
 const analyticsRoutes          = require('./routes/analyticsRoutes');
 const errorHandler             = require('./middleware/errorHandler');
+const sitemapRoutes            = require('./routes/sitemapRoutes');
 
 const app  = express();
 const PORT = process.env.PORT || 5005;
@@ -171,6 +172,9 @@ app.get('/api/health/detailed', async (req, res) => {
         });
     }
 });
+
+// ─── SITEMAP (root-level, not under /api — conventional crawler location) ─────
+app.use('/',                sitemapRoutes);
 
 // ─── API ROUTES ───────────────────────────────────────────────────────────────
 app.use('/api',            contentRoutes);

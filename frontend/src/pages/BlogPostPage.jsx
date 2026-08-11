@@ -5,6 +5,8 @@ import { contentService } from '../services/contentService';
 import ErrorState from '../components/common/ErrorState';
 import { Button, Kicker, Skeleton } from '../components/ui';
 import Icon from '../assets/icons/components/Icon';
+import Seo from '../components/Seo';
+import { SITE_URL } from '../config/seo';
 
 const BlogPostPage = () => {
     const { slug } = useParams();
@@ -39,6 +41,7 @@ const BlogPostPage = () => {
     if (isError || !post) {
         return (
             <main>
+                <Seo title="Post not found" noindex />
                 <section className="v2-section">
                     <div className="v2-container" style={{ maxWidth: 780 }}>
                         <ErrorState
@@ -58,6 +61,21 @@ const BlogPostPage = () => {
 
     return (
         <main>
+            <Seo
+                title={post.title}
+                description={post.excerpt || post.title}
+                path={`/blog/${post.slug}`}
+                jsonLd={{
+                    '@context': 'https://schema.org',
+                    '@type': 'BlogPosting',
+                    headline: post.title,
+                    description: post.excerpt,
+                    author: { '@type': 'Person', name: post.author },
+                    datePublished: post.publishedAt || post.createdAt,
+                    publisher: { '@type': 'Organization', name: 'Junior Reactive', url: SITE_URL },
+                    mainEntityOfPage: `${SITE_URL}/blog/${post.slug}`,
+                }}
+            />
             <section className="v2-intro">
                 <div className="v2-container" style={{ maxWidth: 780 }}>
                     <Kicker>Writing</Kicker>

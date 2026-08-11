@@ -1,0 +1,11 @@
+# Junior Reactive - https://juniorreactive.com
+# Public marketing site: allow full crawl of client-facing content.
+# Admin panel, auth-gated API, and the internal component styleguide
+# are excluded - none of them are meant for search results.
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /styleguide
+
+Sitemap: https://juniorreactive.com/sitemap.xml

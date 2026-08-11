@@ -5,6 +5,7 @@ import { contentService } from '../services/contentService';
 import ServiceRecommender from '../components/ServiceRecommender';
 import { Button, Kicker } from '../components/ui';
 import Icon from '../assets/icons/components/Icon';
+import Seo from '../components/Seo';
 
 // Evidence figures are owner-supplied and shown without animation —
 // numbers state facts; they don't perform.
@@ -41,6 +42,7 @@ const HomePage = () => {
 
     return (
         <main>
+            <Seo path="/" />
             {/* Hero: thesis + live tool demo (show, then assert) */}
             <section className="home-hero">
                 <div className="v2-container">

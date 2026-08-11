@@ -4,6 +4,7 @@ import { contentService } from '../services/contentService';
 import PageIntro from '../components/layout/PageIntro';
 import ErrorState from '../components/common/ErrorState';
 import { Accordion, Button, Skeleton } from '../components/ui';
+import Seo from '../components/Seo';
 
 const FAQPage = () => {
     const { data, isLoading, isError, refetch } = useQuery({
@@ -15,6 +16,20 @@ const FAQPage = () => {
 
     return (
         <main>
+            <Seo
+                title="FAQ"
+                description="Answers about pricing, timelines, ownership, and how Junior Reactive works with clients across East Africa."
+                path="/faq"
+                jsonLd={faqs.length > 0 ? {
+                    '@context': 'https://schema.org',
+                    '@type': 'FAQPage',
+                    mainEntity: faqs.map((f) => ({
+                        '@type': 'Question',
+                        name: f.question,
+                        acceptedAnswer: { '@type': 'Answer', text: f.answer },
+                    })),
+                } : undefined}
+            />
             <PageIntro
                 kicker="Questions"
                 title="Asked before you asked"

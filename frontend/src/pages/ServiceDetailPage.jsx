@@ -6,6 +6,8 @@ import PageIntro from '../components/layout/PageIntro';
 import ErrorState from '../components/common/ErrorState';
 import { Button, Kicker, Skeleton } from '../components/ui';
 import Icon from '../assets/icons/components/Icon';
+import Seo from '../components/Seo';
+import { SITE_URL } from '../config/seo';
 
 const ENGAGEMENT = [
     { step: '01', title: 'Discovery call', desc: 'Thirty minutes on the problem, your current tools, and whether this service fits.' },
@@ -40,6 +42,7 @@ const ServiceDetailPage = () => {
     if (isError || !service) {
         return (
             <main>
+                <Seo title="Service not found" noindex />
                 <section className="v2-section">
                     <div className="v2-container">
                         <ErrorState
@@ -57,6 +60,20 @@ const ServiceDetailPage = () => {
 
     return (
         <main>
+            <Seo
+                title={service.title}
+                description={service.shortDescription}
+                path={`/services/${service.key || id}`}
+                jsonLd={{
+                    '@context': 'https://schema.org',
+                    '@type': 'Service',
+                    name: service.title,
+                    description: service.fullDescription || service.shortDescription,
+                    provider: { '@type': 'Organization', name: 'Junior Reactive', url: SITE_URL },
+                    areaServed: 'East Africa',
+                    url: `${SITE_URL}/services/${service.key || id}`,
+                }}
+            />
             <PageIntro
                 kicker="Service"
                 title={service.title}

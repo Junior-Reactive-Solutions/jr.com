@@ -3,6 +3,7 @@ import {
     Button, Badge, Kicker, Card, Field, Tabs, Accordion, Modal,
     ToastProvider, useToast, EmptyState, Skeleton,
 } from '../components/ui';
+import Seo from '../components/Seo';
 import './StyleguidePage.css';
 
 // Internal design-system reference. Not linked from navigation.
@@ -40,6 +41,7 @@ const StyleguidePage = () => {
 
     return (
         <main className="sg">
+            <Seo title="Styleguide" noindex />
             <header className="sg-hero">
                 <Kicker>Internal reference</Kicker>
                 <h1 className="sg-title">JR Design System v2</h1>
